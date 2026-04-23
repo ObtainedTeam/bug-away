@@ -49,7 +49,7 @@ const h2s = {
   marginBottom: 8,
   letterSpacing: "-0.02em",
 };
-const label = {
+const lbl = {
   fontSize: 11,
   fontFamily: "'Poppins',sans-serif",
   color: c.sage,
@@ -62,145 +62,145 @@ const label = {
 const products = [
   {
     id: 1,
-    name: "Bug Away Broek Heren",
-    tag: "Heren",
-    price: "€ 69,95",
+    name: "Bug Away Pants Men",
+    tag: "Men",
+    price: "€ 69.95",
     bg: c.skyL + "55",
     emoji: "🧥",
-    type: "Broek",
+    type: "Pants",
     cat: "men",
-    desc: "Geïntegreerde voetbescherming, noseeum-grade gaas",
+    desc: "Integrated foot cover, noseeum-grade mesh",
   },
   {
     id: 2,
-    name: "Bug Away Jas Heren",
-    tag: "Heren",
-    price: "€ 74,95",
+    name: "Bug Away Jacket Men",
+    tag: "Men",
+    price: "€ 74.95",
     bg: c.sageL + "55",
     emoji: "🧥",
-    type: "Jas",
+    type: "Jacket",
     cat: "men",
-    desc: "Trekkoord capuchon, ritsslot, zij-zakken",
+    desc: "Drawstring hood, zip closure, side pockets",
   },
   {
     id: 3,
-    name: "Bug Away Broek Dames",
-    tag: "Dames",
-    price: "€ 69,95",
+    name: "Bug Away Pants Women",
+    tag: "Women",
+    price: "€ 69.95",
     bg: c.mist + "55",
     emoji: "🧥",
-    type: "Broek",
+    type: "Pants",
     cat: "women",
-    desc: "Geïntegreerde voetbescherming, noseeum-grade gaas",
+    desc: "Integrated foot cover, noseeum-grade mesh",
   },
   {
     id: 4,
-    name: "Bug Away Jas Dames",
-    tag: "Dames",
-    price: "€ 74,95",
+    name: "Bug Away Jacket Women",
+    tag: "Women",
+    price: "€ 74.95",
     bg: c.skyP + "99",
     emoji: "🧥",
-    type: "Jas",
+    type: "Jacket",
     cat: "women",
-    desc: "Trekkoord capuchon, ritsslot, zij-zakken",
+    desc: "Drawstring hood, zip closure, side pockets",
   },
   {
     id: 5,
-    name: "Kids Set (Jas + Broek)",
+    name: "Kids Set (Jacket + Pants)",
     tag: "Kids",
-    price: "€ 89,95",
+    price: "€ 89.95",
     bg: c.sageL + "44",
     emoji: "👕",
     type: "Kids",
     cat: "kids",
-    desc: "Veilig elastiek bij capuchon, zakken voor vondsten!",
+    desc: "Safe elastic at hood, pockets for treasures!",
   },
   {
     id: 6,
-    name: "Combo Set Volwassenen",
-    tag: "Bundel",
-    price: "€ 129,95",
+    name: "Adults Combo Set",
+    tag: "Bundle",
+    price: "€ 129.95",
     bg: c.sky + "33",
     emoji: "🎒",
-    type: "Bundel",
+    type: "Bundle",
     cat: "bundles",
-    desc: "Broek + Jas samen — bespaar €14,95",
+    desc: "Pants + Jacket together — save €14.95",
   },
   {
     id: 7,
-    name: "Bug Away Sokken",
-    tag: "Extra's",
-    price: "€ 19,95",
+    name: "Bug Away Socks",
+    tag: "Extras",
+    price: "€ 19.95",
     bg: c.glL + "99",
     emoji: "🧦",
     type: "Extra",
     cat: "extras",
-    desc: "Extra bescherming bij de enkel en voet",
+    desc: "Extra protection at ankle and foot",
   },
   {
     id: 8,
-    name: "Teken Pincet Set",
-    tag: "Extra's",
-    price: "€ 9,95",
+    name: "Tick Remover Set",
+    tag: "Extras",
+    price: "€ 9.95",
     bg: c.glL + "99",
     emoji: "🔬",
     type: "Extra",
     cat: "extras",
-    desc: "RVS pincet + loepje + opbergdoosje",
+    desc: "Stainless steel tweezers + magnifier + case",
   },
 ];
 
 const diseases = [
   {
     icon: "🔴",
-    name: "Ziekte van Lyme",
-    sev: "Meest voorkomend · ~27.000/jaar in NL",
+    name: "Lyme Disease",
+    sev: "Most common · ~27,000 new cases/year in NL",
     sevC: "#C0504D",
-    desc: "Veroorzaakt door de bacterie Borrelia. Begint met een ringvormige rode uitslag, gevolgd door vermoeidheid, gewrichtspijn en neurologische klachten. Onbehandeld kan het chronisch worden.",
+    desc: "Caused by the Borrelia bacteria. Starts with a characteristic bull's-eye rash around the bite. Left untreated, Lyme disease can lead to joint inflammation, neurological problems and heart issues. It can become chronic if not caught early.",
     syms: [
-      "Rode ringuitslag",
-      "Vermoeidheid",
-      "Gewrichtspijn",
-      "Neurologische klachten",
+      "Bull's-eye rash",
+      "Extreme fatigue",
+      "Joint pain",
+      "Neurological symptoms",
     ],
   },
   {
     icon: "🟠",
     name: "Tick-borne Encephalitis (TBE)",
-    sev: "Ernstig · Opkomend in NL & BE",
+    sev: "Serious · On the rise in NL & BE",
     sevC: "#D07030",
-    desc: "Virusinfectie die hersenen en ruggenmerg aantast. Begint griepachtig maar kan escaleren naar hersenvliesontsteking met blijvende schade.",
+    desc: "A viral infection that attacks the brain and spinal cord. Starts flu-like but can escalate to meningitis with permanent damage. Increasingly prevalent across the Netherlands and Belgium.",
     syms: [
-      "Hoge koorts",
-      "Zware hoofdpijn",
-      "Hersenvliesontsteking",
-      "Blijvende schade",
+      "High fever",
+      "Severe headache",
+      "Meningitis",
+      "Permanent neurological damage",
     ],
   },
   {
     icon: "🟡",
-    name: "Anaplasmose",
-    sev: "Minder bekend · Onderschat",
+    name: "Anaplasmosis",
+    sev: "Underrecognized · Often misdiagnosed",
     sevC: "#B08A20",
-    desc: "Bacteriële infectie die witte bloedcellen aanvalt. Lijkt op griep maar kan ernstig worden zonder antibiotica, met name bij ouderen.",
+    desc: "A bacterial infection that attacks white blood cells. Symptoms closely resemble the flu. Without antibiotics it can become serious, particularly in elderly people or those with weakened immune systems.",
     syms: [
-      "Koorts & rillingen",
-      "Spierpijn",
-      "Verlaagd immuunsysteem",
-      "Leverproblemen",
+      "Fever & chills",
+      "Muscle pain",
+      "Low white blood cell count",
+      "Liver problems",
     ],
   },
   {
     icon: "🟢",
-    name: "Babesiose",
-    sev: "Zeldzaam maar gevaarlijk",
+    name: "Babesiosis",
+    sev: "Rare but serious",
     sevC: "#4E8065",
-    desc: "Parasitaire infectie vergelijkbaar met malaria. Gevaarlijk voor ouderen en mensen zonder milt. Opkomend in Europa.",
+    desc: "A parasitic infection that destroys red blood cells, similar to malaria. Particularly dangerous for elderly people and those without a spleen. Increasingly reported across Europe, including the Netherlands.",
     syms: [
-      "Hemolytische anemie",
-      "Donkere urine",
-      "Hoge koorts",
-      "Orgaanfalen",
+      "Hemolytic anemia",
+      "Dark urine",
+      "High fever",
+      "Organ failure (severe cases)",
     ],
   },
 ];
@@ -210,46 +210,46 @@ const reviews = [
     name: "Marloes V.",
     loc: "Utrecht",
     stars: 5,
-    text: "Eindelijk iets wat echt werkt! Ik ga elke dag met mijn hond het bos in en had al twee keer de ziekte van Lyme. Met deze kleding voel ik me veel veiliger. Ademend en nauwelijks voelbaar.",
-    product: "Combo Set Volwassenen",
+    text: "Finally something that actually works! I walk my dog in the forest every day and had Lyme disease twice. With this clothing I feel so much safer. Breathable and barely noticeable.",
+    product: "Adults Combo Set",
   },
   {
     name: "Jan de B.",
     loc: "Zeeland",
     stars: 5,
-    text: "Geweldige broek. Zit goed, de voetbescherming is een slim detail — precies wat ik zocht. Mijn vrouw heeft er nu ook eentje besteld.",
-    product: "Bug Away Broek Heren",
+    text: "Great pants. Fits well, the foot cover is a smart detail — exactly what I was looking for. My wife has ordered one too.",
+    product: "Bug Away Pants Men",
   },
   {
     name: "Sofie K.",
-    loc: "Antwerpen",
+    loc: "Antwerp",
     stars: 5,
-    text: "Mijn kinderen spelen nu zonder zorgen in de tuin. De kids set is schattig én functioneel. Zo blij dat ik dit gevonden heb voor het tekenseizoen!",
-    product: "Kids Set (Jas + Broek)",
+    text: "My kids can now play outside without worry. The kids set is cute and functional. So glad I found this before tick season!",
+    product: "Kids Set (Jacket + Pants)",
   },
   {
     name: "Rens M.",
     loc: "Friesland",
     stars: 4,
-    text: "Top product. Licht, fijn stof en werkt goed. Teken zitten er echt niet doorheen. Iets groter besteld zoals aanbevolen en dat was de juiste keuze.",
-    product: "Bug Away Jas Heren",
+    text: "Great product. Light, fine fabric and works well. Ticks simply can't get through. Ordered a size up as recommended and that was the right call.",
+    product: "Bug Away Jacket Men",
   },
 ];
 
 const navItems = [
-  { label: "Heren", key: "men" },
-  { label: "Dames", key: "women" },
+  { label: "Men", key: "men" },
+  { label: "Women", key: "women" },
   { label: "Kids", key: "kids" },
-  { label: "Bundels", key: "bundles" },
-  { label: "Extra's", key: "extras" },
+  { label: "Bundles", key: "bundles" },
+  { label: "Extras", key: "extras" },
 ];
 const catFilters = [
-  { label: "Alles", key: "all" },
-  { label: "Heren", key: "men" },
-  { label: "Dames", key: "women" },
+  { label: "All", key: "all" },
+  { label: "Men", key: "men" },
+  { label: "Women", key: "women" },
   { label: "Kids", key: "kids" },
-  { label: "Bundels", key: "bundles" },
-  { label: "Extra's", key: "extras" },
+  { label: "Bundles", key: "bundles" },
+  { label: "Extras", key: "extras" },
 ];
 
 export default function BugAway() {
@@ -265,11 +265,11 @@ export default function BugAway() {
         : products.filter((p) => p.cat === filter);
 
   const pageTitle = {
-    men: "Heren Collectie",
-    women: "Dames Collectie",
+    men: "Men's Collection",
+    women: "Women's Collection",
     kids: "Kids",
-    bundles: "Bundels & Combos",
-    extras: "Extra's",
+    bundles: "Bundles & Combos",
+    extras: "Extras",
   }[page];
 
   return (
@@ -298,8 +298,8 @@ export default function BugAway() {
           letterSpacing: "0.05em",
         }}
       >
-        🛡️ Gratis verzending bij €59+ · Chemicaliënvrij · Insecticide-vrij ·
-        Eco-verantwoord
+        🛡️ Free shipping on orders over €59 · Chemical-free · Insecticide-free ·
+        Eco-responsible
       </div>
 
       {/* Nav */}
@@ -400,7 +400,7 @@ export default function BugAway() {
                 marginBottom: 20,
               }}
             >
-              🌿 Insecticide-vrij · Eco-verantwoord · Tekenproof
+              🌿 Insecticide-free · Eco-responsible · Tick-proof
             </div>
             <h1
               style={{
@@ -412,9 +412,9 @@ export default function BugAway() {
                 letterSpacing: "-0.02em",
               }}
             >
-              Buiten Genieten.
+              Enjoy the Outdoors.
               <br />
-              <span style={{ color: c.sageD }}>Veilig & Zorgeloos.</span>
+              <span style={{ color: c.sageD }}>Safe & Carefree.</span>
             </h1>
             <p
               style={{
@@ -427,9 +427,9 @@ export default function BugAway() {
                 marginBottom: 10,
               }}
             >
-              Lichtgewicht nylon gaaskleding die teken en insecten fysiek
-              blokkeert. Geen DEET, geen chemicaliën — gewoon een slimme laag
-              tussen jou en de natuur.
+              Lightweight nylon mesh clothing that physically blocks ticks and
+              insects. No DEET, no chemicals — just a smart layer between you
+              and nature.
             </p>
             <p
               style={{
@@ -441,14 +441,14 @@ export default function BugAway() {
                 fontStyle: "italic",
               }}
             >
-              "Zoals een vliegengordijn voor je lichaam 🌿"
+              "Like a screen porch for your body 🌿"
             </p>
             <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
               <button style={btn} onClick={() => setPage("men")}>
-                Bekijk Collectie
+                Shop Collection
               </button>
               <button style={btnO} onClick={() => setPage("bundles")}>
-                Combos & Bundels
+                Combos & Bundles
               </button>
             </div>
           </div>
@@ -486,10 +486,10 @@ export default function BugAway() {
                   lineHeight: 1.5,
                 }}
               >
-                Jas
+                Jacket
                 <br />
                 <span style={{ color: c.gray, fontWeight: 300, fontSize: 11 }}>
-                  Noseeum gaas · Capuchon
+                  Noseeum mesh · Hood
                 </span>
               </div>
             </div>
@@ -520,10 +520,10 @@ export default function BugAway() {
                   lineHeight: 1.5,
                 }}
               >
-                Broek
+                Pants
                 <br />
                 <span style={{ color: c.gray, fontWeight: 300, fontSize: 11 }}>
-                  Geïntegreerde voet · 360° afdekking
+                  Integrated foot · 360° coverage
                 </span>
               </div>
             </div>
@@ -545,28 +545,28 @@ export default function BugAway() {
           {[
             {
               icon: "🛡️",
-              title: "Tekenproof gaas",
-              text: "Blokkeert teken, muggen & noseeums",
+              title: "Tick-proof mesh",
+              text: "Blocks ticks, mosquitoes & noseeums",
             },
             {
               icon: "🌿",
-              title: "Chemicaliënvrij",
-              text: "Geen DEET, geen permethrin",
+              title: "Chemical-free",
+              text: "No DEET, no permethrin",
             },
             {
               icon: "♻️",
-              title: "Eco-verantwoord",
-              text: "Gemaakt van gerecycled polyester",
+              title: "Eco-responsible",
+              text: "Made from recycled polyester",
             },
             {
               icon: "🦵",
-              title: "360° afdekking",
-              text: "Geïntegreerde voet — geen gaten",
+              title: "360° coverage",
+              text: "Integrated foot cover — no gaps",
             },
             {
               icon: "👨‍👩‍👧",
-              title: "Voor het gezin",
-              text: "Heren, dames & kids",
+              title: "For the whole family",
+              text: "Men, women & kids",
             },
           ].map((f, i) => (
             <div
@@ -617,15 +617,15 @@ export default function BugAway() {
           {[
             {
               url: "https://images.unsplash.com/photo-1448375240586-882707db888b?w=900&q=80",
-              label: "Bos & Natuur",
+              label: "Forest & Nature",
             },
             {
               url: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=900&q=80",
-              label: "Wandelen",
+              label: "Hiking",
             },
             {
               url: "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=900&q=80",
-              label: "Buiten Leven",
+              label: "Outdoor Life",
             },
           ].map((img, i) => (
             <div key={i} style={{ position: "relative", overflow: "hidden" }}>
@@ -672,9 +672,9 @@ export default function BugAway() {
           }}
         >
           <div style={{ maxWidth: 920, margin: "0 auto" }}>
-            <div style={label}>Hoe het werkt</div>
+            <div style={lbl}>How it works</div>
             <h2 style={{ ...h2s, marginBottom: 12 }}>
-              Een vliegengordijn voor je lichaam
+              Like a screen porch for your body
             </h2>
             <p
               style={{
@@ -687,9 +687,10 @@ export default function BugAway() {
                 maxWidth: 640,
               }}
             >
-              Het gaas heeft microscopisch kleine gaatjes die teken, muggen en
-              noseeums fysiek blokkeren. Tegelijkertijd laat het lucht door — de
-              luchtzak tussen je huid en het gaas is de sleutel.
+              The mesh has microscopically small openings that physically block
+              ticks, mosquitoes and noseeums. At the same time it lets air
+              through — the air gap between your skin and the mesh is the key to
+              its effectiveness.
             </p>
             <div
               style={{
@@ -702,26 +703,26 @@ export default function BugAway() {
                 {
                   step: "01",
                   icon: "🕷️",
-                  title: "Teken proberen de huid te bereiken",
-                  text: "Ze kruipen omhoog via gras en struiken op zoek naar een warme plek om zich te hechten.",
+                  title: "Ticks try to reach your skin",
+                  text: "They crawl upward through grass and shrubs looking for a warm spot to attach themselves.",
                 },
                 {
                   step: "02",
                   icon: "🧥",
-                  title: "Het gaas vormt een fysieke barrière",
-                  text: "De noseeum-grade mesh is te fijn voor teken om doorheen te komen of te crawlen.",
+                  title: "The mesh forms a physical barrier",
+                  text: "The noseeum-grade mesh is too fine for ticks to crawl through or penetrate.",
                 },
                 {
                   step: "03",
                   icon: "💨",
-                  title: "Luchtzak biedt extra bescherming",
-                  text: "De ruimte tussen het gaas en je huid zorgt dat teken je huid niet kunnen bereiken.",
+                  title: "Air gap adds extra protection",
+                  text: "The space between the mesh and your skin ensures ticks cannot reach you.",
                 },
                 {
                   step: "04",
                   icon: "✅",
-                  title: "Jij geniet — zonder beten",
-                  text: "Chemicaliënvrij, licht en ademend. Gewoon aantrekken en buiten gaan.",
+                  title: "You enjoy — bite-free",
+                  text: "Chemical-free, lightweight and breathable. Just put it on and go outside.",
                 },
               ].map((s, i) => (
                 <div
@@ -786,11 +787,11 @@ export default function BugAway() {
           }}
         >
           {[
-            { num: "1,5M+", label: "Tekenbeten/jaar in NL" },
-            { num: "27.000", label: "Lyme-gevallen/jaar" },
-            { num: "100%", label: "Chemicaliënvrij" },
-            { num: "360°", label: "Lichaamsafdekking" },
-            { num: "< 80g", label: "Gewicht per set" },
+            { num: "1.5M+", label: "Tick bites per year in NL" },
+            { num: "27,000", label: "New Lyme cases per year" },
+            { num: "100%", label: "Chemical-free protection" },
+            { num: "360°", label: "Full body coverage" },
+            { num: "< 80g", label: "Weight per set" },
           ].map((s, i) => (
             <div key={i} style={{ textAlign: "center" }}>
               <div
@@ -823,7 +824,7 @@ export default function BugAway() {
       <section style={{ padding: "64px 60px" }}>
         {page === "home" ? (
           <>
-            <h2 style={h2s}>Onze Collectie</h2>
+            <h2 style={h2s}>Our Collection</h2>
             <p
               style={{
                 fontSize: 14,
@@ -833,7 +834,7 @@ export default function BugAway() {
                 marginBottom: 32,
               }}
             >
-              Bescherming voor het hele gezin — heren, dames & kids
+              Protection for the whole family — men, women & kids
             </p>
             <div
               style={{
@@ -877,7 +878,7 @@ export default function BugAway() {
                 marginBottom: 8,
               }}
             >
-              ← Terug
+              ← Back
             </span>
             <h2 style={h2s}>{pageTitle}</h2>
             <p
@@ -890,10 +891,10 @@ export default function BugAway() {
               }}
             >
               {page === "kids"
-                ? "Veilig buiten spelen zonder zorgen"
+                ? "Safe outdoor play without worry"
                 : page === "bundles"
-                  ? "Meer besparen, meer bescherming"
-                  : "Lichtgewicht mesh base layers"}
+                  ? "Save more, protect more"
+                  : "Lightweight mesh base layers"}
             </p>
           </>
         )}
@@ -995,7 +996,7 @@ export default function BugAway() {
                   {p.price}
                 </div>
                 <button style={{ ...btn, width: "100%", fontSize: 11 }}>
-                  In winkelwagen
+                  Add to cart
                 </button>
               </div>
             </div>
@@ -1007,9 +1008,9 @@ export default function BugAway() {
       {page === "home" && (
         <section style={{ padding: "64px 60px", background: "#fff" }}>
           <div style={{ maxWidth: 940, margin: "0 auto" }}>
-            <div style={label}>Waarom bescherming zo belangrijk is</div>
+            <div style={lbl}>Why protection matters</div>
             <h2 style={{ ...h2s, marginBottom: 12 }}>
-              Ziektes die teken overdragen
+              Diseases transmitted by ticks
             </h2>
             <p
               style={{
@@ -1022,9 +1023,9 @@ export default function BugAway() {
                 maxWidth: 660,
               }}
             >
-              Teken zijn actief van maart tot november en leven in hoog gras,
-              struiken en bosranden. Ze kunnen gevaarlijke ziektes overdragen —
-              en je merkt een tekenbeet vaak niet eens.
+              Ticks are active from March through November and live in tall
+              grass, shrubs and forest edges. They can transmit serious diseases
+              — and you often won't even notice a tick bite.
             </p>
             <div
               style={{
@@ -1099,7 +1100,7 @@ export default function BugAway() {
                         marginBottom: 8,
                       }}
                     >
-                      Symptomen
+                      Symptoms
                     </div>
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                       {d.syms.map((s, j) => (
@@ -1123,6 +1124,50 @@ export default function BugAway() {
                 </div>
               ))}
             </div>
+            <div
+              style={{
+                marginTop: 32,
+                background: `linear-gradient(120deg,${c.skyP} 0%,${c.sageL}44 100%)`,
+                borderRadius: 10,
+                padding: "28px 30px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 24,
+                border: `1px solid ${c.mist}`,
+              }}
+            >
+              <div>
+                <div
+                  style={{
+                    fontSize: 16,
+                    fontWeight: 700,
+                    color: c.dark,
+                    marginBottom: 6,
+                  }}
+                >
+                  Prevention is the best protection
+                </div>
+                <div
+                  style={{
+                    fontSize: 13,
+                    fontFamily: "'Poppins',sans-serif",
+                    color: c.grayD,
+                    fontWeight: 300,
+                    lineHeight: 1.7,
+                  }}
+                >
+                  Bug Away mesh clothing physically blocks ticks — no chemicals,
+                  no DEET, just a light layer you wear all day.
+                </div>
+              </div>
+              <button
+                style={{ ...btn, whiteSpace: "nowrap" }}
+                onClick={() => setPage("men")}
+              >
+                Shop the collection
+              </button>
+            </div>
           </div>
         </section>
       )}
@@ -1130,8 +1175,8 @@ export default function BugAway() {
       {/* Reviews */}
       {page === "home" && (
         <section style={{ padding: "64px 60px", background: c.off }}>
-          <div style={label}>Ervaringen</div>
-          <h2 style={{ ...h2s, marginBottom: 8 }}>Wat onze klanten zeggen</h2>
+          <div style={lbl}>Customer reviews</div>
+          <h2 style={{ ...h2s, marginBottom: 8 }}>What our customers say</h2>
           <p
             style={{
               fontSize: 14,
@@ -1141,7 +1186,8 @@ export default function BugAway() {
               marginBottom: 44,
             }}
           >
-            Echte verhalen van mensen die buiten genieten zonder tekenzorgen
+            Real stories from people who enjoy the outdoors without worrying
+            about ticks
           </p>
           <div
             style={{
@@ -1222,7 +1268,7 @@ export default function BugAway() {
             }}
           >
             <div>
-              <div style={label}>Onze missie</div>
+              <div style={lbl}>Our mission</div>
               <h2
                 style={{
                   fontSize: 28,
@@ -1233,8 +1279,8 @@ export default function BugAway() {
                   letterSpacing: "-0.02em",
                 }}
               >
-                De natuur in —<br />
-                zonder angst voor teken
+                Into nature —<br />
+                without fear of ticks
               </h2>
               <p
                 style={{
@@ -1246,9 +1292,9 @@ export default function BugAway() {
                   marginBottom: 14,
                 }}
               >
-                Wandelaars, mountainbikers, tuiniers, foragers en gezinnen —
-                iedereen die buiten actief is loopt risico. Bug Away is een
-                onzichtbare beschermende laag: licht, ademend en altijd aan.
+                Hikers, mountain bikers, gardeners, foragers and families —
+                anyone who spends time outdoors is at risk. Bug Away is an
+                invisible protective layer: light, breathable and always on.
               </p>
               <p
                 style={{
@@ -1260,15 +1306,15 @@ export default function BugAway() {
                   marginBottom: 24,
                 }}
               >
-                Geen chemicaliën. Geen DEET. Geen permethrin dat bijen doodt.
-                Gewoon slimme bescherming die de natuur respecteert.
+                No chemicals. No DEET. No permethrin that kills bees. Just smart
+                protection that respects nature — for people and animals alike.
               </p>
               <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
                 {[
-                  "♻️ Gerecycled polyester",
-                  "🌿 Insecticide-vrij",
-                  "🐝 Veilig voor bijen",
-                  "✅ Eco-verantwoord",
+                  "♻️ Recycled polyester",
+                  "🌿 Insecticide-free",
+                  "🐝 Safe for bees",
+                  "✅ Eco-responsible",
                 ].map((t, i) => (
                   <span
                     key={i}
@@ -1297,7 +1343,7 @@ export default function BugAway() {
             >
               <img
                 src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=500&q=80"
-                alt="Bos"
+                alt="Forest"
                 style={{
                   width: "100%",
                   height: 190,
@@ -1308,7 +1354,7 @@ export default function BugAway() {
               />
               <img
                 src="https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=500&q=80"
-                alt="Natuur"
+                alt="Nature"
                 style={{
                   width: "100%",
                   height: 190,
@@ -1326,9 +1372,9 @@ export default function BugAway() {
       {/* Blog preview */}
       {page === "home" && (
         <section style={{ padding: "64px 60px", background: "#fff" }}>
-          <div style={label}>Kennisbank</div>
+          <div style={lbl}>Knowledge base</div>
           <h2 style={{ ...h2s, marginBottom: 8 }}>
-            Alles over teken & bescherming
+            Everything about ticks & protection
           </h2>
           <p
             style={{
@@ -1339,7 +1385,8 @@ export default function BugAway() {
               marginBottom: 40,
             }}
           >
-            Lees meer over tekenbeten, ziektes en hoe je jezelf beschermt
+            Learn more about tick bites, tick-borne diseases and how to protect
+            yourself
           </p>
           <div
             style={{
@@ -1351,22 +1398,21 @@ export default function BugAway() {
             {[
               {
                 emoji: "🌱",
-                title:
-                  "Tekenseizoen 2025: wanneer zijn teken het meest actief?",
-                tag: "Voorlichting",
-                desc: "Teken zijn actief zodra de temperatuur boven 7°C komt. Lees wanneer het risico het hoogst is en hoe je je voorbereidt.",
+                title: "Tick season 2025: when are ticks most active?",
+                tag: "Education",
+                desc: "Ticks become active as soon as temperatures rise above 7°C. Find out when the risk is highest and how to prepare.",
               },
               {
                 emoji: "🔬",
-                title: "Hoe herken je een tekenbeet en wat doe je dan?",
-                tag: "Gezondheid",
-                desc: "Niet elke tekenbeet leidt tot Lyme. Maar weten wat je moet doen ná een beet kan het verschil maken.",
+                title: "How to recognize a tick bite and what to do",
+                tag: "Health",
+                desc: "Not every tick bite leads to Lyme disease. But knowing what to do after a bite can make all the difference.",
               },
               {
                 emoji: "🐕",
-                title: "Teken bij honden: risico's en bescherming",
-                tag: "Huisdieren",
-                desc: "Honden lopen hetzelfde risico als mensen. Ontdek hoe je je hond beschermt tegen teken en de ziekte van Lyme.",
+                title: "Ticks and dogs: risks and protection",
+                tag: "Pets",
+                desc: "Dogs face the same risks as humans. Discover how to protect your dog against ticks and Lyme disease.",
               },
             ].map((b, i) => (
               <div
@@ -1436,7 +1482,7 @@ export default function BugAway() {
                       cursor: "pointer",
                     }}
                   >
-                    Lees meer →
+                    Read more →
                   </div>
                 </div>
               </div>
@@ -1479,8 +1525,8 @@ export default function BugAway() {
                 maxWidth: 240,
               }}
             >
-              Insecticide-vrije bescherming tegen teken en muggen. Voor
-              wandelaars, gezinnen en iedereen die buiten geniet.
+              Insecticide-free protection against ticks and mosquitoes. For
+              hikers, families and everyone who enjoys the outdoors.
             </p>
             <div
               style={{
@@ -1490,7 +1536,7 @@ export default function BugAway() {
                 flexWrap: "wrap",
               }}
             >
-              {["♻️ Eco", "🌿 Chemicaliënvrij", "🐝 Bijenproof"].map((t, i) => (
+              {["♻️ Eco", "🌿 Chemical-free", "🐝 Bee-safe"].map((t, i) => (
                 <span
                   key={i}
                   style={{
@@ -1509,16 +1555,16 @@ export default function BugAway() {
           </div>
           {[
             {
-              head: "Collectie",
-              links: ["Heren", "Dames", "Kids", "Bundels", "Extra's"],
+              head: "Collection",
+              links: ["Men", "Women", "Kids", "Bundles", "Extras"],
             },
             {
               head: "Info",
-              links: ["Hoe het werkt", "Teken & Lyme", "Maatgids", "FAQ"],
+              links: ["How it works", "Ticks & Lyme", "Size guide", "FAQ"],
             },
             {
               head: "Service",
-              links: ["Verzending", "Retour", "Contact", "Reviews"],
+              links: ["Shipping", "Returns", "Contact", "Reviews"],
             },
           ].map((col, i) => (
             <div key={i}>
@@ -1569,7 +1615,7 @@ export default function BugAway() {
               fontFamily: "'Poppins',sans-serif",
             }}
           >
-            © 2025 Bug Away. Alle rechten voorbehouden.
+            © 2025 Bug Away. All rights reserved.
           </span>
           <div style={{ display: "flex", gap: 16 }}>
             {["Visa", "Mastercard", "iDEAL", "PayPal"].map((m) => (
