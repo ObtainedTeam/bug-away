@@ -80,12 +80,15 @@ export default function Blog() {
   return (
     <div style={{ fontFamily:"'Archivo',sans-serif", color:c.dark }}>
       {/* Header */}
-      <section style={{ background:`linear-gradient(135deg,${c.skyP} 0%,${c.mist} 100%)`, padding:isMobile?"48px 20px":"64px 60px" }}>
+      <section style={{ background:`linear-gradient(135deg,${c.skyP} 0%,${c.mist} 100%)`, padding:isMobile?"48px 20px":"64px 60px", position:"relative", overflow:"hidden" }}>
+        <img src="/images/lifestyle-kids-forest.png" alt="Blog" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", opacity:0.2 }}/>
+        <div style={{ position:"relative", zIndex:1 }}>
         <div style={LBL}>Knowledge base</div>
         <h1 style={{ fontSize:isMobile?28:42, fontWeight:800, color:c.dark, marginBottom:12, letterSpacing:"-0.02em" }}>Ticks, Lyme & Outdoor Life</h1>
         <p style={{ fontSize:14, color:c.grayD, fontFamily:"'Poppins',sans-serif", fontWeight:300, maxWidth:480 }}>
           Everything you need to know about tick protection, tick-borne diseases and how to enjoy the outdoors safely.
         </p>
+        </div>
       </section>
 
       {/* Articles */}

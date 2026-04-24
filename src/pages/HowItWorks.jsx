@@ -10,7 +10,9 @@ export default function HowItWorks() {
     <div style={{ fontFamily:"'Archivo',sans-serif", color:c.dark }}>
 
       {/* Hero */}
-      <section style={{ background:`linear-gradient(135deg,${c.skyP} 0%,${c.mist} 100%)`, padding:isMobile?"56px 20px":"80px 60px", textAlign:"center" }}>
+      <section style={{ background:`linear-gradient(135deg,${c.skyP} 0%,${c.mist} 100%)`, padding:isMobile?"56px 20px":"80px 60px", textAlign:"center", position:"relative", overflow:"hidden" }}>
+        <img src="/images/how-it-works-infographic.png" alt="How it works" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", opacity:0.12 }}/>
+        <div style={{ position:"relative", zIndex:1 }}>
         <div style={LBL}>The science</div>
         <h1 style={{ fontSize:isMobile?30:48, fontWeight:800, color:c.dark, marginBottom:16, letterSpacing:"-0.02em", maxWidth:600, margin:"0 auto 16px" }}>
           How Bug Away Works
@@ -19,6 +21,7 @@ export default function HowItWorks() {
           No magic, no chemicals — just smart physical protection based on simple science. Here's exactly how our mesh keeps ticks away from your skin.
         </p>
         <Link to="/shop" style={{ ...BTN, textDecoration:"none" }}>Shop Now</Link>
+        </div>
       </section>
 
       {/* The core principle */}

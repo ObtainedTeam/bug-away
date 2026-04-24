@@ -25,12 +25,15 @@ export default function Shop() {
     <div style={{ fontFamily:"'Archivo',sans-serif", color:c.dark }}>
 
       {/* Shop header */}
-      <div style={{ background:`linear-gradient(135deg,${c.skyP} 0%,${c.mist} 100%)`, padding:isMobile?"40px 20px":"56px 60px" }}>
+      <div style={{ background:`linear-gradient(135deg,${c.skyP} 0%,${c.mist} 100%)`, padding:isMobile?"40px 20px":"56px 60px", position:"relative", overflow:"hidden" }}>
+        <img src="/images/lifestyle-couple-forest.png" alt="Shop" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", opacity:0.2 }}/>
+        <div style={{ position:"relative", zIndex:1 }}>
         <div style={LBL}>Shop</div>
         <h1 style={{ fontSize:isMobile?28:38, fontWeight:800, color:c.dark, marginBottom:8, letterSpacing:"-0.02em" }}>{catLabel}</h1>
         <p style={{ fontSize:13, fontFamily:"'Poppins',sans-serif", color:c.grayD, fontWeight:300 }}>
           Tick-proof mesh clothing — chemical-free, lightweight, always effective.
         </p>
+        </div>
       </div>
 
       {/* Filter tabs */}
