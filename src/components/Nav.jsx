@@ -56,14 +56,14 @@ export default function Nav() {
 
         <div style={{ display:"flex", gap:14, alignItems:"center" }}>
           <Link to="/shop" style={{ fontSize:18, textDecoration:"none" }}>🔍</Link>
-          <div style={{ position:"relative", cursor:"pointer" }}>
+          <a href="https://bug-away-3.myshopify.com/cart" style={{ position:"relative", cursor:"pointer", textDecoration:"none" }}>
             <span style={{ fontSize:18 }}>🛒</span>
             {cartCount > 0 && (
               <span style={{ position:"absolute", top:-6, right:-6, background:c.sageD, color:"#fff", borderRadius:"50%", width:16, height:16, fontSize:10, display:"flex", alignItems:"center", justifyContent:"center", fontFamily:"'Poppins',sans-serif" }}>
                 {cartCount}
               </span>
             )}
-          </div>
+          </a>
           {isMobile && (
             <span style={{ fontSize:22, cursor:"pointer", color:c.dark }} onClick={() => setOpen(!open)}>
               {open ? "✕" : "☰"}
