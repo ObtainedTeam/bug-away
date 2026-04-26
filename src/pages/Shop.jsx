@@ -69,18 +69,18 @@ export default function Shop() {
                 onMouseLeave={e=>{ e.currentTarget.style.boxShadow="none"; e.currentTarget.style.transform="none"; }}
               >
                 {/* Image */}
-                <div style={{ height:isMobile?160:260, background:product.placeholderBg+"55", display:"flex", alignItems:"center", justifyContent:"center", flexDirection:"column", gap:8, position:"relative" }}>
-                  <span style={{ fontSize:isMobile?48:64 }}>{product.placeholderEmoji}</span>
-                  <div style={{ display:"flex", gap:5 }}>
-                    {product.colorHex.slice(0,4).map((col,i)=>(
-                      <div key={i} style={{ width:12, height:12, borderRadius:"50%", background:col, border:`1.5px solid ${c.glL}` }}/>
-                    ))}
-                  </div>
+                <div style={{ height:isMobile?160:260, background:product.placeholderBg+"55", overflow:"hidden", position:"relative" }}>
+                  <img src={product.images[0]} alt={product.name} style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }} onError={e=>e.target.style.display="none"}/>
                   {product.badge && (
                     <div style={{ position:"absolute", top:10, left:10, background:c.sageD, color:"#fff", fontSize:10, fontFamily:"'Poppins',sans-serif", fontWeight:700, padding:"3px 10px", borderRadius:20 }}>
                       {product.badge}
                     </div>
                   )}
+                  <div style={{ position:"absolute", bottom:10, left:12, display:"flex", gap:5 }}>
+                    {product.colorHex.slice(0,4).map((col,i)=>(
+                      <div key={i} style={{ width:12, height:12, borderRadius:"50%", background:col, border:`1.5px solid rgba(255,255,255,0.8)` }}/>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Info */}

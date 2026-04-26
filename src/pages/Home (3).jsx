@@ -10,26 +10,27 @@ function StarRow({ n }) {
 }
 
 function ProductCard({ product, isMobile }) {
-  const hasPhoto = false; // Set to true when real photos are added
   return (
     <Link to={`/product/${product.id}`} style={{ textDecoration:"none" }}>
       <div style={{ background:"#fff", borderRadius:8, overflow:"hidden", border:`1px solid ${c.glL}`, transition:"box-shadow 0.2s, transform 0.2s" }}
         onMouseEnter={e=>{ e.currentTarget.style.boxShadow="0 8px 32px rgba(90,102,96,0.13)"; e.currentTarget.style.transform="translateY(-4px)"; }}
         onMouseLeave={e=>{ e.currentTarget.style.boxShadow="none"; e.currentTarget.style.transform="none"; }}>
-        {/* Product image / placeholder */}
-        <div style={{ height:isMobile?160:220, position:"relative", background:product.placeholderBg+"55", display:"flex", alignItems:"center", justifyContent:"center", flexDirection:"column", gap:8 }}>
-          {hasPhoto
-            ? <img src={product.images[0]} alt={product.name} style={{ width:"100%", height:"100%", objectFit:"cover" }} />
-            : <span style={{ fontSize:isMobile?44:56 }}>{product.placeholderEmoji}</span>
-          }
+        {/* Product image */}
+        <div style={{ height:isMobile?160:220, position:"relative", background:product.placeholderBg+"55", overflow:"hidden" }}>
+          <img
+            src={product.images[0]}
+            alt={product.name}
+            style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}
+            onError={e=>{ e.target.style.display="none"; }}
+          />
           {product.badge && (
             <div style={{ position:"absolute", top:12, left:12, background:c.sageD, color:"#fff", fontSize:10, fontFamily:"'Poppins',sans-serif", fontWeight:700, padding:"3px 10px", borderRadius:20, letterSpacing:"0.06em" }}>
               {product.badge}
             </div>
           )}
-          <div style={{ display:"flex", gap:5 }}>
+          <div style={{ position:"absolute", bottom:10, left:12, display:"flex", gap:5 }}>
             {product.colorHex.slice(0,4).map((col,i)=>(
-              <div key={i} style={{ width:11, height:11, borderRadius:"50%", background:col, border:`1.5px solid ${c.glL}` }}/>
+              <div key={i} style={{ width:11, height:11, borderRadius:"50%", background:col, border:`1.5px solid rgba(255,255,255,0.8)` }}/>
             ))}
           </div>
         </div>
@@ -63,19 +64,21 @@ export default function Home() {
         <img
           src="/images/lifestyle-couple-forest.png"
           alt="Couple hiking in forest with Bug Away"
-          style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", opacity:0.35 }}
+          style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", opacity:0.5 }}
         />
+        {/* Dark overlay for text readability */}
+        <div style={{ position:"absolute", inset:0, background:"linear-gradient(90deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.2) 100%)" }} />
         <div style={{ position:"relative", zIndex:1, maxWidth:600 }}>
-          <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(255,255,255,0.85)", border:`1px solid ${c.mist}`, borderRadius:20, padding:"6px 14px", fontSize:11, color:c.sageD, fontFamily:"'Poppins',sans-serif", fontWeight:600, marginBottom:20 }}>
+          <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(255,255,255,0.15)", backdropFilter:"blur(8px)", border:`1px solid rgba(255,255,255,0.3)`, borderRadius:20, padding:"6px 14px", fontSize:11, color:"#ffffff", fontFamily:"'Poppins',sans-serif", fontWeight:600, marginBottom:20 }}>
             🌿 Insecticide-free · Tick-proof · Eco-responsible
           </div>
-          <h1 style={{ fontSize:isMobile?36:58, fontWeight:800, lineHeight:1.08, color:c.dark, marginBottom:16, letterSpacing:"-0.02em" }}>
-            Enjoy the Outdoors.<br/><span style={{ color:c.sageD }}>Safe & Carefree.</span>
+          <h1 style={{ fontSize:isMobile?36:58, fontWeight:800, lineHeight:1.08, color:"#ffffff", marginBottom:16, letterSpacing:"-0.02em" }}>
+            Enjoy the Outdoors.<br/><span style={{ color:c.sageL }}>Safe & Carefree.</span>
           </h1>
-          <p style={{ fontSize:isMobile?14:16, color:c.grayD, fontFamily:"'Poppins',sans-serif", fontWeight:300, lineHeight:1.75, maxWidth:460, marginBottom:12 }}>
+          <p style={{ fontSize:isMobile?14:16, color:"rgba(255,255,255,0.88)", fontFamily:"'Poppins',sans-serif", fontWeight:300, lineHeight:1.75, maxWidth:460, marginBottom:12 }}>
             Lightweight mesh clothing that physically blocks ticks and insects. No DEET, no chemicals — just a smart layer between you and nature.
           </p>
-          <p style={{ fontSize:13, color:c.sageD, fontFamily:"'Poppins',sans-serif", fontWeight:500, marginBottom:32, fontStyle:"italic" }}>
+          <p style={{ fontSize:13, color:c.sageL, fontFamily:"'Poppins',sans-serif", fontWeight:500, marginBottom:32, fontStyle:"italic" }}>
             "Like a screen porch for your body 🌿"
           </p>
           <div style={{ display:"flex", gap:12, flexWrap:"wrap" }}>
@@ -105,18 +108,21 @@ export default function Home() {
         <h2 style={{ ...H2, marginBottom:32 }}>Protection for everyone</h2>
         <div style={{ display:"grid", gridTemplateColumns:isMobile?"1fr 1fr":"repeat(4,1fr)", gap:isMobile?12:20 }}>
           {[
-            { label:"Men", emoji:"🧔", to:"/shop/men", bg:`linear-gradient(135deg,${c.skyL},${c.sky})` },
-            { label:"Women", emoji:"👩", to:"/shop/women", bg:`linear-gradient(135deg,${c.mist},${c.sageL})` },
-            { label:"Kids", emoji:"🧒", to:"/shop/kids", bg:`linear-gradient(135deg,${c.sageL},${c.sage})` },
-            { label:"Bundles", emoji:"🎒", to:"/shop/bundles", bg:`linear-gradient(135deg,${c.skyP},${c.mist})` },
+            { label:"Men", to:"/shop/men", img:"/images/product-men-jacket-front.png" },
+            { label:"Women", to:"/shop/women", img:"/images/lifestyle-women-outdoor.png" },
+            { label:"Kids", to:"/shop/kids", img:"/images/lifestyle-kids-forest.png" },
+            { label:"Bundles", to:"/shop/bundles", img:"/images/lifestyle-couple-forest.png" },
           ].map((cat,i)=>(
             <Link key={i} to={cat.to} style={{ textDecoration:"none" }}>
-              <div style={{ background:cat.bg, borderRadius:10, padding:isMobile?"28px 16px":"40px 24px", textAlign:"center", transition:"transform 0.2s", cursor:"pointer" }}
+              <div style={{ borderRadius:10, overflow:"hidden", position:"relative", height:isMobile?160:220, cursor:"pointer", transition:"transform 0.2s" }}
                 onMouseEnter={e=>e.currentTarget.style.transform="translateY(-4px)"}
                 onMouseLeave={e=>e.currentTarget.style.transform="none"}>
-                <div style={{ fontSize:isMobile?36:48, marginBottom:10 }}>{cat.emoji}</div>
-                <div style={{ fontSize:isMobile?14:16, fontWeight:700, color:c.dark }}>{cat.label}</div>
-                <div style={{ fontSize:11, fontFamily:"'Poppins',sans-serif", color:c.grayD, marginTop:4 }}>Shop →</div>
+                <img src={cat.img} alt={cat.label} style={{ width:"100%", height:"100%", objectFit:"cover", display:"block", filter:"brightness(0.75)" }}/>
+                <div style={{ position:"absolute", inset:0, background:"linear-gradient(0deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.1) 60%)" }}/>
+                <div style={{ position:"absolute", bottom:16, left:16 }}>
+                  <div style={{ fontSize:isMobile?16:18, fontWeight:800, color:"#fff", letterSpacing:"-0.01em" }}>{cat.label}</div>
+                  <div style={{ fontSize:11, fontFamily:"'Poppins',sans-serif", color:"rgba(255,255,255,0.8)", marginTop:2 }}>Shop →</div>
+                </div>
               </div>
             </Link>
           ))}
