@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, ScrollRestoration } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Nav from './components/Nav';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -8,6 +8,7 @@ import HowItWorks from './pages/HowItWorks';
 import About from './pages/About';
 import Blog from './pages/Blog';
 import FAQ from './pages/FAQ';
+import Legal from './pages/Legal';
 
 export default function App() {
   return (
@@ -31,6 +32,9 @@ export default function App() {
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<Blog />} />
           <Route path="/faq" element={<FAQ />} />
+          <Route path="/privacy" element={<Legal />} />
+          <Route path="/returns" element={<Legal />} />
+          <Route path="/terms" element={<Legal />} />
           <Route path="*" element={<Home />} />
         </Routes>
       </main>

@@ -65,9 +65,12 @@ export default function Footer() {
       </div>
 
       {/* Bottom bar */}
-      <div style={{ display:"flex", flexDirection:isMobile?"column":"row", justifyContent:"space-between", alignItems:isMobile?"flex-start":"center", gap:isMobile?8:0 }}>
+      <div style={{ display:"flex", flexDirection:isMobile?"column":"row", justifyContent:"space-between", alignItems:isMobile?"flex-start":"center", gap:isMobile?12:0 }}>
         <span style={{ fontSize:11, color:c.grayD, fontFamily:"'Poppins',sans-serif" }}>© 2025 Bug Away. All rights reserved.</span>
-        <div style={{ display:"flex", gap:14 }}>
+        <div style={{ display:"flex", gap:16, flexWrap:"wrap", alignItems:"center" }}>
+          <Link to="/privacy" style={{ fontSize:11, color:c.grayD, fontFamily:"'Poppins',sans-serif", textDecoration:"none" }}>Privacy</Link>
+          <Link to="/returns" style={{ fontSize:11, color:c.grayD, fontFamily:"'Poppins',sans-serif", textDecoration:"none" }}>Returns</Link>
+          <Link to="/terms" style={{ fontSize:11, color:c.grayD, fontFamily:"'Poppins',sans-serif", textDecoration:"none" }}>Terms</Link>
           {["Visa","Mastercard","iDEAL","PayPal"].map(m=><span key={m} style={{ fontSize:11, color:c.grayD, fontFamily:"'Poppins',sans-serif" }}>{m}</span>)}
         </div>
       </div>
