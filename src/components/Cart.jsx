@@ -5,9 +5,9 @@ import { SHOPIFY_HANDLES } from "../shopify";
 
 const DOMAIN = "bug-away-3.myshopify.com";
 const FREE_SHIPPING_THRESHOLD = 79;
-const SINGLE_PRICE = 44.99;
-const COMBO_PRICE = 79.99;
-const SAVINGS = (SINGLE_PRICE * 2 - COMBO_PRICE).toFixed(2);
+const SINGLE_PRICE = 45;
+const COMBO_PRICE = 79;
+const SAVINGS = (SINGLE_PRICE * 2 - COMBO_PRICE).toFixed(0);
 
 export const CartContext = {
   items: [],
@@ -237,7 +237,7 @@ export default function Cart({ isOpen, onClose }) {
               <strong style={{ color: c.sageD }}>
                 € {remaining.toFixed(2).replace(".", ",")}
               </strong>{" "}
-              away from free US shipping!
+              away from a free gift!
             </p>
           ) : (
             <p
@@ -249,7 +249,7 @@ export default function Cart({ isOpen, onClose }) {
                 fontWeight: 600,
               }}
             >
-              🎉 You've unlocked free US shipping!
+              🎁 You've unlocked your free gift!
             </p>
           )}
           <div
@@ -293,7 +293,7 @@ export default function Cart({ isOpen, onClose }) {
                 color: c.gray,
               }}
             >
-              Free shipping at € {FREE_SHIPPING_THRESHOLD}
+              Free gift at € {FREE_SHIPPING_THRESHOLD}
             </span>
           </div>
         </div>
