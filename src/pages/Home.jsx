@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { c, useIsMobile, BTN, BTNO, H2, LBL } from '../theme';
 import { products, reviews, blogPosts } from '../data';
 import VideoBlock from '../components/VideoBlock';
-import { useCurrency, formatPrice } from '../currency';
+import { useCurrency, formatPrice } from '../currency.jsx';
 
 const pad = (m) => m ? "48px 20px" : "64px 60px";
 

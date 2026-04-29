@@ -4,7 +4,7 @@ import { c, useIsMobile, BTN, BTNO, H2, LBL } from '../theme';
 import { products, reviews } from '../data';
 import { SHOPIFY_IDS, SHOPIFY_HANDLES, fetchProduct, buyNow } from '../shopify';
 import { CartContext } from '../components/Cart';
-import { useCurrency, formatPrice } from '../currency';
+import { useCurrency, formatPrice } from '../currency.jsx';
 
 export default function Product({ onCartOpen }) {
   const { id } = useParams();

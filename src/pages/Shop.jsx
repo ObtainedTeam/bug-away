@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { c, useIsMobile, BTN, H2, LBL } from '../theme';
 import { products } from '../data';
-import { useCurrency, formatPrice } from '../currency';
+import { useCurrency, formatPrice } from '../currency.jsx';
 
 const categories = [
   { label:"All", key:"all" },

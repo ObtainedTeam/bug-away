@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { c, useIsMobile } from '../theme';
 import { SHOPIFY_HANDLES } from '../shopify';
-import { useCurrency, formatPrice } from '../currency';
+import { useCurrency, formatPrice } from '../currency.jsx';
 
 const DOMAIN = 'bug-away-3.myshopify.com';
 const FREE_SHIPPING_THRESHOLD = 79;
