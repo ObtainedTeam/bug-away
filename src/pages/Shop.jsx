@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { c, useIsMobile, BTN, H2, LBL } from '../theme';
 import { products } from '../data';
+import { useCurrency, formatPrice } from '../currency';
 
 const categories = [
   { label:"All", key:"all" },
@@ -16,6 +17,7 @@ export default function Shop() {
   const { category } = useParams();
   const [activeFilter, setActiveFilter] = useState(category || "all");
   const isMobile = useIsMobile();
+  const { symbol } = useCurrency();
 
   const visible = activeFilter === "all" ? products : products.filter(p => p.cat === activeFilter);
 
@@ -89,7 +91,7 @@ export default function Shop() {
                   <div style={{ fontSize:isMobile?13:15, fontWeight:700, color:c.dark, marginBottom:4 }}>{product.name}</div>
                   {!isMobile && <div style={{ fontSize:12, fontFamily:"'Poppins',sans-serif", color:c.gray, marginBottom:8, lineHeight:1.5 }}>{product.description.substring(0,80)}…</div>}
                   <div style={{ fontSize:15, color:c.grayD, fontFamily:"'Poppins',sans-serif", marginBottom:12, fontWeight:500 }}>
-                    € {product.price.toFixed(2).replace('.', ',')}
+                    {formatPrice(product.price, symbol)}
                   </div>
                   <div style={{ ...BTN, width:"100%", fontSize:11, padding:"10px 0", textAlign:"center", borderRadius:4 }}>
                     View Product
