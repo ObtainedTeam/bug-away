@@ -1,6 +1,7 @@
-import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { c, useIsMobile } from '../theme';
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { c, useIsMobile } from "../theme";
+import { CartContext } from "./Cart";
 
 const navLinks = [
   { label: "Shop", to: "/shop" },
@@ -10,13 +11,21 @@ const navLinks = [
   { label: "FAQ", to: "/faq" },
 ];
 
-export default function Nav() {
+export default function Nav({ onCartOpen }) {
   const [open, setOpen] = useState(false);
-  const [cartCount] = useState(0);
+  const [cartCount, setCartCount] = useState(0);
   const location = useLocation();
   const isMobile = useIsMobile();
 
-  const isActive = (to) => location.pathname === to || location.pathname.startsWith(to + '/');
+  useEffect(() => {
+    const updateCount = (items) =>
+      setCartCount(items.reduce((s, i) => s + i.quantity, 0));
+    CartContext.subscribe(updateCount);
+    return () => CartContext.unsubscribe(updateCount);
+  }, []);
+
+  const isActive = (to) =>
+    location.pathname === to || location.pathname.startsWith(to + "/");
 
   const linkStyle = (to) => ({
     fontFamily: "'Poppins',sans-serif",
@@ -26,7 +35,9 @@ export default function Nav() {
     textTransform: "uppercase",
     color: isActive(to) ? c.sageD : c.grayD,
     textDecoration: "none",
-    borderBottom: isActive(to) ? `2px solid ${c.sageD}` : "2px solid transparent",
+    borderBottom: isActive(to)
+      ? `2px solid ${c.sageD}`
+      : "2px solid transparent",
     paddingBottom: 4,
     transition: "color 0.15s",
   });
@@ -34,33 +45,118 @@ export default function Nav() {
   return (
     <>
       {/* Topbar */}
-      <div style={{ background:c.sageD, color:"#fff", textAlign:"center", padding:"8px 16px", fontSize:11, fontFamily:"'Poppins',sans-serif", letterSpacing:"0.05em" }}>
+      <div
+        style={{
+          background: c.sageD,
+          color: "#fff",
+          textAlign: "center",
+          padding: "8px 16px",
+          fontSize: 11,
+          fontFamily: "'Poppins',sans-serif",
+          letterSpacing: "0.05em",
+        }}
+      >
         🛡️ Free shipping in the US · Chemical-free · Eco-responsible
       </div>
 
       {/* Main nav */}
-      <nav style={{ background:"#fff", borderBottom:`1px solid ${c.glL}`, padding:`0 ${isMobile?'16px':'40px'}`, display:"flex", alignItems:"center", justifyContent:"space-between", height:60, position:"sticky", top:0, zIndex:200, boxShadow:"0 2px 12px rgba(90,102,96,0.07)" }}>
-        <Link to="/" style={{ fontSize:19, fontWeight:800, letterSpacing:"0.1em", color:c.sageD, textTransform:"uppercase", textDecoration:"none" }}>
+      <nav
+        style={{
+          background: "#fff",
+          borderBottom: `1px solid ${c.glL}`,
+          padding: `0 ${isMobile ? "16px" : "40px"}`,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          height: 60,
+          position: "sticky",
+          top: 0,
+          zIndex: 200,
+          boxShadow: "0 2px 12px rgba(90,102,96,0.07)",
+        }}
+      >
+        <Link
+          to="/"
+          style={{
+            fontSize: 19,
+            fontWeight: 800,
+            letterSpacing: "0.1em",
+            color: c.sageD,
+            textTransform: "uppercase",
+            textDecoration: "none",
+          }}
+        >
           Bug Away
         </Link>
 
+        {/* Desktop nav */}
         {!isMobile && (
-          <ul style={{ display:"flex", gap:28, listStyle:"none", margin:0, padding:0 }}>
-            {navLinks.map(n => (
+          <ul
+            style={{
+              display: "flex",
+              gap: 28,
+              listStyle: "none",
+              margin: 0,
+              padding: 0,
+            }}
+          >
+            {navLinks.map((n) => (
               <li key={n.to}>
-                <Link to={n.to} style={linkStyle(n.to)}>{n.label}</Link>
+                <Link to={n.to} style={linkStyle(n.to)}>
+                  {n.label}
+                </Link>
               </li>
             ))}
           </ul>
         )}
 
-        <div style={{ display:"flex", gap:14, alignItems:"center" }}>
-          <Link to="/shop" style={{ fontSize:18, textDecoration:"none" }}>🔍</Link>
-          <a href="https://bug-away-3.myshopify.com/cart" style={{ position:"relative", cursor:"pointer", textDecoration:"none", fontSize:18 }}>
+        <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
+          <Link to="/shop" style={{ fontSize: 18, textDecoration: "none" }}>
+            🔍
+          </Link>
+
+          {/* Cart button with badge */}
+          <button
+            onClick={onCartOpen}
+            style={{
+              position: "relative",
+              cursor: "pointer",
+              background: "none",
+              border: "none",
+              fontSize: 18,
+              padding: 0,
+            }}
+          >
             🛒
-          </a>
+            {cartCount > 0 && (
+              <span
+                style={{
+                  position: "absolute",
+                  top: -6,
+                  right: -6,
+                  background: c.sageD,
+                  color: "#fff",
+                  borderRadius: "50%",
+                  width: 17,
+                  height: 17,
+                  fontSize: 10,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontFamily: "'Poppins',sans-serif",
+                  fontWeight: 700,
+                }}
+              >
+                {cartCount}
+              </span>
+            )}
+          </button>
+
           {isMobile && (
-            <span style={{ fontSize:22, cursor:"pointer", color:c.dark }} onClick={() => setOpen(!open)}>
+            <span
+              style={{ fontSize: 22, cursor: "pointer", color: c.dark }}
+              onClick={() => setOpen(!open)}
+            >
               {open ? "✕" : "☰"}
             </span>
           )}
@@ -69,13 +165,30 @@ export default function Nav() {
 
       {/* Mobile dropdown menu */}
       {isMobile && open && (
-        <div style={{ background:"#fff", borderBottom:`1px solid ${c.glL}`, position:"sticky", top:60, zIndex:199 }}>
-          {navLinks.map(n => (
+        <div
+          style={{
+            background: "#fff",
+            borderBottom: `1px solid ${c.glL}`,
+            position: "sticky",
+            top: 60,
+            zIndex: 199,
+          }}
+        >
+          {navLinks.map((n) => (
             <Link
               key={n.to}
               to={n.to}
               onClick={() => setOpen(false)}
-              style={{ display:"block", padding:"14px 20px", fontFamily:"'Poppins',sans-serif", fontSize:14, fontWeight:600, color:isActive(n.to)?c.sageD:c.dark, borderBottom:`1px solid ${c.glL}`, textDecoration:"none" }}
+              style={{
+                display: "block",
+                padding: "14px 20px",
+                fontFamily: "'Poppins',sans-serif",
+                fontSize: 14,
+                fontWeight: 600,
+                color: isActive(n.to) ? c.sageD : c.dark,
+                borderBottom: `1px solid ${c.glL}`,
+                textDecoration: "none",
+              }}
             >
               {n.label}
             </Link>
@@ -83,7 +196,21 @@ export default function Nav() {
           <Link
             to="/shop"
             onClick={() => setOpen(false)}
-            style={{ display:"block", margin:"12px 16px", background:c.sageD, color:"#fff", padding:"12px 20px", borderRadius:4, fontFamily:"'Poppins',sans-serif", fontSize:12, fontWeight:600, textTransform:"uppercase", letterSpacing:"0.08em", textDecoration:"none", textAlign:"center" }}
+            style={{
+              display: "block",
+              margin: "12px 16px",
+              background: c.sageD,
+              color: "#fff",
+              padding: "12px 20px",
+              borderRadius: 4,
+              fontFamily: "'Poppins',sans-serif",
+              fontSize: 12,
+              fontWeight: 600,
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
+              textDecoration: "none",
+              textAlign: "center",
+            }}
           >
             Shop Now
           </Link>

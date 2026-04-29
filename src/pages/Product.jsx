@@ -3,8 +3,9 @@ import { useParams, Link } from "react-router-dom";
 import { c, useIsMobile, BTN, BTNO, H2, LBL } from "../theme";
 import { products, reviews } from "../data";
 import { SHOPIFY_IDS, SHOPIFY_HANDLES, fetchProduct, buyNow } from "../shopify";
+import { CartContext } from "../components/Cart";
 
-export default function Product() {
+export default function Product({ onCartOpen }) {
   const { id } = useParams();
   const isMobile = useIsMobile();
   const product = products.find((p) => p.id === id) || products[0];
@@ -15,6 +16,7 @@ export default function Product() {
   const [activeTab, setActiveTab] = useState("description");
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [added, setAdded] = useState(false);
   const [shopifyProduct, setShopifyProduct] = useState(null);
   const [error, setError] = useState(null);
 
@@ -51,14 +53,16 @@ export default function Product() {
       return;
     }
     setLoading(true);
-    setError(null);
-    try {
-      const variant = getSelectedVariant();
-      await buyNow(product.id, variant?.id, quantity);
-    } catch (err) {
-      setError("Could not connect to checkout. Please try again.");
-      setLoading(false);
-    }
+    CartContext.add(
+      product,
+      selectedSize,
+      product.colors[selectedColor],
+      quantity,
+    );
+    setAdded(true);
+    setLoading(false);
+    if (onCartOpen) onCartOpen();
+    setTimeout(() => setAdded(false), 2000);
   };
 
   const currentPrice = shopifyProduct
@@ -503,7 +507,11 @@ export default function Product() {
                 cursor: loading ? "wait" : "pointer",
               }}
             >
-              {loading ? "Redirecting to checkout..." : "Add to Cart"}
+              {loading
+                ? "Adding..."
+                : added
+                  ? "✓ Added to cart!"
+                  : "Add to Cart"}
             </button>
             <button
               style={{

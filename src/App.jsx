@@ -1,32 +1,43 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Nav from './components/Nav';
-import Footer from './components/Footer';
-import Home from './pages/Home';
-import Shop from './pages/Shop';
-import Product from './pages/Product';
-import HowItWorks from './pages/HowItWorks';
-import About from './pages/About';
-import Blog from './pages/Blog';
-import FAQ from './pages/FAQ';
-import Legal from './pages/Legal';
+import { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Nav from "./components/Nav";
+import Footer from "./components/Footer";
+import Cart from "./components/Cart";
+import Home from "./pages/Home";
+import Shop from "./pages/Shop";
+import Product from "./pages/Product";
+import HowItWorks from "./pages/HowItWorks";
+import About from "./pages/About";
+import Blog from "./pages/Blog";
+import FAQ from "./pages/FAQ";
+import Legal from "./pages/Legal";
 
 export default function App() {
+  const [cartOpen, setCartOpen] = useState(false);
+
   return (
     <BrowserRouter>
-      <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=Poppins:wght@300;400;500;600&display=swap"
+        rel="stylesheet"
+      />
       <style>{`
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Archivo', sans-serif; background: #F7F9F8; overflow-x: hidden; }
         a { color: inherit; }
         img { max-width: 100%; }
       `}</style>
-      <Nav />
+      <Nav onCartOpen={() => setCartOpen(true)} />
+      <Cart isOpen={cartOpen} onClose={() => setCartOpen(false)} />
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/shop/:category" element={<Shop />} />
-          <Route path="/product/:id" element={<Product />} />
+          <Route
+            path="/product/:id"
+            element={<Product onCartOpen={() => setCartOpen(true)} />}
+          />
           <Route path="/how-it-works" element={<HowItWorks />} />
           <Route path="/about" element={<About />} />
           <Route path="/blog" element={<Blog />} />
