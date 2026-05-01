@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { c, useIsMobile } from "../theme";
-import { SHOPIFY_HANDLES } from "../shopify";
+import { SHOPIFY_HANDLES, getVariantId } from "../shopify";
 import { useCurrency, formatPrice } from "../currency.jsx";
 
 const DOMAIN = "bug-away-3.myshopify.com";
@@ -9,45 +9,6 @@ const FREE_GIFT_THRESHOLD = 79;
 const SINGLE_PRICE = 45;
 const COMBO_PRICE = 79;
 const SAVINGS = (SINGLE_PRICE * 2 - COMBO_PRICE).toFixed(0);
-
-// Variant IDs for direct checkout
-const JACKET_MEN_VARIANTS = {
-  "XS|Sage Green": 56675277242748,
-  "XS|Stone Gray": 56675277275516,
-  "XS|Arctic White": 56675277308284,
-  "S|Sage Green": 56675277373820,
-  "S|Stone Gray": 56675277406588,
-  "S|Arctic White": 56675277439356,
-  "M|Sage Green": 56675277504892,
-  "M|Stone Gray": 56675277537660,
-  "M|Arctic White": 56675277570428,
-  "L|Sage Green": 56675277635964,
-  "L|Stone Gray": 56675277668732,
-  "L|Arctic White": 56675277701500,
-  "XL|Sage Green": 56675277767036,
-  "XL|Stone Gray": 56675277799804,
-  "XL|Arctic White": 56675277832572,
-  "XXL|Sage Green": 56675277898108,
-  "XXL|Stone Gray": 56675277930876,
-  "XXL|Arctic White": 56675277963644,
-  "XXXL|Sage Green": 56675278029180,
-  "XXXL|Stone Gray": 56675278061948,
-  "XXXL|Arctic White": 56675278094716,
-};
-
-const DEFAULT_VARIANTS = {
-  "ba-pants-men": 56675310240124,
-  "ba-jacket-women": 56679167590780,
-  "ba-pants-women": 56675313156476,
-  "ba-kids-set": 56707992715644,
-};
-
-function getVariantId(item) {
-  if (item.product.id === "ba-jacket-men") {
-    return JACKET_MEN_VARIANTS[`${item.size}|${item.color}`] || 56675277504892;
-  }
-  return DEFAULT_VARIANTS[item.product.id] || null;
-}
 
 export const CartContext = {
   items: [],
@@ -162,21 +123,20 @@ export default function Cart({ isOpen, onClose }) {
     };
   }
 
-  // Build direct Shopify cart URL with all items
+  // Build cart URL with all items
   const handleCheckout = () => {
     if (items.length === 0) return;
     const cartParts = items
       .map((item) => {
-        const variantId = getVariantId(item);
+        const variantId = getVariantId(item.product.id, item.size, item.color);
         return variantId ? `${variantId}:${item.quantity}` : null;
       })
       .filter(Boolean)
       .join(",");
-
+    const discountParam = discountCode
+      ? `?discount=${encodeURIComponent(discountCode)}`
+      : "";
     if (cartParts) {
-      const discountParam = discountCode
-        ? `?discount=${encodeURIComponent(discountCode)}`
-        : "";
       window.location.href = `https://${DOMAIN}/cart/${cartParts}${discountParam}`;
     } else {
       const handle = SHOPIFY_HANDLES[items[0].product.id];

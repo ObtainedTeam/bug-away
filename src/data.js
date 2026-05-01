@@ -75,7 +75,7 @@ export const products = [
     badge: "Best Seller",
     colors: ["Sage Green", "Stone Gray", "Arctic White"],
     colorHex: ["#6B9E7A", "#9E9E8F", "#F5F5F0"],
-    sizes: ["XS", "S", "M", "L", "XL", "XXL", "XXXL"],
+    sizes: ["XS", "S", "M", "L"],
     desc: "Full-coverage mesh jacket for women. Slim tailored fit, drawstring hood and zip closure. Perfect as a base layer for hiking, gardening and outdoor adventures. Chemical-free and breathable.",
     features: [
       "Slim tailored fit",
@@ -104,7 +104,7 @@ export const products = [
     badge: null,
     colors: ["Sage Green", "Stone Gray", "Arctic White"],
     colorHex: ["#6B9E7A", "#9E9E8F", "#F5F5F0"],
-    sizes: ["XS", "S", "M", "L", "XL", "XXL", "XXXL"],
+    sizes: ["XS", "S", "M", "L"],
     desc: "Tick-protection pants for women with integrated foot cover. One continuous piece of mesh from waist to toe — no gap, no entry point. Tailored fit, lightweight and breathable.",
     features: [
       "Integrated foot cover",
@@ -133,7 +133,7 @@ export const products = [
     badge: "Best Seller",
     colors: ["Sage Green", "Stone Gray", "Arctic White"],
     colorHex: ["#6B9E7A", "#9E9E8F", "#F5F5F0"],
-    sizes: ["XS", "S", "M", "L", "XL", "XXL", "XXXL"],
+    sizes: ["XS", "S", "M", "L"],
     desc: "Complete tick protection in one set. Bug Away Jacket + Bug Away Pants bundled together — save €11 compared to buying separately. Chemical-free, lightweight noseeum-grade mesh with integrated foot cover.",
     features: [
       "Jacket + pants included",
@@ -161,9 +161,9 @@ export const products = [
     category: "KIDS",
     price: 79,
     badge: "Best Seller",
-    colors: ["Sage Green", "Sky Blue"],
-    colorHex: ["#6B9E7A", "#8BB8C8"],
-    sizes: ["2-4Y", "4-6Y", "6-8Y", "8-10Y", "10-12Y"],
+    colors: ["Sage Green", "Stone Gray", "Arctic White"],
+    colorHex: ["#6B9E7A", "#9E9E8F", "#F5F5F0"],
+    sizes: ["4-6Y", "6-8Y", "8-10Y", "10-12Y"],
     desc: "Complete tick protection for kids. Jacket + pants set designed for safe outdoor play. Safe elastic at the hood (no drawstrings), integrated foot cover and extra pockets for nature treasures.",
     features: [
       "Jacket + pants included",
