@@ -1,99 +1,109 @@
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { c, useIsMobile, BTN, H2, LBL } from '../theme';
 import { products } from '../data';
-import { useCurrency, formatPrice } from '../currency.jsx';
+import { useCurrency } from '../currency.jsx';
 
-const categories = [
-  { label:"All", key:"all" },
-  { label:"Men", key:"men" },
-  { label:"Women", key:"women" },
-  { label:"Kids", key:"kids" },
-  { label:"Bundles", key:"bundles" },
-  { label:"Extras", key:"extras" },
+const CATS = [
+  { label: "All", key: "all" },
+  { label: "Men", key: "MEN" },
+  { label: "Women", key: "WOMEN" },
+  { label: "Kids", key: "KIDS" },
+  { label: "Bundles", key: "BUNDLES" },
 ];
 
 export default function Shop() {
-  const { category } = useParams();
-  const [activeFilter, setActiveFilter] = useState(category || "all");
+  const [activeFilter, setActiveFilter] = useState("all");
   const isMobile = useIsMobile();
   const { symbol } = useCurrency();
 
-  const visible = activeFilter === "all" ? products : products.filter(p => p.cat === activeFilter);
-
-  const catLabel = categories.find(c => c.key === activeFilter)?.label || "All Products";
+  const visible = activeFilter === "all"
+    ? products
+    : products.filter(p => p.category === activeFilter);
 
   return (
-    <div style={{ fontFamily:"'Archivo',sans-serif", color:c.dark }}>
-
-      {/* Shop header */}
-      <div style={{ background:`linear-gradient(135deg,${c.skyP} 0%,${c.mist} 100%)`, padding:isMobile?"40px 20px":"56px 60px", position:"relative", overflow:"hidden" }}>
-        <img src="/images/lifestyle-couple-forest.png" alt="Shop" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", opacity:0.2 }}/>
-        <div style={{ position:"relative", zIndex:1 }}>
-        <div style={LBL}>Shop</div>
-        <h1 style={{ fontSize:isMobile?28:38, fontWeight:800, color:c.dark, marginBottom:8, letterSpacing:"-0.02em" }}>{catLabel}</h1>
-        <p style={{ fontSize:13, fontFamily:"'Poppins',sans-serif", color:c.grayD, fontWeight:300 }}>
-          Tick-proof mesh clothing — chemical-free, lightweight, always effective.
-        </p>
+    <div>
+      {/* HERO */}
+      <div style={{
+        position: "relative", minHeight: isMobile ? 200 : 280,
+        background: `linear-gradient(to right, rgba(30,50,40,.72) 55%, rgba(30,50,40,.3) 100%), url('/images/combo-lifestyle-couple-forest-green.jpg') center/cover no-repeat`,
+        display: "flex", alignItems: "center",
+      }}>
+        <div style={{ padding: isMobile ? "40px 24px" : "60px 64px", color: "#fff" }}>
+          <div style={{ ...LBL, color: "rgba(255,255,255,0.7)", marginBottom: 8 }}>COLLECTION</div>
+          <h1 style={{ fontFamily: "Archivo, sans-serif", fontSize: isMobile ? 28 : 40, fontWeight: 900, margin: 0 }}>
+            Shop Bug Away
+          </h1>
+          <p style={{ fontSize: 14, opacity: 0.85, marginTop: 8 }}>
+            Tick-proof mesh clothing — chemical-free, lightweight, always effective.
+          </p>
         </div>
       </div>
 
-      {/* Filter tabs */}
-      <div style={{ background:"#fff", borderBottom:`1px solid ${c.glL}`, padding:`12px ${isMobile?"16px":"60px"}`, display:"flex", gap:8, flexWrap:"wrap", overflowX:"auto" }}>
-        {categories.map(cat => (
-          <button
-            key={cat.key}
-            onClick={() => setActiveFilter(cat.key)}
-            style={{
-              padding:"7px 18px", borderRadius:24, whiteSpace:"nowrap",
-              border:`1.5px solid ${activeFilter===cat.key?c.sageD:c.glL}`,
-              background:activeFilter===cat.key?c.sageD:"#fff",
-              color:activeFilter===cat.key?"#fff":c.grayD,
-              fontSize:12, fontFamily:"'Poppins',sans-serif", fontWeight:600, cursor:"pointer",
-            }}
-          >
+      {/* FILTER TABS */}
+      <div style={{ background: "#fff", borderBottom: "1px solid #e8ede9", padding: `12px ${isMobile ? "16px" : "40px"}`, display: "flex", gap: 8, flexWrap: "wrap", overflowX: "auto" }}>
+        {CATS.map(cat => (
+          <button key={cat.key} onClick={() => setActiveFilter(cat.key)} style={{
+            padding: "7px 18px", borderRadius: 24, whiteSpace: "nowrap",
+            border: `1.5px solid ${activeFilter === cat.key ? c.sageD : "#e0e8e3"}`,
+            background: activeFilter === cat.key ? c.sageD : "#fff",
+            color: activeFilter === cat.key ? "#fff" : "#555",
+            fontSize: 12, fontWeight: 600, cursor: "pointer",
+          }}>
             {cat.label}
           </button>
         ))}
-        <span style={{ marginLeft:"auto", fontSize:12, fontFamily:"'Poppins',sans-serif", color:c.gray, alignSelf:"center", whiteSpace:"nowrap" }}>
+        <span style={{ marginLeft: "auto", fontSize: 12, color: "#999", alignSelf: "center", whiteSpace: "nowrap" }}>
           {visible.length} product{visible.length !== 1 ? "s" : ""}
         </span>
       </div>
 
-      {/* Product grid */}
-      <section style={{ padding:isMobile?"24px 16px":"40px 60px" }}>
-        <div style={{ display:"grid", gridTemplateColumns:isMobile?"repeat(2,1fr)":"repeat(3,1fr)", gap:isMobile?12:24 }}>
+      {/* PRODUCT GRID */}
+      <section style={{ padding: isMobile ? "24px 16px" : "40px 40px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2,1fr)" : "repeat(3,1fr)", gap: isMobile ? 12 : 24 }}>
           {visible.map(product => (
-            <Link key={product.id} to={`/product/${product.id}`} style={{ textDecoration:"none" }}>
-              <div
-                style={{ background:"#fff", borderRadius:8, overflow:"hidden", border:`1px solid ${c.glL}`, transition:"box-shadow 0.2s,transform 0.2s" }}
-                onMouseEnter={e=>{ e.currentTarget.style.boxShadow="0 8px 32px rgba(90,102,96,0.13)"; e.currentTarget.style.transform="translateY(-4px)"; }}
-                onMouseLeave={e=>{ e.currentTarget.style.boxShadow="none"; e.currentTarget.style.transform="none"; }}
+            <Link key={product.id} to={`/product/${product.id}`} style={{ textDecoration: "none" }}>
+              <div style={{ background: "#fff", borderRadius: 12, overflow: "hidden", border: "1px solid #e8ede9", transition: "box-shadow 0.2s, transform 0.2s" }}
+                onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 8px 32px rgba(0,0,0,0.10)"; e.currentTarget.style.transform = "translateY(-4px)"; }}
+                onMouseLeave={e => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.transform = "none"; }}
               >
-                {/* Image */}
-                <div style={{ height:isMobile?160:260, background:product.placeholderBg+"55", overflow:"hidden", position:"relative" }}>
-                  <img src={product.images[0]} alt={product.name} style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }} onError={e=>e.target.style.display="none"}/>
+                {/* IMAGE */}
+                <div style={{ height: isMobile ? 160 : 260, background: "#f3f4f2", overflow: "hidden", position: "relative" }}>
+                  <img src={product.images[0]} alt={product.name}
+                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                    onError={e => e.target.style.display = "none"}
+                  />
                   {product.badge && (
-                    <div style={{ position:"absolute", top:10, left:10, background:c.sageD, color:"#fff", fontSize:10, fontFamily:"'Poppins',sans-serif", fontWeight:700, padding:"3px 10px", borderRadius:20 }}>
+                    <div style={{ position: "absolute", top: 10, left: 10, background: c.sageD, color: "#fff", fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 20 }}>
                       {product.badge}
                     </div>
                   )}
-                  <div style={{ position:"absolute", bottom:10, left:12, display:"flex", gap:5 }}>
-                    {product.colorHex.slice(0,4).map((col,i)=>(
-                      <div key={i} style={{ width:12, height:12, borderRadius:"50%", background:col, border:`1.5px solid rgba(255,255,255,0.8)` }}/>
-                    ))}
-                  </div>
+                  {product.colorHex && (
+                    <div style={{ position: "absolute", bottom: 10, left: 12, display: "flex", gap: 5 }}>
+                      {product.colorHex.slice(0, 4).map((col, i) => (
+                        <div key={i} style={{ width: 12, height: 12, borderRadius: "50%", background: col, border: "1.5px solid rgba(255,255,255,0.8)" }} />
+                      ))}
+                    </div>
+                  )}
                 </div>
 
-                {/* Info */}
-                <div style={{ padding:isMobile?"12px":"18px 20px 20px" }}>
-                  <div style={{ fontSize:10, letterSpacing:"0.12em", textTransform:"uppercase", color:c.sage, fontFamily:"'Poppins',sans-serif", fontWeight:700, marginBottom:3 }}>{product.tag}</div>
-                  <div style={{ fontSize:isMobile?13:15, fontWeight:700, color:c.dark, marginBottom:4 }}>{product.name}</div>
-                  {!isMobile && <div style={{ fontSize:12, fontFamily:"'Poppins',sans-serif", color:c.gray, marginBottom:8, lineHeight:1.5 }}>{product.description.substring(0,80)}…</div>}
-                  <div style={{ fontSize:15, color:c.grayD, fontFamily:"'Poppins',sans-serif", marginBottom:12, fontWeight:500 }}>
-                    {formatPrice(product.price, symbol)}
+                {/* INFO */}
+                <div style={{ padding: isMobile ? "12px" : "18px 20px 20px" }}>
+                  <div style={{ fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: c.sage, fontWeight: 700, marginBottom: 3 }}>
+                    {product.category}
                   </div>
-                  <div style={{ ...BTN, width:"100%", fontSize:11, padding:"10px 0", textAlign:"center", borderRadius:4 }}>
+                  <div style={{ fontSize: isMobile ? 13 : 15, fontWeight: 700, color: "#1a1a1a", marginBottom: 4 }}>
+                    {product.name}
+                  </div>
+                  {!isMobile && (
+                    <div style={{ fontSize: 12, color: "#888", marginBottom: 8, lineHeight: 1.5 }}>
+                      {product.desc.substring(0, 80)}…
+                    </div>
+                  )}
+                  <div style={{ fontSize: 15, color: "#333", marginBottom: 12, fontWeight: 600 }}>
+                    {symbol}{product.price}
+                  </div>
+                  <div style={{ ...BTN, width: "100%", fontSize: 11, padding: "10px 0", textAlign: "center", borderRadius: 6 }}>
                     View Product
                   </div>
                 </div>
@@ -103,19 +113,19 @@ export default function Shop() {
         </div>
 
         {visible.length === 0 && (
-          <div style={{ textAlign:"center", padding:"60px 0", color:c.gray, fontFamily:"'Poppins',sans-serif" }}>
+          <div style={{ textAlign: "center", padding: "60px 0", color: "#999" }}>
             No products found in this category.
           </div>
         )}
       </section>
 
-      {/* Tick protection banner */}
-      <div style={{ background:`linear-gradient(120deg,${c.skyP} 0%,${c.sageL}55 100%)`, margin:`0 ${isMobile?"16px":"60px"}`, marginBottom:isMobile?24:40, borderRadius:10, padding:isMobile?"24px 20px":"32px 40px", display:"flex", alignItems:"center", justifyContent:"space-between", gap:20, flexDirection:isMobile?"column":"row", border:`1px solid ${c.mist}` }}>
+      {/* SIZE GUIDE BANNER */}
+      <div style={{ background: "#F0F5F2", margin: `0 ${isMobile ? "16px" : "40px"}`, marginBottom: isMobile ? 24 : 40, borderRadius: 12, padding: isMobile ? "24px 20px" : "32px 40px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 20, flexDirection: isMobile ? "column" : "row" }}>
         <div>
-          <div style={{ fontSize:16, fontWeight:700, color:c.dark, marginBottom:6 }}>Not sure which size?</div>
-          <div style={{ fontSize:13, fontFamily:"'Poppins',sans-serif", color:c.grayD, fontWeight:300 }}>Check our size guide — Bug Away is designed to wear loosely over regular clothing.</div>
+          <div style={{ fontSize: 16, fontWeight: 700, color: "#1a1a1a", marginBottom: 6 }}>Not sure which size?</div>
+          <div style={{ fontSize: 13, color: "#666" }}>Check our size guide — Bug Away is designed to fit loosely as a base layer.</div>
         </div>
-        <Link to="/faq" style={{ ...BTN, whiteSpace:"nowrap", textDecoration:"none" }}>Size Guide</Link>
+        <Link to="/faq" style={{ ...BTN, whiteSpace: "nowrap", textDecoration: "none" }}>Size Guide</Link>
       </div>
     </div>
   );
