@@ -1,82 +1,121 @@
-// ABOUT PAGE
-import { Link } from 'react-router-dom';
-import { c, useIsMobile, BTN, H2, LBL } from '../theme';
+import { Link } from "react-router-dom";
+import { c, useIsMobile, BTN, H2, LBL } from "../theme";
 
-export function About() {
+const VALUES = [
+  { icon: "🌿", title: "Chemical-free", desc: "We believe protection shouldn't come at the cost of your health or the environment." },
+  { icon: "🔬", title: "Science-backed", desc: "Noseeum mesh technology used in medical and outdoor applications worldwide." },
+  { icon: "♻️", title: "Eco-responsible", desc: "No toxic runoff, no waste. Bug Away lasts for years and leaves no chemical trace." },
+  { icon: "🌍", title: "Made for everyone", desc: "Designed for hikers, families, gardeners — anyone who loves spending time outdoors." },
+];
+
+export default function About() {
   const isMobile = useIsMobile();
-  const pad = isMobile ? "48px 20px" : "64px 60px";
 
   return (
-    <div style={{ fontFamily:"'Archivo',sans-serif", color:c.dark }}>
-
-      {/* Hero */}
-      <section style={{ position:"relative", minHeight:isMobile?320:400, background:`linear-gradient(135deg,${c.skyP} 0%,${c.sageL} 100%)`, display:"flex", alignItems:"center", padding:isMobile?"56px 20px":"80px 60px", overflow:"hidden" }}>
-        <img src="/images/lifestyle-couple-forest.png" alt="Forest" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", opacity:0.2 }}/>
-        <div style={{ position:"relative", zIndex:1, maxWidth:580 }}>
-          <div style={LBL}>Our story</div>
-          <h1 style={{ fontSize:isMobile?30:48, fontWeight:800, color:c.dark, lineHeight:1.1, letterSpacing:"-0.02em", marginBottom:16 }}>
-            We love the outdoors.<br/><span style={{ color:c.sageD }}>Ticks? Not so much.</span>
+    <div>
+      {/* ── HERO ── */}
+      <section style={{
+        position: "relative", minHeight: isMobile ? 300 : 420,
+        background: `linear-gradient(to right, rgba(30,50,40,.72) 55%, rgba(30,50,40,.3) 100%), url('/images/combo-lifestyle-couple-forest-green.jpg') center/cover no-repeat`,
+        display: "flex", alignItems: "center",
+      }}>
+        <div style={{ maxWidth: 700, padding: isMobile ? "60px 24px" : "80px 64px", color: "#fff" }}>
+          <div style={{ ...LBL, color: "rgba(255,255,255,0.7)", marginBottom: 12 }}>OUR STORY</div>
+          <h1 style={{ fontFamily: "Archivo, sans-serif", fontSize: isMobile ? 32 : 48, fontWeight: 900, lineHeight: 1.15, margin: "0 0 16px" }}>
+            We built Bug Away<br /><span style={{ color: "#a8d5b5" }}>because we needed it.</span>
           </h1>
-          <p style={{ fontSize:isMobile?14:16, color:c.grayD, fontFamily:"'Poppins',sans-serif", fontWeight:300, lineHeight:1.75 }}>
-            Bug Away was born from a personal frustration: why should fear of ticks keep anyone indoors? We set out to create the most effective, chemical-free tick protection possible.
+          <p style={{ fontSize: 16, opacity: 0.88, maxWidth: 480, lineHeight: 1.65, margin: 0 }}>
+            After one too many tick checks mid-hike, we wondered: why isn't there a simple, chemical-free solution? Bug Away is that solution.
           </p>
         </div>
       </section>
 
-      {/* Story */}
-      <section style={{ padding:pad, background:"#fff" }}>
-        <div style={{ maxWidth:860, margin:"0 auto", display:"grid", gridTemplateColumns:isMobile?"1fr":"1fr 1fr", gap:isMobile?32:60, alignItems:"center" }}>
+      {/* ── ORIGIN STORY ── */}
+      <section style={{ background: "#fff", padding: isMobile ? "48px 20px" : "72px 40px" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 48, alignItems: "center" }}>
           <div>
-            <div style={LBL}>How it started</div>
-            <h2 style={{ ...H2, marginBottom:16 }}>A walk in the woods changed everything</h2>
-            <p style={{ fontSize:14, fontFamily:"'Poppins',sans-serif", color:c.grayD, lineHeight:1.9, marginBottom:14, fontWeight:300 }}>
-              After a family member was diagnosed with Lyme disease following a routine forest walk, we started researching tick protection options. What we found was disappointing: DEET sprays that wash off in rain, permethrin treatments that kill beneficial insects, and clothing that leaves gaps at the ankles.
+            <div style={{ ...LBL, marginBottom: 12 }}>HOW IT STARTED</div>
+            <h2 style={{ ...H2, marginBottom: 20 }}>One hike. One idea.</h2>
+            <p style={{ color: "#555", fontSize: 15, lineHeight: 1.75, marginBottom: 16 }}>
+              It started during a family hike in the Dutch forests. Every few minutes, someone was stopping to check for ticks — kids, dogs, adults. By the end of the trail, the walk had turned into a tick patrol.
             </p>
-            <p style={{ fontSize:14, fontFamily:"'Poppins',sans-serif", color:c.grayD, lineHeight:1.9, fontWeight:300 }}>
-              We knew there had to be a better way. The answer was surprisingly simple: fine mesh, worn as a base layer, with no gaps. Bug Away was born.
+            <p style={{ color: "#555", fontSize: 15, lineHeight: 1.75, marginBottom: 16 }}>
+              Chemical sprays felt wrong. Tucking trousers into socks was uncomfortable and unreliable. There had to be a better way.
+            </p>
+            <p style={{ color: "#555", fontSize: 15, lineHeight: 1.75, margin: 0 }}>
+              We found noseeum mesh — the same ultra-fine fabric used in medical-grade insect barriers — and designed a lightweight base layer around it. Bug Away was born.
             </p>
           </div>
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12 }}>
-            <img src="/images/lifestyle-kids-forest.png" alt="Forest" style={{ width:"100%", height:200, objectFit:"cover", borderRadius:8, filter:"brightness(0.85) saturate(0.9)" }}/>
-            <img src="/images/lifestyle-men-outdoor.png" alt="Nature" style={{ width:"100%", height:200, objectFit:"cover", borderRadius:8, marginTop:24, filter:"brightness(0.85) saturate(0.9)" }}/>
+          <div style={{ borderRadius: 20, overflow: "hidden", height: isMobile ? 280 : 400 }}>
+            <img src="/images/jacket-men-lifestyle-bicycle-forest.jpg" alt="Outdoor adventure with Bug Away"
+              style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </div>
         </div>
       </section>
 
-      {/* Mission */}
-      <section style={{ padding:pad, background:c.off }}>
-        <div style={{ maxWidth:860, margin:"0 auto" }}>
-          <div style={{ textAlign:"center", marginBottom:48 }}>
-            <div style={{ ...LBL, textAlign:"center" }}>Our mission</div>
-            <h2 style={{ ...H2, textAlign:"center", marginBottom:12 }}>Protect people. Respect nature.</h2>
-            <p style={{ fontSize:14, color:c.grayD, fontFamily:"'Poppins',sans-serif", fontWeight:300, lineHeight:1.85, maxWidth:540, margin:"0 auto" }}>
-              We believe outdoor life should be enjoyed without chemical sprays that harm wildlife, pollinators and the environment. Bug Away is our answer: 100% physical protection.
-            </p>
-          </div>
-          <div style={{ display:"grid", gridTemplateColumns:isMobile?"1fr":"repeat(3,1fr)", gap:isMobile?12:24 }}>
-            {[
-              { icon:"🌿", title:"Chemical-free always", text:"No DEET. No permethrin. No insecticides. We will never compromise on this — it's core to who we are." },
-              { icon:"♻️", title:"Eco-responsible materials", text:"Our mesh is made from recycled polyester. We're continuously working to reduce our environmental footprint." },
-              { icon:"🐝", title:"Safe for nature", text:"What you spray near your skin ends up in nature. Our physical barrier approach means zero chemical impact." },
-            ].map((v,i)=>(
-              <div key={i} style={{ background:"#fff", borderRadius:10, padding:"28px 24px", border:`1px solid ${c.glL}`, textAlign:"center" }}>
-                <div style={{ fontSize:32, marginBottom:12 }}>{v.icon}</div>
-                <div style={{ fontSize:15, fontWeight:700, color:c.dark, marginBottom:8 }}>{v.title}</div>
-                <div style={{ fontSize:13, fontFamily:"'Poppins',sans-serif", color:c.grayD, lineHeight:1.7 }}>{v.text}</div>
+      {/* ── MISSION ── */}
+      <section style={{ background: c.sage, padding: isMobile ? "48px 20px" : "72px 40px", textAlign: "center" }}>
+        <div style={{ maxWidth: 800, margin: "0 auto" }}>
+          <div style={{ ...LBL, color: "rgba(255,255,255,0.7)", marginBottom: 12 }}>OUR MISSION</div>
+          <h2 style={{ fontFamily: "Archivo, sans-serif", fontWeight: 900, fontSize: isMobile ? 28 : 40, color: "#fff", lineHeight: 1.2, marginBottom: 20 }}>
+            To make outdoor time safe, simple and chemical-free.
+          </h2>
+          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 16, lineHeight: 1.75, margin: 0 }}>
+            Every product we make is designed with one goal: to let you enjoy nature without fear. No sprays, no toxins, no compromise. Just you, the outdoors, and a smart layer between you and the bugs.
+          </p>
+        </div>
+      </section>
+
+      {/* ── VALUES ── */}
+      <section style={{ background: "#F7F9F8", padding: isMobile ? "48px 20px" : "72px 40px" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{ ...LBL, marginBottom: 8 }}>WHAT WE STAND FOR</div>
+          <h2 style={{ ...H2, marginBottom: 40 }}>Our values</h2>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(4,1fr)", gap: 24 }}>
+            {VALUES.map(({ icon, title, desc }) => (
+              <div key={title} style={{ background: "#fff", borderRadius: 16, padding: 24, textAlign: "center", boxShadow: "0 2px 10px rgba(0,0,0,0.05)" }}>
+                <div style={{ fontSize: 36, marginBottom: 12 }}>{icon}</div>
+                <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 8 }}>{title}</div>
+                <p style={{ color: "#666", fontSize: 13, lineHeight: 1.6, margin: 0 }}>{desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section style={{ padding:pad, background:`linear-gradient(135deg,${c.sageD} 0%,#3a6450 100%)`, textAlign:"center" }}>
-        <h2 style={{ ...H2, color:"#fff", marginBottom:12 }}>Join the Bug Away community</h2>
-        <p style={{ fontSize:14, color:c.mist, fontFamily:"'Poppins',sans-serif", fontWeight:300, marginBottom:28 }}>500+ outdoor enthusiasts already protect themselves the natural way.</p>
-        <Link to="/shop" style={{ ...BTN, background:"#fff", color:c.sageD, textDecoration:"none" }}>Shop Now</Link>
+      {/* ── PHOTO COLLAGE ── */}
+      <section style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr 1fr", gap: 0 }}>
+        {[
+          { src: "/images/combo-lifestyle-couple-forest-white.jpg", alt: "Couple in forest" },
+          { src: "/images/kids-lifestyle-jumping-stream.jpg", alt: "Kids outdoors" },
+          { src: "/images/jacket-women-lifestyle-meadow-sunset.jpg", alt: "Woman in meadow" },
+        ].map(({ src, alt }) => (
+          <div key={alt} style={{ height: isMobile ? 200 : 320, overflow: "hidden" }}>
+            <img src={src} alt={alt} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          </div>
+        ))}
+      </section>
+
+      {/* ── PRODUCT PROMISE ── */}
+      <section style={{ background: "#fff", padding: isMobile ? "48px 20px" : "72px 40px" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 48, alignItems: "center" }}>
+          <div style={{ borderRadius: 20, overflow: "hidden", height: isMobile ? 260 : 380 }}>
+            <img src="/images/combo-lifestyle-couple-coffee-tent.jpg" alt="Bug Away lifestyle"
+              style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          </div>
+          <div>
+            <div style={{ ...LBL, marginBottom: 12 }}>OUR PROMISE</div>
+            <h2 style={{ ...H2, marginBottom: 20 }}>Quality you can trust</h2>
+            <p style={{ color: "#555", fontSize: 15, lineHeight: 1.75, marginBottom: 16 }}>
+              Every Bug Away garment is made from certified noseeum-grade mesh with durable construction designed to last through hundreds of washes and outdoor seasons.
+            </p>
+            <p style={{ color: "#555", fontSize: 15, lineHeight: 1.75, marginBottom: 28 }}>
+              We stand behind our products with a 30-day return policy and a commitment to continuous improvement based on customer feedback.
+            </p>
+            <Link to="/shop" style={{ ...BTN, textDecoration: "none", display: "inline-block" }}>Explore the collection</Link>
+          </div>
+        </div>
       </section>
     </div>
   );
 }
-
-export default About;

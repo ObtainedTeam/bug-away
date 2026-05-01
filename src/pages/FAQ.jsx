@@ -1,135 +1,127 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { c, useIsMobile, BTN, H2, LBL } from '../theme';
-import { faqs } from '../data';
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { c, useIsMobile, H2, LBL, BTN } from "../theme";
 
-function Accordion({ q, a }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div style={{ borderBottom:`1px solid ${c.glL}` }}>
-      <button
-        onClick={() => setOpen(!open)}
-        style={{ width:"100%", textAlign:"left", padding:"16px 0", background:"none", border:"none", cursor:"pointer", display:"flex", justifyContent:"space-between", alignItems:"center", gap:16 }}
-      >
-        <span style={{ fontSize:14, fontWeight:600, color:c.dark, lineHeight:1.4 }}>{q}</span>
-        <span style={{ fontSize:20, color:c.sageD, flexShrink:0, transition:"transform 0.2s", transform:open?"rotate(45deg)":"none", display:"inline-block" }}>+</span>
-      </button>
-      {open && (
-        <div style={{ paddingBottom:16 }}>
-          <p style={{ fontSize:13, fontFamily:"'Poppins',sans-serif", color:c.grayD, lineHeight:1.85, fontWeight:300 }}>{a}</p>
-        </div>
-      )}
-    </div>
-  );
-}
+const FAQS = [
+  {
+    q: "How does Bug Away actually block ticks?",
+    a: "Bug Away uses noseeum-grade nylon mesh with openings smaller than 0.6mm. Ticks and other insects physically cannot fit through the fabric — it creates a complete barrier between your skin and the environment. No chemicals needed."
+  },
+  {
+    q: "Is it comfortable to wear underneath regular clothes?",
+    a: "Yes — Bug Away is designed as a base layer. The full set weighs under 80g and is made from breathable, moisture-wicking nylon mesh. Most wearers say they forget they have it on within minutes."
+  },
+  {
+    q: "What about the foot? Does the pants leg stay closed?",
+    a: "The pants leg and foot cover are one continuous piece of mesh — sewn together permanently. There is no gap, no elastic band, no separate sock. The mesh flows uninterrupted from the waistband down to the toe."
+  },
+  {
+    q: "Can children wear Bug Away?",
+    a: "Yes. Bug Away is chemical-free and safe for children of all ages. We offer kids sizing specifically designed for smaller frames. Many parents say it's the only tick protection solution that actually works for active kids."
+  },
+  {
+    q: "How do I wash Bug Away?",
+    a: "Machine wash cold on a gentle cycle. Do not tumble dry — air dry only. Bug Away is designed to last for years of regular use with proper care. No special detergents needed."
+  },
+  {
+    q: "Does it work against mosquitoes as well?",
+    a: "Yes. The mesh blocks mosquitoes, harvest mites (chiggers), gnats and other small insects in addition to ticks. It was originally developed as anti-mosquito netting, so mosquito protection is excellent."
+  },
+  {
+    q: "Is there a return policy?",
+    a: "Yes — we offer 30-day hassle-free returns. If you're not satisfied, contact us and we'll arrange a return or exchange. Products must be unworn and in original condition."
+  },
+  {
+    q: "How long does shipping take?",
+    a: "Netherlands: 2–4 business days. EU: 3–7 business days. North America: 10–18 business days. You will receive a tracking number once your order ships."
+  },
+  {
+    q: "What sizes are available?",
+    a: "We offer XS through XXXL for adults and S/M/L for kids. See the size guide below for exact measurements. When in doubt, size up — a slightly looser fit still provides full protection."
+  },
+];
 
 export default function FAQ() {
   const isMobile = useIsMobile();
-  const pad = isMobile ? "48px 20px" : "64px 60px";
-  const [activeCategory, setActiveCategory] = useState("all");
-
-  const categories = ["all", ...faqs.map(f => f.category)];
-  const visible = activeCategory === "all" ? faqs : faqs.filter(f => f.category === activeCategory);
+  const [open, setOpen] = useState(null);
 
   return (
-    <div style={{ fontFamily:"'Archivo',sans-serif", color:c.dark }}>
-
-      {/* Header */}
-      <section style={{ background:`linear-gradient(135deg,${c.skyP} 0%,${c.mist} 100%)`, padding:isMobile?"48px 20px":"64px 60px" }}>
-        <div style={LBL}>Support</div>
-        <h1 style={{ fontSize:isMobile?28:42, fontWeight:800, color:c.dark, marginBottom:12, letterSpacing:"-0.02em" }}>Frequently Asked Questions</h1>
-        <p style={{ fontSize:14, color:c.grayD, fontFamily:"'Poppins',sans-serif", fontWeight:300, maxWidth:480 }}>
-          Everything you need to know about Bug Away. Can't find your answer? Contact us anytime.
-        </p>
-      </section>
-
-      {/* Category filter */}
-      <div style={{ background:"#fff", borderBottom:`1px solid ${c.glL}`, padding:`12px ${isMobile?"16px":"60px"}`, display:"flex", gap:8, flexWrap:"wrap" }}>
-        {categories.map(cat => (
-          <button
-            key={cat}
-            onClick={() => setActiveCategory(cat)}
-            style={{ padding:"7px 16px", borderRadius:20, border:`1.5px solid ${activeCategory===cat?c.sageD:c.glL}`, background:activeCategory===cat?c.sageD:"#fff", color:activeCategory===cat?"#fff":c.grayD, fontSize:12, fontFamily:"'Poppins',sans-serif", fontWeight:600, cursor:"pointer", textTransform:"capitalize" }}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
-
-      {/* FAQ content */}
-      <section style={{ padding:pad }}>
-        <div style={{ maxWidth:760, margin:"0 auto" }}>
-          {visible.map((section, i) => (
-            <div key={i} style={{ marginBottom:40 }}>
-              <h2 style={{ fontSize:18, fontWeight:700, color:c.dark, marginBottom:4, paddingBottom:12, borderBottom:`2px solid ${c.sageD}` }}>
-                {section.category}
-              </h2>
-              {section.questions.map((item, j) => (
-                <Accordion key={j} q={item.q} a={item.a} />
-              ))}
-            </div>
-          ))}
+    <div>
+      {/* ── HERO ── */}
+      <section style={{
+        position: "relative", minHeight: isMobile ? 240 : 300,
+        background: `linear-gradient(to right, rgba(30,50,40,.75) 60%, rgba(30,50,40,.35) 100%), url('/images/combo-lifestyle-couple-forest-white.jpg') center/cover no-repeat`,
+        display: "flex", alignItems: "center",
+      }}>
+        <div style={{ maxWidth: 700, padding: isMobile ? "60px 24px" : "80px 64px", color: "#fff" }}>
+          <div style={{ ...LBL, color: "rgba(255,255,255,0.7)", marginBottom: 12 }}>SUPPORT</div>
+          <h1 style={{ fontFamily: "Archivo, sans-serif", fontSize: isMobile ? 32 : 48, fontWeight: 900, lineHeight: 1.15, margin: 0 }}>
+            Frequently asked<br /><span style={{ color: "#a8d5b5" }}>questions</span>
+          </h1>
         </div>
       </section>
 
-      {/* Size guide */}
-      <section style={{ padding:pad, background:"#fff", borderTop:`1px solid ${c.glL}` }}>
-        <div style={{ maxWidth:760, margin:"0 auto" }}>
-          <div style={LBL}>Size guide</div>
-          <h2 style={{ ...H2, marginBottom:8 }}>Find your perfect fit</h2>
-          <p style={{ fontSize:13, fontFamily:"'Poppins',sans-serif", color:c.grayD, marginBottom:24, fontWeight:300, lineHeight:1.7 }}>
-            Bug Away is designed to be worn loosely as a base layer over your regular clothing. When in doubt, size up. All measurements are in cm.
-          </p>
-          <div style={{ overflowX:"auto" }}>
-            <table style={{ width:"100%", borderCollapse:"collapse", fontFamily:"'Poppins',sans-serif", fontSize:13 }}>
-              <thead>
-                <tr style={{ background:c.dark, color:"#fff" }}>
-                  {["Size","Chest","Waist","Hip","Inseam"].map(h=>(
-                    <th key={h} style={{ padding:"10px 16px", textAlign:"left", fontWeight:600, letterSpacing:"0.04em", fontSize:11 }}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  ["XS","84–88","68–72","92–96","74"],
-                  ["S","88–92","72–76","96–100","76"],
-                  ["M","92–96","76–80","100–104","78"],
-                  ["L","96–100","80–84","104–108","80"],
-                  ["XL","100–104","84–88","108–112","82"],
-                  ["XXL","104–108","88–92","112–116","84"],
-                ].map((row,i)=>(
-                  <tr key={i} style={{ background:i%2===0?"#fff":c.off }}>
-                    {row.map((cell,j)=>(
-                      <td key={j} style={{ padding:"10px 16px", color:j===0?c.dark:c.grayD, fontWeight:j===0?700:400 }}>{cell}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p style={{ fontSize:12, fontFamily:"'Poppins',sans-serif", color:c.gray, marginTop:12, fontStyle:"italic" }}>
-            Tip: Measure yourself wearing the clothing you'll wear underneath Bug Away. Size up if you're between sizes.
-          </p>
-          {/* Size guide images */}
-          <div style={{ display:"grid", gridTemplateColumns:isMobile?"1fr":"1fr 1fr", gap:20, marginTop:28 }}>
-            <img src="/images/size-guide-jacket.png" alt="How to measure" style={{ width:"100%", borderRadius:8, border:`1px solid ${c.glL}` }} />
-            <div style={{ display:"flex", flexDirection:"column", gap:16 }}>
-              <img src="/images/size-guide-fittype.png" alt="Fit type" style={{ width:"100%", borderRadius:8, border:`1px solid ${c.glL}` }} />
-              <img src="/images/size-guide-chart.png" alt="Size chart" style={{ width:"100%", borderRadius:8, border:`1px solid ${c.glL}` }} />
-            </div>
+      {/* ── FAQ ACCORDION ── */}
+      <section style={{ background: "#fff", padding: isMobile ? "48px 20px" : "72px 40px" }}>
+        <div style={{ maxWidth: 780, margin: "0 auto" }}>
+          <div style={{ ...LBL, marginBottom: 8 }}>COMMON QUESTIONS</div>
+          <h2 style={{ ...H2, marginBottom: 40 }}>Everything you need to know</h2>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {FAQS.map(({ q, a }, i) => (
+              <div key={i} style={{ background: "#F7F9F8", borderRadius: 14, overflow: "hidden", border: open === i ? `2px solid ${c.sage}` : "2px solid transparent", transition: "border .2s" }}>
+                <button onClick={() => setOpen(open === i ? null : i)} style={{
+                  width: "100%", textAlign: "left", padding: "18px 20px", background: "none", border: "none",
+                  cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12,
+                }}>
+                  <span style={{ fontWeight: 700, fontSize: 15, color: "#1a1a1a", lineHeight: 1.4 }}>{q}</span>
+                  <span style={{ color: c.sage, fontSize: 20, flexShrink: 0, transition: "transform .2s", transform: open === i ? "rotate(45deg)" : "none" }}>+</span>
+                </button>
+                {open === i && (
+                  <div style={{ padding: "0 20px 18px", color: "#555", fontSize: 14, lineHeight: 1.75 }}>{a}</div>
+                )}
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Contact CTA */}
-      <section style={{ padding:pad, background:c.off }}>
-        <div style={{ maxWidth:600, margin:"0 auto", textAlign:"center" }}>
-          <div style={{ fontSize:40, marginBottom:16 }}>💬</div>
-          <h2 style={{ ...H2, marginBottom:8 }}>Still have questions?</h2>
-          <p style={{ fontSize:14, fontFamily:"'Poppins',sans-serif", color:c.grayD, fontWeight:300, lineHeight:1.7, marginBottom:24 }}>
-            We're happy to help. Send us a message and we'll get back to you within 24 hours.
+      {/* ── SIZE GUIDE ── */}
+      <section style={{ background: "#F7F9F8", padding: isMobile ? "48px 20px" : "72px 40px" }}>
+        <div style={{ maxWidth: 1000, margin: "0 auto" }}>
+          <div style={{ ...LBL, marginBottom: 8 }}>SIZING</div>
+          <h2 style={{ ...H2, marginBottom: 36 }}>Size guide</h2>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3,1fr)", gap: 20 }}>
+            {[
+              { src: "/images/size-guide-jacket.png", alt: "Jacket size guide — measurement points", label: "Jacket measurements" },
+              { src: "/images/size-guide-fittype.png", alt: "Fit type guide", label: "Fit type" },
+              { src: "/images/size-guide-chart.png", alt: "Full size chart", label: "Size chart (XS–XXXL)" },
+            ].map(({ src, alt, label }) => (
+              <div key={label} style={{ background: "#fff", borderRadius: 14, overflow: "hidden", boxShadow: "0 2px 10px rgba(0,0,0,0.06)" }}>
+                <img src={src} alt={alt} style={{ width: "100%", display: "block" }}
+                  onError={e => e.target.style.display = "none"}
+                />
+                <div style={{ padding: "12px 16px", fontSize: 13, fontWeight: 600, color: c.sageD }}>{label}</div>
+              </div>
+            ))}
+          </div>
+          <p style={{ color: "#888", fontSize: 13, marginTop: 20 }}>
+            When in doubt between two sizes, we recommend sizing up. A slightly looser fit still provides complete tick protection and is more comfortable for long wear.
           </p>
-          <a href="mailto:info@bugaway.com" style={{ ...BTN, textDecoration:"none" }}>Contact Us</a>
+        </div>
+      </section>
+
+      {/* ── CONTACT CTA ── */}
+      <section style={{ background: "#1a2e24", padding: isMobile ? "48px 20px" : "64px 40px", textAlign: "center" }}>
+        <div style={{ maxWidth: 520, margin: "0 auto" }}>
+          <h2 style={{ fontFamily: "Archivo, sans-serif", fontWeight: 900, fontSize: isMobile ? 26 : 32, color: "#fff", marginBottom: 12 }}>
+            Still have questions?
+          </h2>
+          <p style={{ color: "rgba(255,255,255,0.8)", fontSize: 15, marginBottom: 28 }}>
+            We're happy to help. Reach out via email and we'll get back to you within 24 hours.
+          </p>
+          <a href="mailto:hello@bugawaygear.com" style={{ ...BTN, textDecoration: "none", display: "inline-block" }}>
+            Contact us
+          </a>
         </div>
       </section>
     </div>

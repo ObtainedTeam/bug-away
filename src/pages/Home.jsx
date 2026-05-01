@@ -1,335 +1,337 @@
-import { Link } from 'react-router-dom';
-import { c, useIsMobile, BTN, BTNO, H2, LBL } from '../theme';
-import { products, reviews, blogPosts } from '../data';
-import VideoBlock from '../components/VideoBlock';
-import { useCurrency, formatPrice } from '../currency.jsx';
+import { useState, useEffect, useContext } from "react";
+import { Link } from "react-router-dom";
+import { c, useIsMobile, BTN, BTNO, H2, LBL } from "../theme";
+import { products, reviews } from "../data";
+import { CurrencyContext } from "../currency";
 
-const pad = (m) => m ? "48px 20px" : "64px 60px";
+// ── small helpers ────────────────────────────────────────────────────────────
+const Star = () => <span style={{ color: "#F59E0B" }}>★</span>;
 
-function StarRow({ n }) {
-  return <div style={{ display:"flex", gap:2 }}>{[...Array(n)].map((_,i)=><span key={i} style={{ color:"#F0B429", fontSize:14 }}>★</span>)}</div>;
-}
-
-function ProductCard({ product, isMobile, symbol }) {
+function ProductCard({ product }) {
+  const { symbol, convert } = useContext(CurrencyContext);
+  const isMobile = useIsMobile();
   return (
-    <Link to={`/product/${product.id}`} style={{ textDecoration:"none" }}>
-      <div style={{ background:"#fff", borderRadius:8, overflow:"hidden", border:`1px solid ${c.glL}`, transition:"box-shadow 0.2s, transform 0.2s" }}
-        onMouseEnter={e=>{ e.currentTarget.style.boxShadow="0 8px 32px rgba(90,102,96,0.13)"; e.currentTarget.style.transform="translateY(-4px)"; }}
-        onMouseLeave={e=>{ e.currentTarget.style.boxShadow="none"; e.currentTarget.style.transform="none"; }}>
-        {/* Product image */}
-        <div style={{ height:isMobile?160:220, position:"relative", background:product.placeholderBg+"55", overflow:"hidden" }}>
-          <img
-            src={product.images[0]}
-            alt={product.name}
-            style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}
-            onError={e=>{ e.target.style.display="none"; }}
+    <Link to={`/product/${product.id}`} style={{ textDecoration: "none", color: "inherit" }}>
+      <div style={{
+        background: "#fff", borderRadius: 16, overflow: "hidden",
+        boxShadow: "0 2px 12px rgba(0,0,0,0.07)", transition: "transform .2s, box-shadow .2s",
+        cursor: "pointer",
+      }}
+        onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 8px 24px rgba(0,0,0,0.13)"; }}
+        onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.07)"; }}
+      >
+        <div style={{ position: "relative", height: isMobile ? 180 : 240, background: "#f3f4f2", overflow: "hidden" }}>
+          <img src={product.images[0]} alt={product.name}
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            onError={e => { e.target.style.display = "none"; }}
           />
           {product.badge && (
-            <div style={{ position:"absolute", top:12, left:12, background:c.sageD, color:"#fff", fontSize:10, fontFamily:"'Poppins',sans-serif", fontWeight:700, padding:"3px 10px", borderRadius:20, letterSpacing:"0.06em" }}>
+            <span style={{ position: "absolute", top: 12, left: 12, background: c.sage, color: "#fff", borderRadius: 20, padding: "4px 12px", fontSize: 11, fontWeight: 700 }}>
               {product.badge}
-            </div>
+            </span>
           )}
-          <div style={{ position:"absolute", bottom:10, left:12, display:"flex", gap:5 }}>
-            {product.colorHex.slice(0,4).map((col,i)=>(
-              <div key={i} style={{ width:11, height:11, borderRadius:"50%", background:col, border:`1.5px solid rgba(255,255,255,0.8)` }}/>
-            ))}
-          </div>
         </div>
-        <div style={{ padding:isMobile?"12px 14px 16px":"16px 18px 20px" }}>
-          <div style={{ fontSize:10, letterSpacing:"0.12em", textTransform:"uppercase", color:c.sage, fontFamily:"'Poppins',sans-serif", fontWeight:700, marginBottom:3 }}>{product.tag}</div>
-          <div style={{ fontSize:isMobile?13:15, fontWeight:700, color:c.dark, marginBottom:4 }}>{product.name}</div>
-          <div style={{ fontSize:14, color:c.grayD, fontFamily:"'Poppins',sans-serif", marginBottom:12, fontWeight:500 }}>{formatPrice(product.price, symbol)}</div>
-          <div style={{ ...BTN, width:"100%", fontSize:11, padding:"10px 0", textAlign:"center", borderRadius:4 }}>Add to Cart</div>
+        <div style={{ padding: "16px 16px 20px" }}>
+          <div style={{ fontSize: 11, color: c.sage, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>{product.category}</div>
+          <div style={{ fontFamily: "Archivo, sans-serif", fontWeight: 700, fontSize: 15, marginBottom: 8 }}>{product.name}</div>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span style={{ fontWeight: 800, fontSize: 16, color: c.sageD }}>{symbol}{convert(product.price)}</span>
+            <span style={{ ...BTN, fontSize: 12, padding: "6px 14px" }}>View</span>
+          </div>
         </div>
       </div>
     </Link>
   );
 }
 
+// ── testimonial strip ─────────────────────────────────────────────────────────
+const TESTIMONIALS = [
+  { name: "Maaike V.", stars: 5, text: "Finally something that actually keeps ticks away. Wore it hiking all weekend — not a single bite.", location: "Netherlands" },
+  { name: "James R.", stars: 5, text: "My whole family wears these now. Kids can play in the forest without us constantly checking.", location: "Canada" },
+  { name: "Sophie L.", stars: 5, text: "The integrated foot cover is genius. No more tucking trousers into socks.", location: "Germany" },
+  { name: "Bart M.", stars: 4, text: "Lightweight, breathable, does exactly what it says. Great for gardening too.", location: "Belgium" },
+];
+
+// ── disease cards ─────────────────────────────────────────────────────────────
+const DISEASES = [
+  { name: "Lyme Disease", severity: "High Risk", color: "#dc2626", desc: "Caused by Borrelia bacteria transmitted through tick bites. Can lead to chronic fatigue, joint pain and neurological issues if untreated." },
+  { name: "TBE (Tick-Borne Encephalitis)", severity: "Serious", color: "#d97706", desc: "Viral infection affecting the nervous system. No cure — prevention is the only protection." },
+  { name: "Anaplasmosis", severity: "Moderate Risk", color: "#ca8a04", desc: "Bacterial infection causing fever, headache and muscle aches. Increasingly common in Europe and North America." },
+  { name: "Babesiosis", severity: "Moderate Risk", color: "#ca8a04", desc: "Parasitic infection of red blood cells. Can be life-threatening in elderly or immunocompromised individuals." },
+];
+
 export default function Home() {
   const isMobile = useIsMobile();
-  const { symbol } = useCurrency();
-  const featuredProducts = products.slice(0, isMobile ? 4 : 4);
+  const { symbol, convert } = useContext(CurrencyContext);
+  const bestsellers = products.filter(p => p.badge === "Best Seller").slice(0, 4);
 
   return (
-    <div style={{ fontFamily:"'Archivo',sans-serif", color:c.dark }}>
-
-      {/* ── HERO ─────────────────────────────────────────── */}
+    <div>
+      {/* ── HERO ── */}
       <section style={{
-        position:"relative", minHeight:isMobile?480:560,
-        background:`linear-gradient(135deg,${c.skyP} 0%,${c.mist} 45%,${c.sageL} 100%)`,
-        display:"flex", alignItems:"center",
-        padding:isMobile?"60px 20px 48px":"0 60px",
-        overflow:"hidden",
+        position: "relative", minHeight: isMobile ? 420 : 520,
+        background: `linear-gradient(to right, rgba(30,50,40,.72) 55%, rgba(30,50,40,.3) 100%), url('/images/combo-lifestyle-couple-forest-green.jpg') center/cover no-repeat`,
+        display: "flex", alignItems: "center",
       }}>
-        {/* Background nature image */}
-        <img
-          src="/images/lifestyle-couple-forest.png"
-          alt="Couple hiking in forest with Bug Away"
-          style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", opacity:0.5 }}
-        />
-        {/* Dark overlay for text readability */}
-        <div style={{ position:"absolute", inset:0, background:"linear-gradient(90deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.2) 100%)" }} />
-        <div style={{ position:"relative", zIndex:1, maxWidth:600 }}>
-          <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(255,255,255,0.15)", backdropFilter:"blur(8px)", border:`1px solid rgba(255,255,255,0.3)`, borderRadius:20, padding:"6px 14px", fontSize:11, color:"#ffffff", fontFamily:"'Poppins',sans-serif", fontWeight:600, marginBottom:20 }}>
-            🌿 Insecticide-free · Tick-proof · Eco-responsible
-          </div>
-          <h1 style={{ fontSize:isMobile?36:58, fontWeight:800, lineHeight:1.08, color:"#ffffff", marginBottom:16, letterSpacing:"-0.02em" }}>
-            Enjoy the Outdoors.<br/><span style={{ color:c.sageL }}>Safe & Carefree.</span>
+        <div style={{ maxWidth: 640, padding: isMobile ? "60px 24px" : "80px 64px", color: "#fff" }}>
+          <span style={{ display: "inline-block", background: "rgba(255,255,255,0.15)", backdropFilter: "blur(4px)", border: "1px solid rgba(255,255,255,0.3)", borderRadius: 24, padding: "5px 16px", fontSize: 12, marginBottom: 20 }}>
+            🛡️ Insecticide-free · Tick-proof · Eco-responsible
+          </span>
+          <h1 style={{ fontFamily: "Archivo, sans-serif", fontSize: isMobile ? 36 : 56, fontWeight: 900, lineHeight: 1.1, margin: "0 0 12px" }}>
+            Enjoy the Outdoors.<br />
+            <span style={{ color: c.sageL }}>Safe & Carefree.</span>
           </h1>
-          <p style={{ fontSize:isMobile?14:16, color:"rgba(255,255,255,0.88)", fontFamily:"'Poppins',sans-serif", fontWeight:300, lineHeight:1.75, maxWidth:460, marginBottom:12 }}>
+          <p style={{ fontSize: 16, opacity: 0.88, maxWidth: 420, lineHeight: 1.6, margin: "0 0 12px" }}>
             Lightweight mesh clothing that physically blocks ticks and insects. No DEET, no chemicals — just a smart layer between you and nature.
           </p>
-          <p style={{ fontSize:13, color:c.sageL, fontFamily:"'Poppins',sans-serif", fontWeight:500, marginBottom:32, fontStyle:"italic" }}>
-            "Like a screen porch for your body 🌿"
-          </p>
-          <div style={{ display:"flex", gap:12, flexWrap:"wrap" }}>
-            <Link to="/shop" style={{ ...BTN, textDecoration:"none" }}>Shop Now</Link>
-            <Link to="/how-it-works" style={{ ...BTNO, textDecoration:"none" }}>How It Works</Link>
-          </div>
+          <p style={{ fontStyle: "italic", color: c.sageL, fontSize: 14, marginBottom: 28 }}>"Like a screen porch for your body 🌿"</p>
+          <Link to="/shop" style={{ ...BTN, fontSize: 15, padding: "14px 32px", display: "inline-block", textDecoration: "none" }}>SHOP NOW</Link>
         </div>
       </section>
 
-      {/* ── SOCIAL PROOF BAR ─────────────────────────────── */}
-      <div style={{ background:"#fff", borderBottom:`1px solid ${c.glL}`, padding:"16px 40px", display:"flex", alignItems:"center", justifyContent:"center", gap:isMobile?24:48, flexWrap:"wrap" }}>
-        <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-          <div style={{ display:"flex", gap:1 }}>{[...Array(5)].map((_,i)=><span key={i} style={{ color:"#F0B429", fontSize:14 }}>★</span>)}</div>
-          <span style={{ fontSize:12, fontFamily:"'Poppins',sans-serif", color:c.grayD }}>500+ happy customers</span>
-        </div>
-        {!isMobile && <div style={{ width:1, height:20, background:c.glL }} />}
-        <div style={{ fontSize:12, fontFamily:"'Poppins',sans-serif", color:c.grayD }}>🛡️ 100% chemical-free</div>
-        {!isMobile && <div style={{ width:1, height:20, background:c.glL }} />}
-        <div style={{ fontSize:12, fontFamily:"'Poppins',sans-serif", color:c.grayD }}>🌍 Ships to EU & North America</div>
-        {!isMobile && <div style={{ width:1, height:20, background:c.glL }} />}
-        <div style={{ fontSize:12, fontFamily:"'Poppins',sans-serif", color:c.grayD }}>↩️ 30-day returns</div>
-      </div>
-
-      {/* ── SHOP BY CATEGORY ─────────────────────────────── */}
-      <section style={{ padding:pad(isMobile), background:c.off }}>
-        <div style={LBL}>Shop by category</div>
-        <h2 style={{ ...H2, marginBottom:32 }}>Protection for everyone</h2>
-        <div style={{ display:"grid", gridTemplateColumns:isMobile?"1fr 1fr":"repeat(4,1fr)", gap:isMobile?12:20 }}>
+      {/* ── TRUST BAR ── */}
+      <section style={{ background: "#fff", borderBottom: "1px solid #e8ede9", padding: "14px 24px" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", flexWrap: "wrap", justifyContent: "center", gap: isMobile ? 16 : 40 }}>
           {[
-            { label:"Men", to:"/shop/men", img:"/images/product-men-jacket-front.png" },
-            { label:"Women", to:"/shop/women", img:"/images/lifestyle-women-outdoor.png" },
-            { label:"Kids", to:"/shop/kids", img:"/images/lifestyle-kids-forest.png" },
-            { label:"Bundles", to:"/shop/bundles", img:"/images/lifestyle-couple-forest.png" },
-          ].map((cat,i)=>(
-            <Link key={i} to={cat.to} style={{ textDecoration:"none" }}>
-              <div style={{ borderRadius:10, overflow:"hidden", position:"relative", height:isMobile?160:220, cursor:"pointer", transition:"transform 0.2s" }}
-                onMouseEnter={e=>e.currentTarget.style.transform="translateY(-4px)"}
-                onMouseLeave={e=>e.currentTarget.style.transform="none"}>
-                <img src={cat.img} alt={cat.label} style={{ width:"100%", height:"100%", objectFit:"cover", display:"block", filter:"brightness(0.75)" }}/>
-                <div style={{ position:"absolute", inset:0, background:"linear-gradient(0deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.1) 60%)" }}/>
-                <div style={{ position:"absolute", bottom:16, left:16 }}>
-                  <div style={{ fontSize:isMobile?16:18, fontWeight:800, color:"#fff", letterSpacing:"-0.01em" }}>{cat.label}</div>
-                  <div style={{ fontSize:11, fontFamily:"'Poppins',sans-serif", color:"rgba(255,255,255,0.8)", marginTop:2 }}>Shop →</div>
-                </div>
-              </div>
-            </Link>
+            { icon: "⭐", text: "500+ happy customers" },
+            { icon: "🔵", text: "100% chemical-free" },
+            { icon: "🌍", text: "Ships to EU & North America" },
+            { icon: "📦", text: "30-day returns" },
+          ].map(({ icon, text }) => (
+            <span key={text} style={{ fontSize: 13, color: "#555", display: "flex", alignItems: "center", gap: 6 }}>
+              <span>{icon}</span>{text}
+            </span>
           ))}
         </div>
       </section>
 
-      {/* ── FEATURED PRODUCTS ────────────────────────────── */}
-      <section style={{ padding:pad(isMobile), background:"#fff" }}>
-        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end", marginBottom:32, flexWrap:"wrap", gap:12 }}>
-          <div>
-            <div style={LBL}>Featured</div>
-            <h2 style={H2}>Our best sellers</h2>
-          </div>
-          <Link to="/shop" style={{ fontSize:13, fontFamily:"'Poppins',sans-serif", color:c.sageD, fontWeight:600, textDecoration:"none" }}>View all →</Link>
-        </div>
-        <div style={{ display:"grid", gridTemplateColumns:isMobile?"1fr 1fr":"repeat(4,1fr)", gap:isMobile?12:20 }}>
-          {featuredProducts.map(p => <ProductCard key={p.id} product={p} isMobile={isMobile} symbol={symbol} />)}
-        </div>
-      </section>
-
-      {/* ── HOW IT WORKS ─────────────────────────────────── */}
-      <section style={{ padding:pad(isMobile), background:`linear-gradient(135deg,${c.skyP} 0%,${c.off} 100%)` }}>
-        <div style={{ maxWidth:900, margin:"0 auto" }}>
-          <div style={{ textAlign:"center", marginBottom:48 }}>
-            <div style={{ ...LBL, textAlign:"center" }}>How it works</div>
-            <h2 style={{ ...H2, textAlign:"center", marginBottom:12 }}>Like a screen porch for your body</h2>
-            <p style={{ fontSize:14, color:c.grayD, fontFamily:"'Poppins',sans-serif", fontWeight:300, lineHeight:1.85, maxWidth:560, margin:"0 auto" }}>
-              The mesh physically blocks ticks while letting air through. Simple, effective, chemical-free.
-            </p>
-          </div>
-          <div style={{ display:"grid", gridTemplateColumns:isMobile?"1fr 1fr":"repeat(4,1fr)", gap:isMobile?12:24 }}>
+      {/* ── SHOP BY CATEGORY ── */}
+      <section style={{ background: "#F7F9F8", padding: isMobile ? "48px 20px" : "72px 40px" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+          <div style={{ ...LBL, marginBottom: 8 }}>SHOP BY CATEGORY</div>
+          <h2 style={{ ...H2, marginBottom: 32 }}>Protection for everyone</h2>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(4, 1fr)", gap: 16 }}>
             {[
-              { step:"01", icon:"🕷️", title:"Ticks crawl upward", text:"Looking for warm skin through grass and shrubs." },
-              { step:"02", icon:"🧥", title:"Mesh blocks them", text:"Noseeum-grade mesh is too fine for any tick to penetrate." },
-              { step:"03", icon:"💨", title:"Air gap protects", text:"The space between mesh and skin keeps ticks at distance." },
-              { step:"04", icon:"✅", title:"You enjoy outside", text:"Chemical-free, light and breathable. Just put it on." },
-            ].map((s,i)=>(
-              <div key={i} style={{ background:"#fff", borderRadius:10, padding:isMobile?"16px":"24px 20px", border:`1px solid ${c.glL}` }}>
-                <div style={{ fontSize:10, fontFamily:"'Poppins',sans-serif", fontWeight:700, color:c.sage, letterSpacing:"0.12em", marginBottom:8 }}>{s.step}</div>
-                <div style={{ fontSize:isMobile?22:28, marginBottom:8 }}>{s.icon}</div>
-                <div style={{ fontSize:isMobile?12:14, fontWeight:700, color:c.dark, marginBottom:6, lineHeight:1.3 }}>{s.title}</div>
-                <div style={{ fontSize:11, fontFamily:"'Poppins',sans-serif", color:c.gray, lineHeight:1.6 }}>{s.text}</div>
-              </div>
+              { label: "Men", img: "/images/jacket-men-white-front.jpg", link: "/shop?cat=men" },
+              { label: "Women", img: "/images/jacket-women-white-front.jpg", link: "/shop?cat=women" },
+              { label: "Kids", img: "/images/kids-set-green-flatlay.jpg", link: "/shop?cat=kids" },
+              { label: "Bundles", img: "/images/combo-lifestyle-couple-coffee-tent.jpg", link: "/shop?cat=bundles" },
+            ].map(({ label, img, link }) => (
+              <Link key={label} to={link} style={{ textDecoration: "none" }}>
+                <div style={{ position: "relative", borderRadius: 16, overflow: "hidden", height: isMobile ? 160 : 260, cursor: "pointer" }}
+                  onMouseEnter={e => e.currentTarget.querySelector("img").style.transform = "scale(1.06)"}
+                  onMouseLeave={e => e.currentTarget.querySelector("img").style.transform = "scale(1)"}
+                >
+                  <img src={img} alt={label} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform .4s" }} />
+                  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%)" }} />
+                  <div style={{ position: "absolute", bottom: 16, left: 16, color: "#fff" }}>
+                    <div style={{ fontFamily: "Archivo, sans-serif", fontWeight: 800, fontSize: 18 }}>{label}</div>
+                    <div style={{ fontSize: 12, opacity: 0.85 }}>Shop →</div>
+                  </div>
+                </div>
+              </Link>
             ))}
           </div>
-          <div style={{ textAlign:"center", marginTop:32 }}>
-            <Link to="/how-it-works" style={{ ...BTNO, textDecoration:"none" }}>Learn More</Link>
-          </div>
         </div>
       </section>
 
-      {/* ── VIDEO SECTION ────────────────────────────────── */}
-      <section style={{ padding:pad(isMobile), background:c.dark }}>
-        <div style={{ maxWidth:800, margin:"0 auto" }}>
-          <div style={{ textAlign:"center", marginBottom:32 }}>
-            <div style={{ ...LBL, color:c.sage, textAlign:"center" }}>See it in action</div>
-            <h2 style={{ ...H2, color:"#fff", textAlign:"center", marginBottom:12 }}>Real protection, real outdoors</h2>
-            <p style={{ fontSize:14, color:c.gray, fontFamily:"'Poppins',sans-serif", fontWeight:300, textAlign:"center", maxWidth:480, margin:"0 auto" }}>
-              Watch how Bug Away works in real conditions — hiking, gardening, playing outside.
-            </p>
-          </div>
-          {/* 
-            TO ADD YOUR VIDEO: Replace 'placeholder' with one of:
-            youtube="YOUR_YOUTUBE_ID"        e.g. youtube="dQw4w9WgXcQ"
-            vimeo="YOUR_VIMEO_ID"            e.g. vimeo="123456789"
-            src="/videos/my-video.mp4"       e.g. your own video file
-          */}
-          <VideoBlock
-            src="/videos/see-in-action.mp4"
-            label="Watch Bug Away in action"
-            height={isMobile ? 240 : 420}
-          />
-        </div>
-      </section>
-
-      {/* ── NATURE STRIP ─────────────────────────────────── */}
-      <div style={{ display:"grid", gridTemplateColumns:isMobile?"1fr":"1.2fr 1fr 1fr", height:isMobile?180:260, overflow:"hidden" }}>
+      {/* ── NATURE PHOTO STRIP ── */}
+      <section style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr 1fr", height: isMobile ? "auto" : 300, overflow: "hidden" }}>
         {[
-          { url:"/images/lifestyle-kids-forest.png", label:"Family Protection" },
-          { url:"/images/lifestyle-women-outdoor.png", label:"Adventure Ready" },
-          { url:"/images/lifestyle-men-outdoor.png", label:"Adventure Ready" },
-        ].filter((_,i)=>!isMobile||i===0).map((img,i)=>(
-          <div key={i} style={{ position:"relative", overflow:"hidden" }}>
-            <img src={img.url} alt={img.label} style={{ width:"100%", height:"100%", objectFit:"cover", filter:"brightness(0.72) saturate(0.85)" }}/>
-            <div style={{ position:"absolute", bottom:12, left:12, background:"rgba(255,255,255,0.14)", backdropFilter:"blur(6px)", borderRadius:6, padding:"4px 12px", fontSize:12, color:"#fff", fontFamily:"'Poppins',sans-serif", fontWeight:600 }}>{img.label}</div>
+          { src: "/images/combo-lifestyle-couple-forest-white.jpg", alt: "Family Protection" },
+          { src: "/images/kids-lifestyle-forest-playing.jpg", alt: "Adventure Ready" },
+          { src: "/images/jacket-men-lifestyle-birdwatching.jpg", alt: "Adventure Ready" },
+        ].map(({ src, alt }) => (
+          <div key={alt} style={{ overflow: "hidden", height: isMobile ? 180 : "100%" }}>
+            <img src={src} alt={alt} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform .4s" }}
+              onMouseEnter={e => e.target.style.transform = "scale(1.04)"}
+              onMouseLeave={e => e.target.style.transform = "scale(1)"}
+            />
           </div>
         ))}
-      </div>
-
-      {/* ── STATS BAR ────────────────────────────────────── */}
-      <div style={{ background:c.sageD, padding:isMobile?"20px 16px":"24px 60px", display:"grid", gridTemplateColumns:isMobile?"repeat(2,1fr)":"repeat(5,1fr)", gap:isMobile?16:0 }}>
-        {[{num:"1.5M+",label:"Tick bites/year NL"},{num:"27,000",label:"New Lyme cases/yr"},{num:"100%",label:"Chemical-free"},{num:"360°",label:"Body coverage"},{num:"< 80g",label:"Per set"}].map((s,i)=>(
-          <div key={i} style={{ textAlign:"center" }}>
-            <div style={{ fontSize:isMobile?20:24, fontWeight:800, color:"#fff", letterSpacing:"-0.02em" }}>{s.num}</div>
-            <div style={{ fontSize:10, color:c.mist, fontFamily:"'Poppins',sans-serif", fontWeight:300, marginTop:3 }}>{s.label}</div>
-          </div>
-        ))}
-      </div>
-
-      {/* ── LIFESTYLE USE CASES ──────────────────────────── */}
-      <section style={{ padding:pad(isMobile), background:"#fff" }}>
-        <div style={{ maxWidth:940, margin:"0 auto" }}>
-          <div style={LBL}>Who is it for</div>
-          <h2 style={{ ...H2, marginBottom:40 }}>Designed for outdoor life</h2>
-          <div style={{ display:"grid", gridTemplateColumns:isMobile?"1fr 1fr":"repeat(3,1fr)", gap:isMobile?12:20 }}>
-            {[
-              { emoji:"🥾", title:"Hikers", text:"Hours in the forest without constantly checking for ticks. Focus on the trail, not the bugs.", img:"/images/lifestyle-couple-forest.png" },
-              { emoji:"🌿", title:"Gardeners", text:"Weeding, planting, pruning — tick territory. Bug Away lets you garden without worry.", img:"/images/lifestyle-women-outdoor.png" },
-              { emoji:"👨‍👩‍👧", title:"Families", text:"Kids playing in tall grass or exploring nature — protected without any chemical sprays.", img:"/images/lifestyle-kids-forest.png" },
-            ].map((u,i)=>(
-              <div key={i} style={{ borderRadius:10, overflow:"hidden", border:`1px solid ${c.glL}` }}>
-                <div style={{ height:isMobile?140:200, position:"relative", overflow:"hidden" }}>
-                  <img src={u.img} alt={u.title} style={{ width:"100%", height:"100%", objectFit:"cover", filter:"brightness(0.8) saturate(0.9)" }}/>
-                  <div style={{ position:"absolute", bottom:12, left:12, fontSize:24 }}>{u.emoji}</div>
-                </div>
-                <div style={{ padding:"16px 18px 20px", background:c.off }}>
-                  <div style={{ fontSize:15, fontWeight:700, color:c.dark, marginBottom:6 }}>{u.title}</div>
-                  <div style={{ fontSize:12, fontFamily:"'Poppins',sans-serif", color:c.grayD, lineHeight:1.65 }}>{u.text}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
       </section>
 
-      {/* ── REVIEWS ──────────────────────────────────────── */}
-      <section style={{ padding:pad(isMobile), background:c.off }}>
-        <div style={{ ...LBL }}>Customer reviews</div>
-        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end", marginBottom:36, flexWrap:"wrap", gap:12 }}>
-          <h2 style={H2}>What our customers say</h2>
-          <div style={{ display:"flex", gap:4, alignItems:"center" }}>
-            <div style={{ display:"flex", gap:1 }}>{[...Array(5)].map((_,i)=><span key={i} style={{ color:"#F0B429", fontSize:16 }}>★</span>)}</div>
-            <span style={{ fontSize:13, fontFamily:"'Poppins',sans-serif", color:c.grayD, marginLeft:6 }}>4.9 / 5 (500+ reviews)</span>
-          </div>
-        </div>
-        <div style={{ display:"grid", gridTemplateColumns:isMobile?"1fr":"repeat(3,1fr)", gap:isMobile?12:20 }}>
-          {reviews.slice(0,3).map((r,i)=>(
-            <div key={i} style={{ background:"#fff", borderRadius:10, padding:"22px", border:`1px solid ${c.glL}` }}>
-              <StarRow n={r.stars} />
-              <p style={{ fontSize:13, fontFamily:"'Poppins',sans-serif", color:c.grayD, lineHeight:1.75, margin:"12px 0 16px", fontWeight:300, fontStyle:"italic" }}>"{r.text}"</p>
-              <div style={{ borderTop:`1px solid ${c.glL}`, paddingTop:12 }}>
-                <div style={{ fontSize:13, fontWeight:700, color:c.dark }}>{r.name}</div>
-                <div style={{ fontSize:11, fontFamily:"'Poppins',sans-serif", color:c.gray, marginTop:2 }}>{r.loc} · {r.product}</div>
-              </div>
+      {/* ── STATS BAR ── */}
+      <section style={{ background: c.sage, padding: "32px 24px" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(5,1fr)", gap: 24, textAlign: "center", color: "#fff" }}>
+          {[
+            { num: "1.5M+", label: "Tick bites/year NL" },
+            { num: "27,000", label: "New Lyme cases/yr" },
+            { num: "100%", label: "Chemical-free" },
+            { num: "360°", label: "Body coverage" },
+            { num: "< 80g", label: "Per set" },
+          ].map(({ num, label }) => (
+            <div key={label}>
+              <div style={{ fontFamily: "Archivo, sans-serif", fontWeight: 900, fontSize: isMobile ? 22 : 28 }}>{num}</div>
+              <div style={{ fontSize: 12, opacity: 0.82, marginTop: 4 }}>{label}</div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ── SECOND VIDEO SLOT ────────────────────────────── */}
-      <section style={{ padding:pad(isMobile), background:c.off }}>
-        <div style={{ maxWidth:700, margin:"0 auto" }}>
-          <div style={{ textAlign:"center", marginBottom:24 }}>
-            <div style={LBL}>Tick awareness</div>
-            <h2 style={{ ...H2, marginBottom:8, textAlign:"center" }}>Know your risk</h2>
-            <p style={{ fontSize:14, color:c.grayD, fontFamily:"'Poppins',sans-serif", fontWeight:300, textAlign:"center" }}>
-              A short explainer on Lyme disease and why tick prevention matters.
-            </p>
+      {/* ── BESTSELLERS ── */}
+      <section style={{ background: "#fff", padding: isMobile ? "48px 20px" : "72px 40px" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+          <div style={{ ...LBL, marginBottom: 8 }}>OUR PICKS</div>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 32 }}>
+            <h2 style={{ ...H2, margin: 0 }}>Best Sellers</h2>
+            <Link to="/shop" style={{ fontSize: 13, color: c.sage, textDecoration: "none", fontWeight: 600 }}>View all →</Link>
           </div>
-          <VideoBlock
-            src="/videos/lyme-awareness.mp4"
-            height={isMobile?200:360}
-          />
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(4, 1fr)", gap: 20 }}>
+            {(bestsellers.length ? bestsellers : products.slice(0, 4)).map(p => <ProductCard key={p.id} product={p} />)}
+          </div>
         </div>
       </section>
 
-      {/* ── BLOG PREVIEW ─────────────────────────────────── */}
-      <section style={{ padding:pad(isMobile), background:"#fff" }}>
-        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end", marginBottom:32, flexWrap:"wrap", gap:12 }}>
-          <div>
-            <div style={LBL}>Knowledge base</div>
-            <h2 style={H2}>Learn about tick protection</h2>
+      {/* ── HOW IT WORKS ── */}
+      <section style={{ background: "#F7F9F8", padding: isMobile ? "48px 20px" : "72px 40px" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{ ...LBL, marginBottom: 8 }}>HOW IT WORKS</div>
+          <h2 style={{ ...H2, marginBottom: 40 }}>The science is simple</h2>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4,1fr)", gap: 28 }}>
+            {[
+              { step: "01", title: "Put it on", desc: "Slip on the lightweight mesh suit as a base layer under your regular clothes." },
+              { step: "02", title: "Physical barrier", desc: "The ultra-fine noseeum mesh creates a physical barrier — ticks and insects simply can't get through." },
+              { step: "03", title: "Sealed at the foot", desc: "The pant leg and foot cover are one continuous piece — no gap, no entry point at the ankle." },
+              { step: "04", title: "Enjoy nature freely", desc: "Hike, garden, camp — no sprays, no worry, just comfort and protection all day." },
+            ].map(({ step, title, desc }) => (
+              <div key={step} style={{ background: "#fff", borderRadius: 16, padding: 24, boxShadow: "0 2px 10px rgba(0,0,0,0.05)" }}>
+                <div style={{ fontFamily: "Archivo, sans-serif", fontWeight: 900, fontSize: 32, color: c.sageL, marginBottom: 12 }}>{step}</div>
+                <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 8 }}>{title}</div>
+                <p style={{ color: "#666", fontSize: 14, lineHeight: 1.6, margin: 0 }}>{desc}</p>
+              </div>
+            ))}
           </div>
-          <Link to="/blog" style={{ fontSize:13, fontFamily:"'Poppins',sans-serif", color:c.sageD, fontWeight:600, textDecoration:"none" }}>All articles →</Link>
         </div>
-        <div style={{ display:"grid", gridTemplateColumns:isMobile?"1fr":"repeat(3,1fr)", gap:isMobile?12:22 }}>
-          {blogPosts.map((b,i)=>(
-            <Link key={i} to={`/blog/${b.slug}`} style={{ textDecoration:"none" }}>
-              <div style={{ border:`1px solid ${c.glL}`, borderRadius:10, overflow:"hidden", background:c.off, transition:"transform 0.2s" }}
-                onMouseEnter={e=>e.currentTarget.style.transform="translateY(-3px)"}
-                onMouseLeave={e=>e.currentTarget.style.transform="none"}>
-                <div style={{ height:isMobile?100:130, background:`linear-gradient(135deg,${c.skyP} 0%,${c.sageL}55 100%)`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:isMobile?40:52 }}>{b.emoji}</div>
-                <div style={{ padding:"16px 18px 20px" }}>
-                  <div style={{ fontSize:10, fontFamily:"'Poppins',sans-serif", fontWeight:700, color:c.sage, letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:6 }}>{b.tag}</div>
-                  <div style={{ fontSize:isMobile?13:14, fontWeight:700, color:c.dark, marginBottom:6, lineHeight:1.4 }}>{b.title}</div>
-                  <div style={{ fontSize:11, fontFamily:"'Poppins',sans-serif", color:c.gray, lineHeight:1.6, marginBottom:12 }}>{b.excerpt}</div>
-                  <div style={{ fontSize:12, color:c.sageD, fontFamily:"'Poppins',sans-serif", fontWeight:600 }}>Read more →</div>
+      </section>
+
+      {/* ── SEE IT IN ACTION (video) ── */}
+      <section style={{ background: "#1a2e24", padding: isMobile ? "48px 20px" : "72px 40px" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
+          <div style={{ ...LBL, color: c.sageL, marginBottom: 8 }}>SEE IT IN ACTION</div>
+          <h2 style={{ ...H2, color: "#fff", marginBottom: 32 }}>Watch it in the wild</h2>
+          <video autoPlay muted loop playsInline style={{ width: "100%", borderRadius: 16, maxHeight: 480, objectFit: "cover" }}>
+            <source src="/videos/see-in-action.mp4" type="video/mp4" />
+          </video>
+        </div>
+      </section>
+
+      {/* ── WHO IS IT FOR ── */}
+      <section style={{ background: "#fff", padding: isMobile ? "48px 20px" : "72px 40px" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{ ...LBL, marginBottom: 8 }}>WHO IS IT FOR</div>
+          <h2 style={{ ...H2, marginBottom: 36 }}>Designed for outdoor life</h2>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3,1fr)", gap: 24 }}>
+            {[
+              { label: "Hikers", icon: "🥾", desc: "Hours in the forest without constantly checking for ticks. Focus on the trail, not the bugs.", img: "/images/jacket-men-lifestyle-forest-walking.jpg" },
+              { label: "Gardeners", icon: "🌿", desc: "Weeding, planting, pruning — tick territory. Bug Away lets you garden without worry.", img: "/images/jacket-women-lifestyle-gardening.jpg" },
+              { label: "Families", icon: "👨‍👩‍👧", desc: "Kids playing in tall grass or exploring nature — protected without any chemical sprays.", img: "/images/kids-lifestyle-jumping-stream.jpg" },
+            ].map(({ label, icon, desc, img }) => (
+              <div key={label} style={{ background: "#F7F9F8", borderRadius: 16, overflow: "hidden", boxShadow: "0 2px 10px rgba(0,0,0,0.05)" }}>
+                <div style={{ height: 180, overflow: "hidden" }}>
+                  <img src={img} alt={label} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                </div>
+                <div style={{ padding: 24 }}>
+                  <div style={{ fontSize: 28, marginBottom: 8 }}>{icon}</div>
+                  <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 6 }}>{label}</div>
+                  <p style={{ color: "#666", fontSize: 14, lineHeight: 1.6, margin: 0 }}>{desc}</p>
                 </div>
               </div>
-            </Link>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* ── CTA BANNER ───────────────────────────────────── */}
-      <section style={{ padding:pad(isMobile), background:`linear-gradient(135deg,${c.sageD} 0%,#3a6450 100%)` }}>
-        <div style={{ maxWidth:600, margin:"0 auto", textAlign:"center" }}>
-          <h2 style={{ ...H2, color:"#fff", fontSize:isMobile?24:32, marginBottom:12 }}>Ready for tick-free adventures?</h2>
-          <p style={{ fontSize:14, color:c.mist, fontFamily:"'Poppins',sans-serif", fontWeight:300, lineHeight:1.75, marginBottom:28 }}>
-            Join 500+ outdoor enthusiasts who have already discovered the difference.
-          </p>
-          <Link to="/shop" style={{ ...BTN, background:"#fff", color:c.sageD, textDecoration:"none", fontSize:13 }}>Shop Now</Link>
+      {/* ── KNOW YOUR RISK (video) ── */}
+      <section style={{ background: "#F7F9F8", padding: isMobile ? "48px 20px" : "72px 40px" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
+          <div style={{ ...LBL, marginBottom: 8 }}>TICK AWARENESS</div>
+          <h2 style={{ ...H2, marginBottom: 32 }}>Know your risk</h2>
+          <video autoPlay muted loop playsInline style={{ width: "100%", borderRadius: 16, maxHeight: 480, objectFit: "cover" }}>
+            <source src="/videos/lyme-awareness.mp4" type="video/mp4" />
+          </video>
         </div>
       </section>
 
+      {/* ── DISEASE INFO ── */}
+      <section style={{ background: "#fff", padding: isMobile ? "48px 20px" : "72px 40px" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{ ...LBL, marginBottom: 8 }}>HEALTH & SAFETY</div>
+          <h2 style={{ ...H2, marginBottom: 36 }}>Diseases ticks carry</h2>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2,1fr)", gap: 20 }}>
+            {DISEASES.map(({ name, severity, color, desc }) => (
+              <div key={name} style={{ background: "#F7F9F8", borderRadius: 16, padding: 24, borderLeft: `4px solid ${color}` }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
+                  <div style={{ fontWeight: 700, fontSize: 16 }}>{name}</div>
+                  <span style={{ background: color + "20", color, borderRadius: 20, padding: "3px 10px", fontSize: 11, fontWeight: 700, whiteSpace: "nowrap", marginLeft: 8 }}>{severity}</span>
+                </div>
+                <p style={{ color: "#666", fontSize: 14, lineHeight: 1.6, margin: 0 }}>{desc}</p>
+              </div>
+            ))}
+          </div>
+          <div style={{ marginTop: 36, background: c.sage, borderRadius: 16, padding: isMobile ? "28px 20px" : "36px 40px", display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: "center", justifyContent: "space-between", gap: 20 }}>
+            <div>
+              <div style={{ fontFamily: "Archivo, sans-serif", fontWeight: 800, fontSize: 22, color: "#fff", marginBottom: 6 }}>Don't leave it to chance</div>
+              <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 15, margin: 0 }}>Bug Away gives you physical tick protection — no chemicals, no sprays, no compromise.</p>
+            </div>
+            <Link to="/shop" style={{ ...BTN, background: "#fff", color: c.sageD, whiteSpace: "nowrap", flexShrink: 0, textDecoration: "none", display: "inline-block" }}>Shop Now</Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── REVIEWS ── */}
+      <section style={{ background: "#F7F9F8", padding: isMobile ? "48px 20px" : "72px 40px" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{ ...LBL, marginBottom: 8 }}>REVIEWS</div>
+          <h2 style={{ ...H2, marginBottom: 36 }}>What our customers say</h2>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2,1fr)", gap: 20 }}>
+            {TESTIMONIALS.map(({ name, stars, text, location }) => (
+              <div key={name} style={{ background: "#fff", borderRadius: 16, padding: 24, boxShadow: "0 2px 10px rgba(0,0,0,0.05)" }}>
+                <div style={{ marginBottom: 12 }}>{Array(stars).fill(0).map((_, i) => <Star key={i} />)}</div>
+                <p style={{ fontSize: 15, lineHeight: 1.6, color: "#333", margin: "0 0 16px", fontStyle: "italic" }}>"{text}"</p>
+                <div style={{ fontSize: 13, fontWeight: 700, color: c.sageD }}>{name} <span style={{ color: "#999", fontWeight: 400 }}>— {location}</span></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── BLOG PREVIEW ── */}
+      <section style={{ background: "#fff", padding: isMobile ? "48px 20px" : "72px 40px" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 32 }}>
+            <div>
+              <div style={{ ...LBL, marginBottom: 8 }}>KNOWLEDGE BASE</div>
+              <h2 style={{ ...H2, margin: 0 }}>Learn about tick protection</h2>
+            </div>
+            <Link to="/blog" style={{ fontSize: 13, color: c.sage, textDecoration: "none", fontWeight: 600 }}>All articles →</Link>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3,1fr)", gap: 24 }}>
+            {[
+              { cat: "EDUCATION", title: "Tick Season 2025: When Are Ticks Most Active?", excerpt: "Ticks become active as soon as temperatures rise above 7°C. Find out when the risk is highest and how to protect yourself and your family.", img: "/images/proof-ticks.jpg" },
+              { cat: "HEALTH", title: "How to Recognize a Tick Bite and What to Do", excerpt: "Not every tick bite leads to Lyme disease. But knowing what to do immediately after a bite can make all the difference to your health.", img: "/images/proof-mosquito.jpg" },
+              { cat: "PETS", title: "Ticks and Dogs: Risks and How to Protect Your Pet", excerpt: "Dogs face the exact same tick risks as humans. Discover how to protect your dog against ticks and tick-borne diseases this season.", img: "/images/pants-detail-feet-grass.jpg" },
+            ].map(({ cat, title, excerpt, img }) => (
+              <Link key={title} to="/blog" style={{ textDecoration: "none", color: "inherit" }}>
+                <div style={{ background: "#F0F5F2", borderRadius: 16, overflow: "hidden", boxShadow: "0 2px 10px rgba(0,0,0,0.05)", transition: "transform .2s" }}
+                  onMouseEnter={e => e.currentTarget.style.transform = "translateY(-4px)"}
+                  onMouseLeave={e => e.currentTarget.style.transform = ""}
+                >
+                  <div style={{ height: 160, overflow: "hidden" }}>
+                    <img src={img} alt={title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  </div>
+                  <div style={{ padding: 20 }}>
+                    <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: 1.5, color: c.sage, marginBottom: 8 }}>{cat}</div>
+                    <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 8, lineHeight: 1.4 }}>{title}</div>
+                    <p style={{ color: "#666", fontSize: 13, lineHeight: 1.6, margin: "0 0 12px" }}>{excerpt}</p>
+                    <span style={{ fontSize: 13, color: c.sage, fontWeight: 600 }}>Read more →</span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

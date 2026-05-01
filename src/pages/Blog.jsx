@@ -1,117 +1,163 @@
-import { Link, useParams } from 'react-router-dom';
-import { c, useIsMobile, BTN, H2, LBL } from '../theme';
-import { blogPosts } from '../data';
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { c, useIsMobile, H2, LBL } from "../theme";
+
+const ARTICLES = [
+  {
+    id: 1, cat: "EDUCATION",
+    title: "Tick Season 2025: When Are Ticks Most Active?",
+    excerpt: "Ticks become active as soon as temperatures rise above 7°C. Find out when the risk is highest and how to protect yourself and your family throughout the year.",
+    img: "/images/proof-ticks.jpg",
+    readTime: "4 min read",
+  },
+  {
+    id: 2, cat: "HEALTH",
+    title: "How to Recognize a Tick Bite and What to Do",
+    excerpt: "Not every tick bite leads to Lyme disease. But knowing what to do immediately after a bite can make all the difference to your health. Here's a step-by-step guide.",
+    img: "/images/proof-mosquito.jpg",
+    readTime: "5 min read",
+  },
+  {
+    id: 3, cat: "PETS",
+    title: "Ticks and Dogs: Risks and How to Protect Your Pet",
+    excerpt: "Dogs face the exact same tick risks as humans. Discover how to protect your dog against ticks and tick-borne diseases this outdoor season.",
+    img: "/images/pants-detail-feet-grass.jpg",
+    readTime: "4 min read",
+  },
+  {
+    id: 4, cat: "OUTDOORS",
+    title: "The Best Forests for Hiking in the Netherlands — and How to Stay Safe",
+    excerpt: "From the Veluwe to the Amsterdamse Bos, Dutch forests are beautiful — and full of ticks. Here's how to enjoy them safely.",
+    img: "/images/jacket-men-lifestyle-birdwatching.jpg",
+    readTime: "6 min read",
+  },
+  {
+    id: 5, cat: "HEALTH",
+    title: "Lyme Disease: Symptoms, Diagnosis and What Happens If It Goes Untreated",
+    excerpt: "Lyme disease is on the rise across Europe and North America. Understanding the symptoms could save you from years of chronic illness.",
+    img: "/images/detail-collage-white.jpg",
+    readTime: "7 min read",
+  },
+  {
+    id: 6, cat: "FAMILY",
+    title: "How to Get Kids to Wear Tick Protection Without a Fight",
+    excerpt: "Let's be honest — getting children to wear extra layers isn't always easy. Here are some tips that actually work.",
+    img: "/images/kids-lifestyle-jumping-stream.jpg",
+    readTime: "3 min read",
+  },
+];
+
+const CATS = ["ALL", "EDUCATION", "HEALTH", "OUTDOORS", "PETS", "FAMILY"];
 
 export default function Blog() {
-  const { slug } = useParams();
   const isMobile = useIsMobile();
-  const pad = isMobile ? "48px 20px" : "64px 60px";
+  const [active, setActive] = useState("ALL");
+  const filtered = active === "ALL" ? ARTICLES : ARTICLES.filter(a => a.cat === active);
 
-  // Article detail view
-  const article = slug ? blogPosts.find(b => b.slug === slug) : null;
-
-  if (article) {
-    return (
-      <div style={{ fontFamily:"'Archivo',sans-serif", color:c.dark }}>
-        {/* Breadcrumb */}
-        <div style={{ background:"#fff", borderBottom:`1px solid ${c.glL}`, padding:`12px ${isMobile?"16px":"60px"}` }}>
-          <div style={{ fontSize:12, fontFamily:"'Poppins',sans-serif", color:c.gray }}>
-            <Link to="/" style={{ color:c.gray, textDecoration:"none" }}>Home</Link>
-            <span style={{ margin:"0 8px" }}>›</span>
-            <Link to="/blog" style={{ color:c.gray, textDecoration:"none" }}>Blog</Link>
-            <span style={{ margin:"0 8px" }}>›</span>
-            <span style={{ color:c.dark }}>{article.title}</span>
-          </div>
-        </div>
-
-        {/* Article hero */}
-        <div style={{ background:`linear-gradient(135deg,${c.skyP} 0%,${c.sageL}55 100%)`, padding:isMobile?"48px 20px":"64px 60px", textAlign:"center" }}>
-          <div style={{ fontSize:64, marginBottom:16 }}>{article.emoji}</div>
-          <div style={{ fontSize:11, fontFamily:"'Poppins',sans-serif", fontWeight:700, color:c.sage, letterSpacing:"0.12em", textTransform:"uppercase", marginBottom:12 }}>{article.tag}</div>
-          <h1 style={{ fontSize:isMobile?24:38, fontWeight:800, color:c.dark, lineHeight:1.15, letterSpacing:"-0.01em", maxWidth:700, margin:"0 auto 16px" }}>{article.title}</h1>
-          <div style={{ fontSize:12, fontFamily:"'Poppins',sans-serif", color:c.gray }}>{article.date} · {article.readTime}</div>
-        </div>
-
-        {/* Article content */}
-        <div style={{ padding:pad, maxWidth:720, margin:"0 auto" }}>
-          {article.content.split('\n\n').map((para, i) => {
-            if (para.startsWith('**')) {
-              return <h3 key={i} style={{ fontSize:16, fontWeight:700, color:c.dark, marginBottom:10, marginTop:24 }}>{para.replace(/\*\*/g,'')}</h3>;
-            }
-            if (para.startsWith('1.') || para.startsWith('-')) {
-              const items = para.split('\n').filter(l=>l.trim());
-              return (
-                <ul key={i} style={{ paddingLeft:20, marginBottom:16 }}>
-                  {items.map((item,j)=>(
-                    <li key={j} style={{ fontSize:14, fontFamily:"'Poppins',sans-serif", color:c.grayD, lineHeight:1.8, marginBottom:6, fontWeight:300 }}>
-                      {item.replace(/^[\d\.\-\*]\s*/,'')}
-                    </li>
-                  ))}
-                </ul>
-              );
-            }
-            return <p key={i} style={{ fontSize:14, fontFamily:"'Poppins',sans-serif", color:c.grayD, lineHeight:1.9, marginBottom:16, fontWeight:300 }}>{para}</p>;
-          })}
-        </div>
-
-        {/* More articles */}
-        <section style={{ padding:pad, background:c.off, borderTop:`1px solid ${c.glL}` }}>
-          <h2 style={{ ...H2, marginBottom:24 }}>More articles</h2>
-          <div style={{ display:"grid", gridTemplateColumns:isMobile?"1fr":"repeat(3,1fr)", gap:isMobile?12:20 }}>
-            {blogPosts.filter(b=>b.slug!==slug).map((b,i)=>(
-              <Link key={i} to={`/blog/${b.slug}`} style={{ textDecoration:"none" }}>
-                <div style={{ border:`1px solid ${c.glL}`, borderRadius:10, overflow:"hidden", background:"#fff" }}>
-                  <div style={{ height:100, background:`linear-gradient(135deg,${c.skyP} 0%,${c.sageL}55 100%)`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:40 }}>{b.emoji}</div>
-                  <div style={{ padding:"14px 16px" }}>
-                    <div style={{ fontSize:10, fontFamily:"'Poppins',sans-serif", fontWeight:700, color:c.sage, textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:6 }}>{b.tag}</div>
-                    <div style={{ fontSize:13, fontWeight:700, color:c.dark, lineHeight:1.4, marginBottom:6 }}>{b.title}</div>
-                    <div style={{ fontSize:12, color:c.sageD, fontFamily:"'Poppins',sans-serif", fontWeight:600 }}>Read more →</div>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-      </div>
-    );
-  }
-
-  // Blog listing
   return (
-    <div style={{ fontFamily:"'Archivo',sans-serif", color:c.dark }}>
-      {/* Header */}
-      <section style={{ background:`linear-gradient(135deg,${c.skyP} 0%,${c.mist} 100%)`, padding:isMobile?"48px 20px":"64px 60px", position:"relative", overflow:"hidden" }}>
-        <img src="/images/lifestyle-kids-forest.png" alt="Blog" style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", opacity:0.2 }}/>
-        <div style={{ position:"relative", zIndex:1 }}>
-        <div style={LBL}>Knowledge base</div>
-        <h1 style={{ fontSize:isMobile?28:42, fontWeight:800, color:c.dark, marginBottom:12, letterSpacing:"-0.02em" }}>Ticks, Lyme & Outdoor Life</h1>
-        <p style={{ fontSize:14, color:c.grayD, fontFamily:"'Poppins',sans-serif", fontWeight:300, maxWidth:480 }}>
-          Everything you need to know about tick protection, tick-borne diseases and how to enjoy the outdoors safely.
-        </p>
+    <div>
+      {/* ── HERO ── */}
+      <section style={{
+        position: "relative", minHeight: isMobile ? 260 : 340,
+        background: `linear-gradient(to right, rgba(30,50,40,.75) 60%, rgba(30,50,40,.35) 100%), url('/images/jacket-men-lifestyle-forest-walking.jpg') center/cover no-repeat`,
+        display: "flex", alignItems: "center",
+      }}>
+        <div style={{ maxWidth: 700, padding: isMobile ? "60px 24px" : "80px 64px", color: "#fff" }}>
+          <div style={{ ...LBL, color: "rgba(255,255,255,0.7)", marginBottom: 12 }}>KNOWLEDGE BASE</div>
+          <h1 style={{ fontFamily: "Archivo, sans-serif", fontSize: isMobile ? 32 : 48, fontWeight: 900, lineHeight: 1.15, margin: "0 0 16px" }}>
+            Learn about<br /><span style={{ color: "#a8d5b5" }}>tick protection</span>
+          </h1>
+          <p style={{ fontSize: 15, opacity: 0.85, maxWidth: 440, lineHeight: 1.65, margin: 0 }}>
+            Expert articles on Lyme disease, tick seasons, pet protection and how to enjoy outdoor life safely.
+          </p>
         </div>
       </section>
 
-      {/* Articles */}
-      <section style={{ padding:pad }}>
-        <div style={{ display:"grid", gridTemplateColumns:isMobile?"1fr":"repeat(3,1fr)", gap:isMobile?16:28 }}>
-          {blogPosts.map((b,i)=>(
-            <Link key={i} to={`/blog/${b.slug}`} style={{ textDecoration:"none" }}>
-              <div style={{ border:`1px solid ${c.glL}`, borderRadius:10, overflow:"hidden", background:"#fff", transition:"transform 0.2s" }}
-                onMouseEnter={e=>e.currentTarget.style.transform="translateY(-4px)"}
-                onMouseLeave={e=>e.currentTarget.style.transform="none"}>
-                <div style={{ height:isMobile?130:180, background:`linear-gradient(135deg,${c.skyP} 0%,${c.sageL}55 100%)`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:isMobile?52:72 }}>{b.emoji}</div>
-                <div style={{ padding:isMobile?"16px":"20px 22px 24px" }}>
-                  <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:8 }}>
-                    <div style={{ fontSize:10, fontFamily:"'Poppins',sans-serif", fontWeight:700, color:c.sage, letterSpacing:"0.1em", textTransform:"uppercase" }}>{b.tag}</div>
-                    <div style={{ fontSize:11, fontFamily:"'Poppins',sans-serif", color:c.gray }}>{b.readTime}</div>
-                  </div>
-                  <h2 style={{ fontSize:isMobile?14:16, fontWeight:700, color:c.dark, marginBottom:8, lineHeight:1.4 }}>{b.title}</h2>
-                  <p style={{ fontSize:12, fontFamily:"'Poppins',sans-serif", color:c.gray, lineHeight:1.65, marginBottom:14 }}>{b.excerpt}</p>
-                  <div style={{ fontSize:12, color:c.sageD, fontFamily:"'Poppins',sans-serif", fontWeight:600 }}>Read more →</div>
+      {/* ── FILTERS ── */}
+      <section style={{ background: "#fff", padding: "20px 24px", borderBottom: "1px solid #e8ede9", position: "sticky", top: 0, zIndex: 10 }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", gap: 10, overflowX: "auto", flexWrap: isMobile ? "nowrap" : "wrap" }}>
+          {CATS.map(cat => (
+            <button key={cat} onClick={() => setActive(cat)} style={{
+              padding: "8px 18px", borderRadius: 24, border: "none", cursor: "pointer", fontSize: 12, fontWeight: 700, whiteSpace: "nowrap",
+              background: active === cat ? c.sage : "#F0F5F2",
+              color: active === cat ? "#fff" : c.sageD,
+              transition: "all .2s",
+            }}>{cat}</button>
+          ))}
+        </div>
+      </section>
+
+      {/* ── FEATURED ARTICLE ── */}
+      {active === "ALL" && (
+        <section style={{ background: "#F7F9F8", padding: isMobile ? "32px 20px" : "48px 40px" }}>
+          <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+            <div style={{ background: "#fff", borderRadius: 20, overflow: "hidden", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", boxShadow: "0 4px 20px rgba(0,0,0,0.07)" }}>
+              <div style={{ height: isMobile ? 220 : "100%", minHeight: 300, overflow: "hidden" }}>
+                <img src={ARTICLES[0].img} alt={ARTICLES[0].title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              </div>
+              <div style={{ padding: isMobile ? 24 : 40, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: 1.5, color: c.sage, marginBottom: 12 }}>FEATURED · {ARTICLES[0].cat}</div>
+                <h2 style={{ fontFamily: "Archivo, sans-serif", fontWeight: 800, fontSize: isMobile ? 22 : 28, lineHeight: 1.3, marginBottom: 16 }}>{ARTICLES[0].title}</h2>
+                <p style={{ color: "#666", fontSize: 15, lineHeight: 1.7, marginBottom: 24 }}>{ARTICLES[0].excerpt}</p>
+                <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                  <span style={{ fontSize: 12, color: "#999" }}>{ARTICLES[0].readTime}</span>
+                  <span style={{ fontSize: 14, color: c.sage, fontWeight: 600, cursor: "pointer" }}>Read more →</span>
                 </div>
               </div>
-            </Link>
-          ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ── ARTICLE GRID ── */}
+      <section style={{ background: "#fff", padding: isMobile ? "32px 20px" : "48px 40px" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3,1fr)", gap: 24 }}>
+            {(active === "ALL" ? filtered.slice(1) : filtered).map(({ id, cat, title, excerpt, img, readTime }) => (
+              <div key={id} style={{ background: "#F7F9F8", borderRadius: 16, overflow: "hidden", boxShadow: "0 2px 10px rgba(0,0,0,0.05)", transition: "transform .2s", cursor: "pointer" }}
+                onMouseEnter={e => e.currentTarget.style.transform = "translateY(-4px)"}
+                onMouseLeave={e => e.currentTarget.style.transform = ""}
+              >
+                <div style={{ height: 180, overflow: "hidden" }}>
+                  <img src={img} alt={title} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform .4s" }}
+                    onMouseEnter={e => e.target.style.transform = "scale(1.05)"}
+                    onMouseLeave={e => e.target.style.transform = "scale(1)"}
+                  />
+                </div>
+                <div style={{ padding: 20 }}>
+                  <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: 1.5, color: c.sage, marginBottom: 8 }}>{cat}</div>
+                  <div style={{ fontWeight: 700, fontSize: 15, lineHeight: 1.4, marginBottom: 10 }}>{title}</div>
+                  <p style={{ color: "#666", fontSize: 13, lineHeight: 1.65, margin: "0 0 14px" }}>{excerpt}</p>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span style={{ fontSize: 12, color: "#aaa" }}>{readTime}</span>
+                    <span style={{ fontSize: 13, color: c.sage, fontWeight: 600 }}>Read more →</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── NEWSLETTER ── */}
+      <section style={{ background: c.sage, padding: isMobile ? "48px 20px" : "64px 40px", textAlign: "center" }}>
+        <div style={{ maxWidth: 520, margin: "0 auto" }}>
+          <h2 style={{ fontFamily: "Archivo, sans-serif", fontWeight: 900, fontSize: isMobile ? 26 : 32, color: "#fff", marginBottom: 12 }}>
+            Stay updated on tick season
+          </h2>
+          <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 15, marginBottom: 28 }}>
+            Get our latest articles and tick protection tips straight to your inbox.
+          </p>
+          <div style={{ display: "flex", gap: 10, maxWidth: 420, margin: "0 auto", flexDirection: isMobile ? "column" : "row" }}>
+            <input type="email" placeholder="Your email address" style={{
+              flex: 1, padding: "13px 18px", borderRadius: 10, border: "none",
+              fontSize: 14, outline: "none",
+            }} />
+            <button style={{
+              background: "#1a2e24", color: "#fff", border: "none", borderRadius: 10,
+              padding: "13px 24px", fontWeight: 700, fontSize: 14, cursor: "pointer", whiteSpace: "nowrap",
+            }}>Subscribe</button>
+          </div>
         </div>
       </section>
     </div>
