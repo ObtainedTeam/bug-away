@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { c, useIsMobile, BTN, H2, LBL } from "../theme";
-import { products, reviews } from "../data";
+import { products } from "../data";
 import { useCurrency } from "../currency";
 
-// ── small helpers ────────────────────────────────────────────────────────────
 const Star = () => <span style={{ color: "#F59E0B" }}>★</span>;
 
 function ProductCard({ product }) {
@@ -12,23 +11,14 @@ function ProductCard({ product }) {
   const isMobile = useIsMobile();
   return (
     <Link to={`/product/${product.id}`} style={{ textDecoration: "none", color: "inherit" }}>
-      <div style={{
-        background: "#fff", borderRadius: 16, overflow: "hidden",
-        boxShadow: "0 2px 12px rgba(0,0,0,0.07)", transition: "transform .2s, box-shadow .2s",
-        cursor: "pointer",
-      }}
+      <div style={{ background: "#fff", borderRadius: 16, overflow: "hidden", boxShadow: "0 2px 12px rgba(0,0,0,0.07)", transition: "transform .2s, box-shadow .2s", cursor: "pointer" }}
         onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 8px 24px rgba(0,0,0,0.13)"; }}
         onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.07)"; }}
       >
         <div style={{ position: "relative", height: isMobile ? 180 : 240, background: "#f3f4f2", overflow: "hidden" }}>
-          <img src={product.images[0]} alt={product.name}
-            style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            onError={e => { e.target.style.display = "none"; }}
-          />
+          <img src={product.images[0]} alt={product.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           {product.badge && (
-            <span style={{ position: "absolute", top: 12, left: 12, background: c.sage, color: "#fff", borderRadius: 20, padding: "4px 12px", fontSize: 11, fontWeight: 700 }}>
-              {product.badge}
-            </span>
+            <span style={{ position: "absolute", top: 12, left: 12, background: c.sage, color: "#fff", borderRadius: 20, padding: "4px 12px", fontSize: 11, fontWeight: 700 }}>{product.badge}</span>
           )}
         </div>
         <div style={{ padding: "16px 16px 20px" }}>
@@ -44,7 +34,6 @@ function ProductCard({ product }) {
   );
 }
 
-// ── testimonial strip ─────────────────────────────────────────────────────────
 const TESTIMONIALS = [
   { name: "Maaike V.", stars: 5, text: "Finally something that actually keeps ticks away. Wore it hiking all weekend — not a single bite.", location: "Netherlands" },
   { name: "James R.", stars: 5, text: "My whole family wears these now. Kids can play in the forest without us constantly checking.", location: "Canada" },
@@ -52,7 +41,6 @@ const TESTIMONIALS = [
   { name: "Bart M.", stars: 4, text: "Lightweight, breathable, does exactly what it says. Great for gardening too.", location: "Belgium" },
 ];
 
-// ── disease cards ─────────────────────────────────────────────────────────────
 const DISEASES = [
   { name: "Lyme Disease", severity: "High Risk", color: "#dc2626", desc: "Caused by Borrelia bacteria transmitted through tick bites. Can lead to chronic fatigue, joint pain and neurological issues if untreated." },
   { name: "TBE (Tick-Borne Encephalitis)", severity: "Serious", color: "#d97706", desc: "Viral infection affecting the nervous system. No cure — prevention is the only protection." },
@@ -63,11 +51,11 @@ const DISEASES = [
 export default function Home() {
   const isMobile = useIsMobile();
   const { symbol } = useCurrency();
-  const bestsellers = products.filter(p => p.badge === "Best Seller").slice(0, 4);
+  const bestsellers = products.filter(p => p.badge === "Best Seller");
 
   return (
     <div>
-      {/* ── HERO ── */}
+      {/* HERO */}
       <section style={{
         position: "relative", minHeight: isMobile ? 420 : 520,
         background: `linear-gradient(to right, rgba(30,50,40,.72) 55%, rgba(30,50,40,.3) 100%), url('/images/combo-lifestyle-couple-forest-green.jpg') center/cover no-repeat`,
@@ -78,8 +66,7 @@ export default function Home() {
             🛡️ Insecticide-free · Tick-proof · Eco-responsible
           </span>
           <h1 style={{ fontFamily: "Archivo, sans-serif", fontSize: isMobile ? 36 : 56, fontWeight: 900, lineHeight: 1.1, margin: "0 0 12px" }}>
-            Enjoy the Outdoors.<br />
-            <span style={{ color: c.sageL }}>Safe & Carefree.</span>
+            Enjoy the Outdoors.<br /><span style={{ color: c.sageL }}>Safe & Carefree.</span>
           </h1>
           <p style={{ fontSize: 16, opacity: 0.88, maxWidth: 420, lineHeight: 1.6, margin: "0 0 12px" }}>
             Lightweight mesh clothing that physically blocks ticks and insects. No DEET, no chemicals — just a smart layer between you and nature.
@@ -89,7 +76,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── TRUST BAR ── */}
+      {/* TRUST BAR */}
       <section style={{ background: "#fff", borderBottom: "1px solid #e8ede9", padding: "14px 24px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", flexWrap: "wrap", justifyContent: "center", gap: isMobile ? 16 : 40 }}>
           {[
@@ -105,7 +92,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── SHOP BY CATEGORY ── */}
+      {/* SHOP BY CATEGORY */}
       <section style={{ background: "#F7F9F8", padding: isMobile ? "48px 20px" : "72px 40px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <div style={{ ...LBL, marginBottom: 8 }}>SHOP BY CATEGORY</div>
@@ -135,23 +122,20 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── NATURE PHOTO STRIP ── */}
+      {/* NATURE PHOTO STRIP */}
       <section style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr 1fr", height: isMobile ? "auto" : 300, overflow: "hidden" }}>
-        {[
-          { src: "/images/combo-lifestyle-couple-forest-white.jpg", alt: "Family Protection" },
-          { src: "/images/kids-lifestyle-forest-playing.jpg", alt: "Kids forest adventure" },
-          { src: "/images/jacket-men-lifestyle-birdwatching.jpg", alt: "Birdwatching in nature" },
-        ].map(({ src, alt }) => (
-          <div key={alt} style={{ overflow: "hidden", height: isMobile ? 180 : "100%" }}>
-            <img src={src} alt={alt} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform .4s" }}
-              onMouseEnter={e => e.target.style.transform = "scale(1.04)"}
-              onMouseLeave={e => e.target.style.transform = "scale(1)"}
-            />
-          </div>
-        ))}
+        <div style={{ overflow: "hidden", height: isMobile ? 180 : "100%" }}>
+          <img src="/images/combo-lifestyle-couple-forest-white.jpg" alt="Family protection" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        </div>
+        <div style={{ overflow: "hidden", height: isMobile ? 180 : "100%" }}>
+          <img src="/images/kids-lifestyle-forest-playing.jpg" alt="Kids in forest" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        </div>
+        <div style={{ overflow: "hidden", height: isMobile ? 180 : "100%" }}>
+          <img src="/images/jacket-men-lifestyle-birdwatching.jpg" alt="Birdwatching outdoors" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        </div>
       </section>
 
-      {/* ── STATS BAR ── */}
+      {/* STATS BAR */}
       <section style={{ background: c.sage, padding: "32px 24px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(5,1fr)", gap: 24, textAlign: "center", color: "#fff" }}>
           {[
@@ -169,7 +153,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── BESTSELLERS ── */}
+      {/* BESTSELLERS */}
       <section style={{ background: "#fff", padding: isMobile ? "48px 20px" : "72px 40px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <div style={{ ...LBL, marginBottom: 8 }}>OUR PICKS</div>
@@ -178,12 +162,12 @@ export default function Home() {
             <Link to="/shop" style={{ fontSize: 13, color: c.sage, textDecoration: "none", fontWeight: 600 }}>View all →</Link>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(4, 1fr)", gap: 20 }}>
-            {(bestsellers.length ? bestsellers : products.slice(0, 4)).map(p => <ProductCard key={p.id} product={p} />)}
+            {bestsellers.map(p => <ProductCard key={p.id} product={p} />)}
           </div>
         </div>
       </section>
 
-      {/* ── HOW IT WORKS ── */}
+      {/* HOW IT WORKS */}
       <section style={{ background: "#F7F9F8", padding: isMobile ? "48px 20px" : "72px 40px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <div style={{ ...LBL, marginBottom: 8 }}>HOW IT WORKS</div>
@@ -205,18 +189,18 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── SEE IT IN ACTION (video) ── */}
+      {/* SEE IT IN ACTION VIDEO */}
       <section style={{ background: "#1a2e24", padding: isMobile ? "48px 20px" : "72px 40px" }}>
         <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
           <div style={{ ...LBL, color: c.sageL, marginBottom: 8 }}>SEE IT IN ACTION</div>
-          <h2 style={{ ...H2, color: "#fff", marginBottom: 32 }}>Watch it in the wild</h2>
+          <h2 style={{ fontFamily: "Archivo, sans-serif", fontWeight: 900, fontSize: isMobile ? 28 : 36, color: "#fff", marginBottom: 32 }}>Watch it in the wild</h2>
           <video autoPlay muted loop playsInline style={{ width: "100%", borderRadius: 16, maxHeight: 480, objectFit: "cover" }}>
             <source src="/videos/see-in-action.mp4" type="video/mp4" />
           </video>
         </div>
       </section>
 
-      {/* ── WHO IS IT FOR ── */}
+      {/* WHO IS IT FOR */}
       <section style={{ background: "#fff", padding: isMobile ? "48px 20px" : "72px 40px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <div style={{ ...LBL, marginBottom: 8 }}>WHO IS IT FOR</div>
@@ -242,7 +226,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── KNOW YOUR RISK (video) ── */}
+      {/* TICK AWARENESS VIDEO */}
       <section style={{ background: "#F7F9F8", padding: isMobile ? "48px 20px" : "72px 40px" }}>
         <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
           <div style={{ ...LBL, marginBottom: 8 }}>TICK AWARENESS</div>
@@ -253,7 +237,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── DISEASE INFO ── */}
+      {/* DISEASE INFO */}
       <section style={{ background: "#fff", padding: isMobile ? "48px 20px" : "72px 40px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <div style={{ ...LBL, marginBottom: 8 }}>HEALTH & SAFETY</div>
@@ -279,7 +263,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── REVIEWS ── */}
+      {/* REVIEWS */}
       <section style={{ background: "#F7F9F8", padding: isMobile ? "48px 20px" : "72px 40px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <div style={{ ...LBL, marginBottom: 8 }}>REVIEWS</div>
@@ -296,7 +280,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── BLOG PREVIEW ── */}
+      {/* BLOG PREVIEW */}
       <section style={{ background: "#fff", padding: isMobile ? "48px 20px" : "72px 40px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 32 }}>
@@ -308,9 +292,9 @@ export default function Home() {
           </div>
           <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3,1fr)", gap: 24 }}>
             {[
-              { cat: "EDUCATION", title: "Tick Season 2025: When Are Ticks Most Active?", excerpt: "Ticks become active as soon as temperatures rise above 7°C. Find out when the risk is highest and how to protect yourself and your family.", img: "/images/proof-ticks.jpg" },
-              { cat: "HEALTH", title: "How to Recognize a Tick Bite and What to Do", excerpt: "Not every tick bite leads to Lyme disease. But knowing what to do immediately after a bite can make all the difference to your health.", img: "/images/proof-mosquito.jpg" },
-              { cat: "PETS", title: "Ticks and Dogs: Risks and How to Protect Your Pet", excerpt: "Dogs face the exact same tick risks as humans. Discover how to protect your dog against ticks and tick-borne diseases this season.", img: "/images/pants-detail-feet-grass.jpg" },
+              { cat: "EDUCATION", title: "Tick Season 2025: When Are Ticks Most Active?", excerpt: "Ticks become active as soon as temperatures rise above 7°C. Find out when the risk is highest and how to protect yourself.", img: "/images/proof-ticks.jpg" },
+              { cat: "HEALTH", title: "How to Recognize a Tick Bite and What to Do", excerpt: "Not every tick bite leads to Lyme disease. But knowing what to do immediately after a bite can make all the difference.", img: "/images/proof-mosquito.jpg" },
+              { cat: "PETS", title: "Ticks and Dogs: Risks and How to Protect Your Pet", excerpt: "Dogs face the exact same tick risks as humans. Discover how to protect your dog this outdoor season.", img: "/images/pants-detail-feet-grass.jpg" },
             ].map(({ cat, title, excerpt, img }) => (
               <Link key={title} to="/blog" style={{ textDecoration: "none", color: "inherit" }}>
                 <div style={{ background: "#F0F5F2", borderRadius: 16, overflow: "hidden", boxShadow: "0 2px 10px rgba(0,0,0,0.05)", transition: "transform .2s" }}

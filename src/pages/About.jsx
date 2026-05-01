@@ -10,10 +10,8 @@ const VALUES = [
 
 export default function About() {
   const isMobile = useIsMobile();
-
   return (
     <div>
-      {/* ── HERO ── */}
       <section style={{
         position: "relative", minHeight: isMobile ? 300 : 420,
         background: `linear-gradient(to right, rgba(30,50,40,.72) 55%, rgba(30,50,40,.3) 100%), url('/images/combo-lifestyle-couple-forest-green.jpg') center/cover no-repeat`,
@@ -30,7 +28,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* ── ORIGIN STORY ── */}
       <section style={{ background: "#fff", padding: isMobile ? "48px 20px" : "72px 40px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 48, alignItems: "center" }}>
           <div>
@@ -53,7 +50,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* ── MISSION ── */}
       <section style={{ background: c.sage, padding: isMobile ? "48px 20px" : "72px 40px", textAlign: "center" }}>
         <div style={{ maxWidth: 800, margin: "0 auto" }}>
           <div style={{ ...LBL, color: "rgba(255,255,255,0.7)", marginBottom: 12 }}>OUR MISSION</div>
@@ -66,7 +62,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* ── VALUES ── */}
       <section style={{ background: "#F7F9F8", padding: isMobile ? "48px 20px" : "72px 40px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <div style={{ ...LBL, marginBottom: 8 }}>WHAT WE STAND FOR</div>
@@ -83,7 +78,7 @@ export default function About() {
         </div>
       </section>
 
-      {/* ── PHOTO COLLAGE ── */}
+      {/* 3 foto collage — alle drie bestaan in de images map */}
       <section style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr 1fr", gap: 0 }}>
         {[
           { src: "/images/combo-lifestyle-couple-forest-white.jpg", alt: "Couple in forest" },
@@ -96,7 +91,6 @@ export default function About() {
         ))}
       </section>
 
-      {/* ── PRODUCT PROMISE ── */}
       <section style={{ background: "#fff", padding: isMobile ? "48px 20px" : "72px 40px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 48, alignItems: "center" }}>
           <div style={{ borderRadius: 20, overflow: "hidden", height: isMobile ? 260 : 380 }}>

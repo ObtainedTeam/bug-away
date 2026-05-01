@@ -25,10 +25,8 @@ const FEATURES = [
 
 export default function HowItWorks() {
   const isMobile = useIsMobile();
-
   return (
     <div>
-      {/* ── HERO ── */}
       <section style={{
         position: "relative", minHeight: isMobile ? 280 : 360,
         background: `linear-gradient(to right, rgba(30,50,40,.75) 60%, rgba(30,50,40,.35) 100%), url('/images/jacket-men-lifestyle-birdwatching.jpg') center/cover no-repeat`,
@@ -42,7 +40,6 @@ export default function HowItWorks() {
         </div>
       </section>
 
-      {/* ── 4 STEPS ── */}
       <section style={{ background: "#F7F9F8", padding: isMobile ? "48px 20px" : "72px 40px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <div style={{ ...LBL, marginBottom: 8 }}>THE PROCESS</div>
@@ -59,7 +56,6 @@ export default function HowItWorks() {
         </div>
       </section>
 
-      {/* ── MESH SIZE PROOF ── */}
       <section style={{ background: "#fff", padding: isMobile ? "48px 20px" : "72px 40px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <div style={{ ...LBL, marginBottom: 8 }}>PROOF IT WORKS</div>
@@ -75,8 +71,7 @@ export default function HowItWorks() {
               </div>
             ))}
           </div>
-          {/* mesh size callout */}
-          <div style={{ background: c.sage, borderRadius: 16, padding: isMobile ? "24px 20px" : "32px 40px", display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: "center", gap: 20 }}>
+          <div style={{ background: c.sage, borderRadius: 16, padding: isMobile ? "24px 20px" : "32px 40px", display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: "center", gap: 24 }}>
             <div style={{ fontFamily: "Archivo, sans-serif", fontWeight: 900, fontSize: isMobile ? 36 : 52, color: "#fff", flexShrink: 0 }}>{"< 0.6mm"}</div>
             <div style={{ color: "rgba(255,255,255,0.9)", fontSize: 15, lineHeight: 1.65 }}>
               That's the maximum opening size of Bug Away's noseeum mesh. The average tick nymph is 1.5–2mm wide — it physically cannot fit through the fabric, even when it tries to crawl.
@@ -85,19 +80,15 @@ export default function HowItWorks() {
         </div>
       </section>
 
-      {/* ── INFOGRAPHIC ── */}
       <section style={{ background: "#F7F9F8", padding: isMobile ? "48px 20px" : "72px 40px" }}>
         <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
           <div style={{ ...LBL, marginBottom: 8 }}>HOW THE LAYERS WORK</div>
           <h2 style={{ ...H2, marginBottom: 32 }}>The layering system</h2>
-          <img src="/images/how-it-works-infographic.png" alt="How Bug Away layering works"
-            style={{ width: "100%", borderRadius: 16, boxShadow: "0 4px 20px rgba(0,0,0,0.08)" }}
-            onError={e => e.target.style.display = "none"}
-          />
+          <img src="/images/how-it-works-infographic.jpg" alt="How Bug Away layering works"
+            style={{ width: "100%", borderRadius: 16, boxShadow: "0 4px 20px rgba(0,0,0,0.08)" }} />
         </div>
       </section>
 
-      {/* ── FEATURES GRID ── */}
       <section style={{ background: "#fff", padding: isMobile ? "48px 20px" : "72px 40px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <div style={{ ...LBL, marginBottom: 8 }}>KEY FEATURES</div>
@@ -114,19 +105,18 @@ export default function HowItWorks() {
         </div>
       </section>
 
-      {/* ── LIFESTYLE PHOTOS ── */}
-      <section style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 0 }}>
+      <section style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr 1fr", gap: 0 }}>
         {[
           { src: "/images/jacket-men-lifestyle-forest-walking.jpg", alt: "Hiking in Bug Away" },
           { src: "/images/jacket-women-lifestyle-gardening.jpg", alt: "Gardening protected" },
+          { src: "/images/combo-lifestyle-couple-forest-white.jpg", alt: "Couple outdoors" },
         ].map(({ src, alt }) => (
-          <div key={alt} style={{ height: isMobile ? 220 : 380, overflow: "hidden" }}>
+          <div key={alt} style={{ height: isMobile ? 200 : 320, overflow: "hidden" }}>
             <img src={src} alt={alt} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </div>
         ))}
       </section>
 
-      {/* ── CTA ── */}
       <section style={{ background: "#1a2e24", padding: isMobile ? "48px 20px" : "72px 40px", textAlign: "center" }}>
         <div style={{ maxWidth: 600, margin: "0 auto" }}>
           <h2 style={{ fontFamily: "Archivo, sans-serif", fontWeight: 900, fontSize: isMobile ? 28 : 36, color: "#fff", marginBottom: 16 }}>Ready to protect yourself?</h2>
