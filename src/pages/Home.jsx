@@ -1,14 +1,14 @@
-import { useState, useEffect, useContext } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { c, useIsMobile, BTN, BTNO, H2, LBL } from "../theme";
+import { c, useIsMobile, BTN, H2, LBL } from "../theme";
 import { products, reviews } from "../data";
-import { CurrencyContext } from "../currency";
+import { useCurrency } from "../currency";
 
 // ── small helpers ────────────────────────────────────────────────────────────
 const Star = () => <span style={{ color: "#F59E0B" }}>★</span>;
 
 function ProductCard({ product }) {
-  const { symbol, convert } = useContext(CurrencyContext);
+  const { symbol } = useCurrency();
   const isMobile = useIsMobile();
   return (
     <Link to={`/product/${product.id}`} style={{ textDecoration: "none", color: "inherit" }}>
@@ -35,7 +35,7 @@ function ProductCard({ product }) {
           <div style={{ fontSize: 11, color: c.sage, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>{product.category}</div>
           <div style={{ fontFamily: "Archivo, sans-serif", fontWeight: 700, fontSize: 15, marginBottom: 8 }}>{product.name}</div>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span style={{ fontWeight: 800, fontSize: 16, color: c.sageD }}>{symbol}{convert(product.price)}</span>
+            <span style={{ fontWeight: 800, fontSize: 16, color: c.sageD }}>{symbol}{product.price}</span>
             <span style={{ ...BTN, fontSize: 12, padding: "6px 14px" }}>View</span>
           </div>
         </div>
@@ -62,7 +62,7 @@ const DISEASES = [
 
 export default function Home() {
   const isMobile = useIsMobile();
-  const { symbol, convert } = useContext(CurrencyContext);
+  const { symbol } = useCurrency();
   const bestsellers = products.filter(p => p.badge === "Best Seller").slice(0, 4);
 
   return (
@@ -139,8 +139,8 @@ export default function Home() {
       <section style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr 1fr", height: isMobile ? "auto" : 300, overflow: "hidden" }}>
         {[
           { src: "/images/combo-lifestyle-couple-forest-white.jpg", alt: "Family Protection" },
-          { src: "/images/kids-lifestyle-forest-playing.jpg", alt: "Adventure Ready" },
-          { src: "/images/jacket-men-lifestyle-birdwatching.jpg", alt: "Adventure Ready" },
+          { src: "/images/kids-lifestyle-forest-playing.jpg", alt: "Kids forest adventure" },
+          { src: "/images/jacket-men-lifestyle-birdwatching.jpg", alt: "Birdwatching in nature" },
         ].map(({ src, alt }) => (
           <div key={alt} style={{ overflow: "hidden", height: isMobile ? 180 : "100%" }}>
             <img src={src} alt={alt} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform .4s" }}
