@@ -68,7 +68,7 @@ export default function Shop() {
                 onMouseLeave={e => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.transform = "none"; }}
               >
                 {/* IMAGE */}
-                <div style={{ height: isMobile ? 160 : 260, background: "#f3f4f2", overflow: "hidden", position: "relative" }}>
+                <div style={{ height: isMobile ? 200 : 340, background: "#f3f4f2", overflow: "hidden", position: "relative" }}>
                   <img src={product.images[0]} alt={product.name}
                     style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
                     onError={e => e.target.style.display = "none"}
@@ -101,7 +101,7 @@ export default function Shop() {
                     </div>
                   )}
                   <div style={{ fontSize: 15, color: "#333", marginBottom: 12, fontWeight: 600 }}>
-                    {symbol}{product.price}
+                    {symbol}{product.price.toFixed(2)}
                   </div>
                   <div style={{ ...BTN, width: "100%", fontSize: 11, padding: "10px 0", textAlign: "center", borderRadius: 6 }}>
                     View Product

@@ -1,221 +1,140 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { c, useIsMobile } from "../theme";
 import { CartContext } from "./Cart";
 
-const navLinks = [
-  { label: "Shop", to: "/shop" },
-  { label: "How It Works", to: "/how-it-works" },
-  { label: "About", to: "/about" },
-  { label: "Blog", to: "/blog" },
-  { label: "FAQ", to: "/faq" },
+const NAV_LINKS = [
+  { label: "How It Works", path: "/how-it-works" },
+  { label: "About", path: "/about" },
+  { label: "Blog", path: "/blog" },
+  { label: "FAQ", path: "/faq" },
 ];
 
-export default function Nav({ onCartOpen }) {
-  const [open, setOpen] = useState(false);
-  const [cartCount, setCartCount] = useState(0);
-  const location = useLocation();
+const SHOP_DROPDOWN = [
+  { label: "All Products", path: "/shop" },
+  { label: "Men", path: "/shop?cat=MEN" },
+  { label: "Women", path: "/shop?cat=WOMEN" },
+  { label: "Kids", path: "/shop?cat=KIDS" },
+  { label: "Bundles", path: "/shop?cat=BUNDLES" },
+];
+
+export default function Nav({ cartCount, onCartOpen }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [shopOpen, setShopOpen] = useState(false);
+  const { pathname } = useLocation();
   const isMobile = useIsMobile();
-
-  useEffect(() => {
-    const updateCount = (items) =>
-      setCartCount(items.reduce((s, i) => s + i.quantity, 0));
-    CartContext.subscribe(updateCount);
-    return () => CartContext.unsubscribe(updateCount);
-  }, []);
-
-  const isActive = (to) =>
-    location.pathname === to || location.pathname.startsWith(to + "/");
-
-  const linkStyle = (to) => ({
-    fontFamily: "'Poppins',sans-serif",
-    fontSize: 12,
-    fontWeight: 600,
-    letterSpacing: "0.08em",
-    textTransform: "uppercase",
-    color: isActive(to) ? c.sageD : c.grayD,
-    textDecoration: "none",
-    borderBottom: isActive(to)
-      ? `2px solid ${c.sageD}`
-      : "2px solid transparent",
-    paddingBottom: 4,
-    transition: "color 0.15s",
-  });
 
   return (
     <>
-      {/* Topbar */}
-      <div
-        style={{
-          background: c.sageD,
-          color: "#fff",
-          textAlign: "center",
-          padding: "8px 16px",
-          fontSize: 11,
-          fontFamily: "'Poppins',sans-serif",
-          letterSpacing: "0.05em",
-        }}
-      >
-        🛡️ Free shipping in the US · Chemical-free · Eco-responsible
+      {/* ANNOUNCEMENT BAR */}
+      <div style={{ background: c.sage, color: "#fff", textAlign: "center", fontSize: 12, fontWeight: 600, padding: "8px 16px", letterSpacing: 0.5 }}>
+        🌿 Free shipping in the US · Chemical-free · Eco-responsible
       </div>
 
-      {/* Main nav */}
-      <nav
-        style={{
-          background: "#fff",
-          borderBottom: `1px solid ${c.glL}`,
-          padding: `0 ${isMobile ? "16px" : "40px"}`,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          height: 60,
-          position: "sticky",
-          top: 0,
-          zIndex: 200,
-          boxShadow: "0 2px 12px rgba(90,102,96,0.07)",
-        }}
-      >
-        <Link
-          to="/"
-          style={{
-            fontSize: 19,
-            fontWeight: 800,
-            letterSpacing: "0.1em",
-            color: c.sageD,
-            textTransform: "uppercase",
-            textDecoration: "none",
-          }}
-        >
-          Bug Away
-        </Link>
+      {/* NAV */}
+      <nav style={{ background: "#fff", borderBottom: "1px solid #e8ede9", position: "sticky", top: 0, zIndex: 100, boxShadow: "0 1px 8px rgba(0,0,0,0.05)" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", height: 60, gap: 32 }}>
 
-        {/* Desktop nav */}
-        {!isMobile && (
-          <ul
-            style={{
-              display: "flex",
-              gap: 28,
-              listStyle: "none",
-              margin: 0,
-              padding: 0,
-            }}
-          >
-            {navLinks.map((n) => (
-              <li key={n.to}>
-                <Link to={n.to} style={linkStyle(n.to)}>
-                  {n.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
-
-        <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
-          <Link to="/shop" style={{ fontSize: 18, textDecoration: "none" }}>
-            🔍
+          {/* LOGO */}
+          <Link to="/" style={{ fontFamily: "Archivo, sans-serif", fontWeight: 900, fontSize: 18, color: c.sageD, textDecoration: "none", letterSpacing: "-0.02em", flexShrink: 0 }}>
+            BUG AWAY
           </Link>
 
-          {/* Cart button with badge */}
-          <button
-            onClick={onCartOpen}
-            style={{
-              position: "relative",
-              cursor: "pointer",
-              background: "none",
-              border: "none",
-              fontSize: 18,
-              padding: 0,
-            }}
-          >
-            🛒
-            {cartCount > 0 && (
-              <span
-                style={{
-                  position: "absolute",
-                  top: -6,
-                  right: -6,
-                  background: c.sageD,
-                  color: "#fff",
-                  borderRadius: "50%",
-                  width: 17,
-                  height: 17,
-                  fontSize: 10,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontFamily: "'Poppins',sans-serif",
-                  fontWeight: 700,
-                }}
+          {!isMobile && (
+            <div style={{ display: "flex", alignItems: "center", gap: 4, flex: 1 }}>
+              {/* SHOP DROPDOWN */}
+              <div
+                style={{ position: "relative" }}
+                onMouseEnter={() => setShopOpen(true)}
+                onMouseLeave={() => setShopOpen(false)}
               >
-                {cartCount}
-              </span>
-            )}
-          </button>
+                <Link to="/shop" style={{
+                  textDecoration: "none", fontSize: 13, fontWeight: 700, padding: "8px 12px",
+                  color: pathname === "/shop" ? c.sageD : "#555",
+                  borderBottom: pathname === "/shop" ? `2px solid ${c.sageD}` : "2px solid transparent",
+                  display: "flex", alignItems: "center", gap: 4,
+                }}>
+                  SHOP <span style={{ fontSize: 10, opacity: 0.7 }}>▾</span>
+                </Link>
+                {shopOpen && (
+                  <div style={{
+                    position: "absolute", top: "100%", left: 0, background: "#fff",
+                    borderRadius: 12, boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
+                    border: "1px solid #e8ede9", minWidth: 180, overflow: "hidden", zIndex: 200,
+                  }}>
+                    {SHOP_DROPDOWN.map(({ label, path }) => (
+                      <Link key={label} to={path} onClick={() => setShopOpen(false)} style={{
+                        display: "block", padding: "10px 18px", textDecoration: "none",
+                        fontSize: 13, fontWeight: 600, color: "#333",
+                        borderBottom: "1px solid #f0f0f0",
+                        transition: "background .15s",
+                      }}
+                        onMouseEnter={e => e.currentTarget.style.background = "#F7F9F8"}
+                        onMouseLeave={e => e.currentTarget.style.background = "#fff"}
+                      >
+                        {label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
 
-          {isMobile && (
-            <span
-              style={{ fontSize: 22, cursor: "pointer", color: c.dark }}
-              onClick={() => setOpen(!open)}
-            >
-              {open ? "✕" : "☰"}
-            </span>
+              {/* OTHER NAV LINKS */}
+              {NAV_LINKS.map(({ label, path }) => (
+                <Link key={label} to={path} style={{
+                  textDecoration: "none", fontSize: 13, fontWeight: 700, padding: "8px 12px",
+                  color: pathname === path ? c.sageD : "#555",
+                  borderBottom: pathname === path ? `2px solid ${c.sageD}` : "2px solid transparent",
+                  transition: "color .2s",
+                }}>
+                  {label.toUpperCase()}
+                </Link>
+              ))}
+            </div>
           )}
-        </div>
-      </nav>
 
-      {/* Mobile dropdown menu */}
-      {isMobile && open && (
-        <div
-          style={{
-            background: "#fff",
-            borderBottom: `1px solid ${c.glL}`,
-            position: "sticky",
-            top: 60,
-            zIndex: 199,
-          }}
-        >
-          {navLinks.map((n) => (
-            <Link
-              key={n.to}
-              to={n.to}
-              onClick={() => setOpen(false)}
-              style={{
-                display: "block",
-                padding: "14px 20px",
-                fontFamily: "'Poppins',sans-serif",
-                fontSize: 14,
-                fontWeight: 600,
-                color: isActive(n.to) ? c.sageD : c.dark,
-                borderBottom: `1px solid ${c.glL}`,
-                textDecoration: "none",
-              }}
-            >
-              {n.label}
-            </Link>
-          ))}
-          <Link
-            to="/shop"
-            onClick={() => setOpen(false)}
-            style={{
-              display: "block",
-              margin: "12px 16px",
-              background: c.sageD,
-              color: "#fff",
-              padding: "12px 20px",
-              borderRadius: 4,
-              fontFamily: "'Poppins',sans-serif",
-              fontSize: 12,
-              fontWeight: 600,
-              textTransform: "uppercase",
-              letterSpacing: "0.08em",
-              textDecoration: "none",
-              textAlign: "center",
-            }}
-          >
-            Shop Now
-          </Link>
+          <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 16 }}>
+            {/* CART */}
+            <button onClick={onCartOpen} style={{ position: "relative", background: "none", border: "none", cursor: "pointer", padding: 4 }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={c.sageD} strokeWidth="2">
+                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
+              </svg>
+              {cartCount > 0 && (
+                <span style={{ position: "absolute", top: -4, right: -4, background: c.sageD, color: "#fff", borderRadius: "50%", width: 16, height: 16, fontSize: 10, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  {cartCount}
+                </span>
+              )}
+            </button>
+
+            {/* HAMBURGER */}
+            {isMobile && (
+              <button onClick={() => setMenuOpen(!menuOpen)} style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
+                <div style={{ width: 22, height: 2, background: "#333", marginBottom: 5, transition: "all .3s", transform: menuOpen ? "rotate(45deg) translateY(7px)" : "none" }} />
+                <div style={{ width: 22, height: 2, background: "#333", marginBottom: 5, opacity: menuOpen ? 0 : 1 }} />
+                <div style={{ width: 22, height: 2, background: "#333", transition: "all .3s", transform: menuOpen ? "rotate(-45deg) translateY(-7px)" : "none" }} />
+              </button>
+            )}
+          </div>
         </div>
-      )}
+
+        {/* MOBILE MENU */}
+        {isMobile && menuOpen && (
+          <div style={{ background: "#fff", borderTop: "1px solid #e8ede9", padding: "16px 24px" }}>
+            <div style={{ fontSize: 11, fontWeight: 800, color: "#999", textTransform: "uppercase", letterSpacing: 1, marginBottom: 8 }}>Collections</div>
+            {SHOP_DROPDOWN.map(({ label, path }) => (
+              <Link key={label} to={path} onClick={() => setMenuOpen(false)} style={{ display: "block", padding: "10px 0", fontSize: 14, fontWeight: 600, color: "#333", textDecoration: "none", borderBottom: "1px solid #f5f5f5" }}>
+                {label}
+              </Link>
+            ))}
+            <div style={{ fontSize: 11, fontWeight: 800, color: "#999", textTransform: "uppercase", letterSpacing: 1, margin: "16px 0 8px" }}>More</div>
+            {NAV_LINKS.map(({ label, path }) => (
+              <Link key={label} to={path} onClick={() => setMenuOpen(false)} style={{ display: "block", padding: "10px 0", fontSize: 14, fontWeight: 600, color: "#333", textDecoration: "none", borderBottom: "1px solid #f5f5f5" }}>
+                {label}
+              </Link>
+            ))}
+          </div>
+        )}
+      </nav>
     </>
   );
 }

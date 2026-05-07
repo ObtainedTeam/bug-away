@@ -1,50 +1,34 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { c, useIsMobile } from "../theme";
-import { SHOPIFY_HANDLES, getVariantId } from "../shopify";
-import { useCurrency, formatPrice } from "../currency.jsx";
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { c, useIsMobile } from '../theme';
+import { SHOPIFY_HANDLES, getVariantId } from '../shopify';
+import { useCurrency, formatPrice } from '../currency.jsx';
 
-const DOMAIN = "bug-away-3.myshopify.com";
+const DOMAIN = 'bug-away-3.myshopify.com';
 const FREE_GIFT_THRESHOLD = 79;
-const SINGLE_PRICE = 45;
-const COMBO_PRICE = 79;
-const SAVINGS = (SINGLE_PRICE * 2 - COMBO_PRICE).toFixed(0);
+const SINGLE_PRICE = 44.99;
+const COMBO_PRICE = 78.99;
+const SAVINGS = ((SINGLE_PRICE * 2) - COMBO_PRICE).toFixed(2);
+
+
 
 export const CartContext = {
   items: [],
   listeners: [],
-  subscribe(fn) {
-    this.listeners.push(fn);
-  },
-  unsubscribe(fn) {
-    this.listeners = this.listeners.filter((l) => l !== fn);
-  },
-  notify() {
-    this.listeners.forEach((fn) => fn([...this.items]));
-  },
+  subscribe(fn) { this.listeners.push(fn); },
+  unsubscribe(fn) { this.listeners = this.listeners.filter(l => l !== fn); },
+  notify() { this.listeners.forEach(fn => fn([...this.items])); },
   add(product, size, color, quantity = 1) {
     const key = `${product.id}-${size}-${color}`;
-    const existing = this.items.find((i) => i.key === key);
-    if (existing) {
-      existing.quantity += quantity;
-    } else {
-      this.items.push({ key, product, size, color, quantity });
-    }
+    const existing = this.items.find(i => i.key === key);
+    if (existing) { existing.quantity += quantity; }
+    else { this.items.push({ key, product, size, color, quantity }); }
     this.notify();
   },
-  remove(key) {
-    this.items = this.items.filter((i) => i.key !== key);
-    this.notify();
-  },
+  remove(key) { this.items = this.items.filter(i => i.key !== key); this.notify(); },
   updateQty(key, qty) {
-    const item = this.items.find((i) => i.key === key);
-    if (item) {
-      if (qty <= 0) this.remove(key);
-      else {
-        item.quantity = qty;
-        this.notify();
-      }
-    }
+    const item = this.items.find(i => i.key === key);
+    if (item) { if (qty <= 0) this.remove(key); else { item.quantity = qty; this.notify(); } }
   },
 };
 
@@ -52,10 +36,10 @@ export default function Cart({ isOpen, onClose }) {
   const isMobile = useIsMobile();
   const { symbol } = useCurrency();
   const [items, setItems] = useState([...CartContext.items]);
-  const [discountCode, setDiscountCode] = useState("");
+  const [discountCode, setDiscountCode] = useState('');
   const [showDiscount, setShowDiscount] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
-  const [notes, setNotes] = useState("");
+  const [notes, setNotes] = useState('');
 
   useEffect(() => {
     CartContext.subscribe(setItems);
@@ -67,465 +51,135 @@ export default function Cart({ isOpen, onClose }) {
   const remaining = Math.max(0, FREE_GIFT_THRESHOLD - total);
   const progress = Math.min(100, (total / FREE_GIFT_THRESHOLD) * 100);
 
-  const hasMenJacket = items.some((i) => i.product.id === "ba-jacket-men");
-  const hasMenPants = items.some((i) => i.product.id === "ba-pants-men");
-  const hasWomenJacket = items.some((i) => i.product.id === "ba-jacket-women");
-  const hasWomenPants = items.some((i) => i.product.id === "ba-pants-women");
+  const hasMenJacket = items.some(i => i.product.id === 'ba-jacket-men');
+  const hasMenPants = items.some(i => i.product.id === 'ba-pants-men');
+  const hasWomenJacket = items.some(i => i.product.id === 'ba-jacket-women');
+  const hasWomenPants = items.some(i => i.product.id === 'ba-pants-women');
 
   let upsell = null;
   if (hasMenJacket && !hasMenPants) {
-    upsell = {
-      text: "Add the matching pants and save",
-      product: {
-        id: "ba-pants-men",
-        name: "Bug Away Pants — Men",
-        price: SINGLE_PRICE,
-        images: ["/images/pants-men-white-front.jpg"],
-        colorHex: ["#6B9E7A"],
-        colors: ["Sage Green"],
-      },
-    };
+    upsell = { text: "Add the matching pants and save", product: { id: 'ba-pants-men', name: 'Bug Away Pants — Men', price: SINGLE_PRICE, images: ['/images/pants-men-white-front.jpg'], colorHex: ['#6B9E7A'], colors: ['Sage Green'] } };
   } else if (hasMenPants && !hasMenJacket) {
-    upsell = {
-      text: "Add the matching jacket and save",
-      product: {
-        id: "ba-jacket-men",
-        name: "Bug Away Jacket — Men",
-        price: SINGLE_PRICE,
-        images: ["/images/jacket-men-white-front.jpg"],
-        colorHex: ["#6B9E7A"],
-        colors: ["Sage Green"],
-      },
-    };
+    upsell = { text: "Add the matching jacket and save", product: { id: 'ba-jacket-men', name: 'Bug Away Jacket — Men', price: SINGLE_PRICE, images: ['/images/jacket-men-white-front.jpg'], colorHex: ['#6B9E7A'], colors: ['Sage Green'] } };
   } else if (hasWomenJacket && !hasWomenPants) {
-    upsell = {
-      text: "Add the matching pants and save",
-      product: {
-        id: "ba-pants-women",
-        name: "Bug Away Pants — Women",
-        price: SINGLE_PRICE,
-        images: ["/images/pants-women-white-front.jpg"],
-        colorHex: ["#6B9E7A"],
-        colors: ["Sage Green"],
-      },
-    };
+    upsell = { text: "Add the matching pants and save", product: { id: 'ba-pants-women', name: 'Bug Away Pants — Women', price: SINGLE_PRICE, images: ['/images/pants-women-white-front.jpg'], colorHex: ['#6B9E7A'], colors: ['Sage Green'] } };
   } else if (hasWomenPants && !hasWomenJacket) {
-    upsell = {
-      text: "Add the matching jacket and save",
-      product: {
-        id: "ba-jacket-women",
-        name: "Bug Away Jacket — Women",
-        price: SINGLE_PRICE,
-        images: ["/images/jacket-women-white-front.jpg"],
-        colorHex: ["#6B9E7A"],
-        colors: ["Sage Green"],
-      },
-    };
+    upsell = { text: "Add the matching jacket and save", product: { id: 'ba-jacket-women', name: 'Bug Away Jacket — Women', price: SINGLE_PRICE, images: ['/images/jacket-women-white-front.jpg'], colorHex: ['#6B9E7A'], colors: ['Sage Green'] } };
   }
 
   // Build cart URL with all items
   const handleCheckout = () => {
     if (items.length === 0) return;
     const cartParts = items
-      .map((item) => {
+      .map(item => {
         const variantId = getVariantId(item.product.id, item.size, item.color);
         return variantId ? `${variantId}:${item.quantity}` : null;
       })
       .filter(Boolean)
-      .join(",");
-    const discountParam = discountCode
-      ? `?discount=${encodeURIComponent(discountCode)}`
-      : "";
+      .join(',');
+    const discountParam = discountCode ? `?discount=${encodeURIComponent(discountCode)}` : '';
     if (cartParts) {
       window.location.href = `https://${DOMAIN}/cart/${cartParts}${discountParam}`;
     } else {
       const handle = SHOPIFY_HANDLES[items[0].product.id];
-      window.location.href = handle
-        ? `https://${DOMAIN}/products/${handle}`
-        : `https://${DOMAIN}`;
+      window.location.href = handle ? `https://${DOMAIN}/products/${handle}` : `https://${DOMAIN}`;
     }
   };
 
-  const panelWidth = isMobile ? "100%" : "400px";
+  const panelWidth = isMobile ? '100%' : '400px';
 
   return (
     <>
       {isOpen && (
-        <div
-          onClick={onClose}
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.4)",
-            zIndex: 300,
-            backdropFilter: "blur(2px)",
-          }}
-        />
+        <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 300, backdropFilter: 'blur(2px)' }} />
       )}
 
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          right: isOpen ? 0 : `-${panelWidth}`,
-          width: panelWidth,
-          height: "100%",
-          background: "#fff",
-          zIndex: 301,
-          transition: "right 0.3s ease",
-          display: "flex",
-          flexDirection: "column",
-          boxShadow: "-4px 0 24px rgba(0,0,0,0.12)",
-        }}
-      >
+      <div style={{ position: 'fixed', top: 0, right: isOpen ? 0 : `-${panelWidth}`, width: panelWidth, height: '100%', background: '#fff', zIndex: 301, transition: 'right 0.3s ease', display: 'flex', flexDirection: 'column', boxShadow: '-4px 0 24px rgba(0,0,0,0.12)' }}>
+
         {/* Header */}
-        <div
-          style={{
-            padding: "18px 20px",
-            borderBottom: "1px solid #e8ede9",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            flexShrink: 0,
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <span
-              style={{
-                fontSize: 14,
-                fontWeight: 700,
-                color: "#1a1a1a",
-                fontFamily: "Archivo, sans-serif",
-              }}
-            >
-              Your Cart
-            </span>
+        <div style={{ padding: '18px 20px', borderBottom: '1px solid #e8ede9', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span style={{ fontSize: 14, fontWeight: 700, color: '#1a1a1a', fontFamily: "Archivo, sans-serif" }}>Your Cart</span>
             {count > 0 && (
-              <span
-                style={{
-                  background: c.sageD,
-                  color: "#fff",
-                  borderRadius: 20,
-                  padding: "1px 8px",
-                  fontSize: 11,
-                  fontWeight: 600,
-                }}
-              >
-                {count}
-              </span>
+              <span style={{ background: c.sageD, color: '#fff', borderRadius: 20, padding: '1px 8px', fontSize: 11, fontWeight: 600 }}>{count}</span>
             )}
           </div>
-          <button
-            onClick={onClose}
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              fontSize: 20,
-              color: "#999",
-              lineHeight: 1,
-            }}
-          >
-            ✕
-          </button>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, color: '#999', lineHeight: 1 }}>✕</button>
         </div>
 
         {/* Free gift bar */}
-        <div
-          style={{
-            padding: "14px 20px",
-            background: "#F7F9F8",
-            borderBottom: "1px solid #e8ede9",
-            flexShrink: 0,
-          }}
-        >
+        <div style={{ padding: '14px 20px', background: '#F7F9F8', borderBottom: '1px solid #e8ede9', flexShrink: 0 }}>
           {remaining > 0 ? (
-            <p style={{ fontSize: 12, color: "#555", marginBottom: 8 }}>
-              Only{" "}
-              <strong style={{ color: c.sageD }}>
-                {symbol}
-                {remaining.toFixed(0)}
-              </strong>{" "}
-              away from a free gift!
+            <p style={{ fontSize: 12, color: '#555', marginBottom: 8 }}>
+              Only <strong style={{ color: c.sageD }}>{symbol}{remaining.toFixed(0)}</strong> away from a free gift!
             </p>
           ) : (
-            <p
-              style={{
-                fontSize: 12,
-                color: c.sageD,
-                marginBottom: 8,
-                fontWeight: 600,
-              }}
-            >
+            <p style={{ fontSize: 12, color: c.sageD, marginBottom: 8, fontWeight: 600 }}>
               🎁 You've unlocked your free gift!
             </p>
           )}
-          <div
-            style={{
-              height: 4,
-              background: "#e0e8e3",
-              borderRadius: 2,
-              overflow: "hidden",
-            }}
-          >
-            <div
-              style={{
-                height: "100%",
-                width: `${progress}%`,
-                background: c.sageD,
-                borderRadius: 2,
-                transition: "width 0.4s ease",
-              }}
-            />
+          <div style={{ height: 4, background: '#e0e8e3', borderRadius: 2, overflow: 'hidden' }}>
+            <div style={{ height: '100%', width: `${progress}%`, background: c.sageD, borderRadius: 2, transition: 'width 0.4s ease' }} />
           </div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              marginTop: 5,
-            }}
-          >
-            <span style={{ fontSize: 10, color: "#aaa" }}>{symbol}0</span>
-            <span style={{ fontSize: 10, color: "#aaa" }}>
-              Free gift at {symbol}
-              {FREE_GIFT_THRESHOLD}
-            </span>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 5 }}>
+            <span style={{ fontSize: 10, color: '#aaa' }}>{symbol}0</span>
+            <span style={{ fontSize: 10, color: '#aaa' }}>Free gift at {symbol}{FREE_GIFT_THRESHOLD}</span>
           </div>
         </div>
 
         {/* Items */}
-        <div style={{ flex: 1, overflowY: "auto", padding: "16px 20px" }}>
+        <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px' }}>
           {items.length === 0 ? (
-            <div style={{ textAlign: "center", padding: "48px 20px" }}>
+            <div style={{ textAlign: 'center', padding: '48px 20px' }}>
               <div style={{ fontSize: 40, marginBottom: 16 }}>🛒</div>
-              <p style={{ fontSize: 14, color: "#999", marginBottom: 20 }}>
-                Your cart is empty
-              </p>
-              <Link
-                to="/shop"
-                onClick={onClose}
-                style={{
-                  background: c.sageD,
-                  color: "#fff",
-                  padding: "11px 24px",
-                  borderRadius: 8,
-                  fontSize: 12,
-                  fontWeight: 600,
-                  textDecoration: "none",
-                  display: "inline-block",
-                }}
-              >
+              <p style={{ fontSize: 14, color: '#999', marginBottom: 20 }}>Your cart is empty</p>
+              <Link to="/shop" onClick={onClose} style={{ background: c.sageD, color: '#fff', padding: '11px 24px', borderRadius: 8, fontSize: 12, fontWeight: 600, textDecoration: 'none', display: 'inline-block' }}>
                 Shop Now
               </Link>
             </div>
           ) : (
-            items.map((item) => (
-              <div
-                key={item.key}
-                style={{
-                  display: "flex",
-                  gap: 12,
-                  marginBottom: 16,
-                  paddingBottom: 16,
-                  borderBottom: "1px solid #e8ede9",
-                }}
-              >
-                <div
-                  style={{
-                    width: 72,
-                    height: 72,
-                    borderRadius: 8,
-                    overflow: "hidden",
-                    background: "#f3f4f2",
-                    flexShrink: 0,
-                  }}
-                >
-                  <img
-                    src={item.product.images[0]}
-                    alt={item.product.name}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
-                    onError={(e) => (e.target.style.display = "none")}
-                  />
+            items.map(item => (
+              <div key={item.key} style={{ display: 'flex', gap: 12, marginBottom: 16, paddingBottom: 16, borderBottom: '1px solid #e8ede9' }}>
+                <div style={{ width: 72, height: 72, borderRadius: 8, overflow: 'hidden', background: '#f3f4f2', flexShrink: 0 }}>
+                  <img src={item.product.images[0]} alt={item.product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => e.target.style.display = 'none'} />
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div
-                    style={{
-                      fontSize: 13,
-                      fontWeight: 700,
-                      color: "#1a1a1a",
-                      marginBottom: 3,
-                      lineHeight: 1.3,
-                    }}
-                  >
-                    {item.product.name}
-                  </div>
-                  <div style={{ fontSize: 11, color: "#999", marginBottom: 8 }}>
-                    {item.color} · Size {item.size}
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        border: "1px solid #e8ede9",
-                        borderRadius: 6,
-                        overflow: "hidden",
-                      }}
-                    >
-                      <button
-                        onClick={() =>
-                          CartContext.updateQty(item.key, item.quantity - 1)
-                        }
-                        style={{
-                          width: 28,
-                          height: 28,
-                          background: "none",
-                          border: "none",
-                          cursor: "pointer",
-                          fontSize: 14,
-                        }}
-                      >
-                        −
-                      </button>
-                      <span
-                        style={{
-                          width: 28,
-                          textAlign: "center",
-                          fontSize: 12,
-                          fontWeight: 600,
-                        }}
-                      >
-                        {item.quantity}
-                      </span>
-                      <button
-                        onClick={() =>
-                          CartContext.updateQty(item.key, item.quantity + 1)
-                        }
-                        style={{
-                          width: 28,
-                          height: 28,
-                          background: "none",
-                          border: "none",
-                          cursor: "pointer",
-                          fontSize: 14,
-                        }}
-                      >
-                        +
-                      </button>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: '#1a1a1a', marginBottom: 3, lineHeight: 1.3 }}>{item.product.name}</div>
+                  <div style={{ fontSize: 11, color: '#999', marginBottom: 8 }}>{item.color} · Size {item.size}</div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #e8ede9', borderRadius: 6, overflow: 'hidden' }}>
+                      <button onClick={() => CartContext.updateQty(item.key, item.quantity - 1)} style={{ width: 28, height: 28, background: 'none', border: 'none', cursor: 'pointer', fontSize: 14 }}>−</button>
+                      <span style={{ width: 28, textAlign: 'center', fontSize: 12, fontWeight: 600 }}>{item.quantity}</span>
+                      <button onClick={() => CartContext.updateQty(item.key, item.quantity + 1)} style={{ width: 28, height: 28, background: 'none', border: 'none', cursor: 'pointer', fontSize: 14 }}>+</button>
                     </div>
-                    <span style={{ fontSize: 14, fontWeight: 700 }}>
-                      {formatPrice(item.product.price * item.quantity, symbol)}
-                    </span>
+                    <span style={{ fontSize: 14, fontWeight: 700 }}>{formatPrice(item.product.price * item.quantity, symbol)}</span>
                   </div>
                 </div>
-                <button
-                  onClick={() => CartContext.remove(item.key)}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    color: "#ccc",
-                    fontSize: 16,
-                    alignSelf: "flex-start",
-                    flexShrink: 0,
-                  }}
-                >
-                  🗑
-                </button>
+                <button onClick={() => CartContext.remove(item.key)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#ccc', fontSize: 16, alignSelf: 'flex-start', flexShrink: 0 }}>🗑</button>
               </div>
             ))
           )}
 
           {/* Upsell */}
           {upsell && items.length > 0 && (
-            <div
-              style={{
-                background: "#F0F5F2",
-                border: "1px solid #d4e6da",
-                borderRadius: 12,
-                padding: 14,
-                marginTop: 8,
-              }}
-            >
-              <div
-                style={{
-                  fontSize: 11,
-                  fontWeight: 700,
-                  color: c.sageD,
-                  marginBottom: 8,
-                }}
-              >
-                🎯 {upsell.text} — save {symbol}
-                {SAVINGS}
+            <div style={{ background: '#F0F5F2', border: '1px solid #d4e6da', borderRadius: 12, padding: 14, marginTop: 8 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: c.sageD, marginBottom: 8 }}>
+                🎯 {upsell.text} — save {symbol}{SAVINGS}
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <div
-                  style={{
-                    width: 52,
-                    height: 52,
-                    borderRadius: 6,
-                    overflow: "hidden",
-                    background: "#e8f0eb",
-                    flexShrink: 0,
-                  }}
-                >
-                  <img
-                    src={upsell.product.images[0]}
-                    alt={upsell.product.name}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
-                    onError={(e) => (e.target.style.display = "none")}
-                  />
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ width: 52, height: 52, borderRadius: 6, overflow: 'hidden', background: '#e8f0eb', flexShrink: 0 }}>
+                  <img src={upsell.product.images[0]} alt={upsell.product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => e.target.style.display = 'none'} />
                 </div>
                 <div style={{ flex: 1 }}>
-                  <div
-                    style={{ fontSize: 12, fontWeight: 700, marginBottom: 2 }}
-                  >
-                    {upsell.product.name}
-                  </div>
-                  <div style={{ fontSize: 11, color: "#888" }}>
-                    <span
-                      style={{ textDecoration: "line-through", marginRight: 4 }}
-                    >
-                      {formatPrice(upsell.product.price, symbol)}
-                    </span>
-                    <span style={{ color: c.sageD, fontWeight: 700 }}>
-                      Bundle & save!
-                    </span>
+                  <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 2 }}>{upsell.product.name}</div>
+                  <div style={{ fontSize: 11, color: '#888' }}>
+                    <span style={{ textDecoration: 'line-through', marginRight: 4 }}>{formatPrice(upsell.product.price, symbol)}</span>
+                    <span style={{ color: c.sageD, fontWeight: 700 }}>Bundle & save!</span>
                   </div>
                 </div>
                 <button
-                  onClick={() =>
-                    CartContext.add(
-                      upsell.product,
-                      items[0]?.size || "M",
-                      upsell.product.colors[0],
-                    )
-                  }
-                  style={{
-                    background: c.sageD,
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: 6,
-                    padding: "7px 12px",
-                    fontSize: 11,
-                    fontWeight: 600,
-                    cursor: "pointer",
-                    whiteSpace: "nowrap",
-                  }}
+                  onClick={() => CartContext.add(upsell.product, items[0]?.size || 'M', upsell.product.colors[0])}
+                  style={{ background: c.sageD, color: '#fff', border: 'none', borderRadius: 6, padding: '7px 12px', fontSize: 11, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}
                 >
                   Add +
                 </button>
@@ -536,157 +190,36 @@ export default function Cart({ isOpen, onClose }) {
 
         {/* Footer */}
         {items.length > 0 && (
-          <div style={{ borderTop: "1px solid #e8ede9", flexShrink: 0 }}>
-            <div style={{ display: "flex", borderBottom: "1px solid #e8ede9" }}>
-              <button
-                onClick={() => {
-                  setShowDiscount(!showDiscount);
-                  setShowNotes(false);
-                }}
-                style={{
-                  flex: 1,
-                  padding: 12,
-                  background: "none",
-                  border: "none",
-                  borderRight: "1px solid #e8ede9",
-                  cursor: "pointer",
-                  fontSize: 12,
-                  color: showDiscount ? c.sageD : "#888",
-                  fontWeight: showDiscount ? 600 : 400,
-                }}
-              >
+          <div style={{ borderTop: '1px solid #e8ede9', flexShrink: 0 }}>
+            <div style={{ display: 'flex', borderBottom: '1px solid #e8ede9' }}>
+              <button onClick={() => { setShowDiscount(!showDiscount); setShowNotes(false); }} style={{ flex: 1, padding: 12, background: 'none', border: 'none', borderRight: '1px solid #e8ede9', cursor: 'pointer', fontSize: 12, color: showDiscount ? c.sageD : '#888', fontWeight: showDiscount ? 600 : 400 }}>
                 🏷 Discount
               </button>
-              <button
-                onClick={() => {
-                  setShowNotes(!showNotes);
-                  setShowDiscount(false);
-                }}
-                style={{
-                  flex: 1,
-                  padding: 12,
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  fontSize: 12,
-                  color: showNotes ? c.sageD : "#888",
-                  fontWeight: showNotes ? 600 : 400,
-                }}
-              >
+              <button onClick={() => { setShowNotes(!showNotes); setShowDiscount(false); }} style={{ flex: 1, padding: 12, background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: showNotes ? c.sageD : '#888', fontWeight: showNotes ? 600 : 400 }}>
                 📝 Notes
               </button>
             </div>
             {showDiscount && (
-              <div
-                style={{
-                  padding: "12px 20px",
-                  borderBottom: "1px solid #e8ede9",
-                  display: "flex",
-                  gap: 8,
-                }}
-              >
-                <input
-                  type="text"
-                  placeholder="Discount code"
-                  value={discountCode}
-                  onChange={(e) => setDiscountCode(e.target.value)}
-                  style={{
-                    flex: 1,
-                    padding: "8px 12px",
-                    border: "1px solid #e8ede9",
-                    borderRadius: 6,
-                    fontSize: 12,
-                    outline: "none",
-                  }}
-                />
-                <button
-                  style={{
-                    background: c.sageD,
-                    color: "#fff",
-                    border: "none",
-                    padding: "8px 16px",
-                    borderRadius: 6,
-                    fontSize: 12,
-                    fontWeight: 600,
-                    cursor: "pointer",
-                  }}
-                >
-                  Apply
-                </button>
+              <div style={{ padding: '12px 20px', borderBottom: '1px solid #e8ede9', display: 'flex', gap: 8 }}>
+                <input type="text" placeholder="Discount code" value={discountCode} onChange={e => setDiscountCode(e.target.value)} style={{ flex: 1, padding: '8px 12px', border: '1px solid #e8ede9', borderRadius: 6, fontSize: 12, outline: 'none' }} />
+                <button style={{ background: c.sageD, color: '#fff', border: 'none', padding: '8px 16px', borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>Apply</button>
               </div>
             )}
             {showNotes && (
-              <div
-                style={{
-                  padding: "12px 20px",
-                  borderBottom: "1px solid #e8ede9",
-                }}
-              >
-                <textarea
-                  placeholder="Add a note for your order..."
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  rows={3}
-                  style={{
-                    width: "100%",
-                    padding: "8px 12px",
-                    border: "1px solid #e8ede9",
-                    borderRadius: 6,
-                    fontSize: 12,
-                    outline: "none",
-                    resize: "none",
-                  }}
-                />
+              <div style={{ padding: '12px 20px', borderBottom: '1px solid #e8ede9' }}>
+                <textarea placeholder="Add a note for your order..." value={notes} onChange={e => setNotes(e.target.value)} rows={3} style={{ width: '100%', padding: '8px 12px', border: '1px solid #e8ede9', borderRadius: 6, fontSize: 12, outline: 'none', resize: 'none' }} />
               </div>
             )}
-            <div style={{ padding: "16px 20px" }}>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  marginBottom: 6,
-                }}
-              >
-                <span style={{ fontSize: 13, color: "#666" }}>Subtotal</span>
-                <span style={{ fontSize: 15, fontWeight: 700 }}>
-                  {formatPrice(total, symbol)}
-                </span>
+            <div style={{ padding: '16px 20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                <span style={{ fontSize: 13, color: '#666' }}>Subtotal</span>
+                <span style={{ fontSize: 15, fontWeight: 700 }}>{formatPrice(total, symbol)}</span>
               </div>
-              <p style={{ fontSize: 11, color: "#aaa", marginBottom: 14 }}>
-                Taxes and shipping calculated at checkout
-              </p>
-              <button
-                onClick={handleCheckout}
-                style={{
-                  width: "100%",
-                  background: c.sageD,
-                  color: "#fff",
-                  border: "none",
-                  padding: 14,
-                  borderRadius: 8,
-                  fontSize: 13,
-                  fontWeight: 700,
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  cursor: "pointer",
-                  marginBottom: 8,
-                }}
-              >
+              <p style={{ fontSize: 11, color: '#aaa', marginBottom: 14 }}>Taxes and shipping calculated at checkout</p>
+              <button onClick={handleCheckout} style={{ width: '100%', background: c.sageD, color: '#fff', border: 'none', padding: 14, borderRadius: 8, fontSize: 13, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', cursor: 'pointer', marginBottom: 8 }}>
                 Checkout →
               </button>
-              <button
-                onClick={onClose}
-                style={{
-                  width: "100%",
-                  background: "none",
-                  border: "1px solid #e8ede9",
-                  color: "#666",
-                  padding: 11,
-                  borderRadius: 8,
-                  fontSize: 12,
-                  cursor: "pointer",
-                }}
-              >
+              <button onClick={onClose} style={{ width: '100%', background: 'none', border: '1px solid #e8ede9', color: '#666', padding: 11, borderRadius: 8, fontSize: 12, cursor: 'pointer' }}>
                 Continue Shopping
               </button>
             </div>
