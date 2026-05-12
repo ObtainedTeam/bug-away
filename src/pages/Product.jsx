@@ -164,31 +164,39 @@ export default function Product() {
             </div>
           )}
 
-          {/* QTY + ADD TO CART */}
-          <div style={{ display: 'flex', gap: 10, marginBottom: 16, alignItems: 'center' }}>
+          {/* SCARCITY */}
+          <div style={{ background: '#FEF3C7', borderRadius: 8, padding: '8px 12px', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontSize: 14 }}>🔥</span>
+            <span style={{ fontSize: 13, color: '#92400E', fontWeight: 600 }}>Only 9 left in stock — order soon</span>
+          </div>
+
+          {/* QTY + BUY NOW (primary) */}
+          <div style={{ display: 'flex', gap: 10, marginBottom: 10, alignItems: 'center' }}>
             <div style={{ display: 'flex', alignItems: 'center', border: '2px solid #e8ede9', borderRadius: 10, overflow: 'hidden' }}>
               <button onClick={() => setQty(Math.max(1, qty - 1))} style={{ width: 40, height: 48, background: 'none', border: 'none', cursor: 'pointer', fontSize: 18 }}>−</button>
               <span style={{ width: 40, textAlign: 'center', fontWeight: 700, fontSize: 15 }}>{qty}</span>
               <button onClick={() => setQty(qty + 1)} style={{ width: 40, height: 48, background: 'none', border: 'none', cursor: 'pointer', fontSize: 18 }}>+</button>
             </div>
-            <button onClick={handleAddToCart} style={{
-              flex: 1, ...BTN, fontSize: 14, padding: '14px 0', textAlign: 'center',
-              background: added ? '#2d6b4a' : c.sageD,
-              transition: 'background .3s',
+            <button onClick={handleBuyNow} disabled={loading} style={{
+              flex: 1, ...BTN, fontSize: 15, padding: '14px 0', textAlign: 'center',
+              opacity: loading ? 0.7 : 1, cursor: loading ? 'wait' : 'pointer',
             }}>
-              {added ? '✓ Added to Cart' : 'Add to Cart'}
+              {loading ? 'Loading...' : 'Buy Now →'}
             </button>
           </div>
 
-          <button onClick={handleBuyNow} disabled={loading} style={{
-            width: '100%', ...BTNO, fontSize: 14, padding: '14px 0', textAlign: 'center',
-            opacity: loading ? 0.7 : 1, cursor: loading ? 'wait' : 'pointer',
+          {/* ADD TO CART (secondary) */}
+          <button onClick={handleAddToCart} style={{
+            width: '100%', ...BTNO, fontSize: 14, padding: '12px 0', textAlign: 'center',
+            marginBottom: 20,
+            background: added ? '#F0F5F2' : 'transparent',
+            transition: 'background .3s',
           }}>
-            {loading ? 'Loading...' : 'Buy Now →'}
+            {added ? '✓ Added to Cart' : 'Add to Cart'}
           </button>
 
           {/* TRUST BADGES */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginTop: 20, padding: '16px 0', borderTop: '1px solid #e8ede9', borderBottom: '1px solid #e8ede9' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, padding: '16px 0', borderTop: '1px solid #e8ede9', borderBottom: '1px solid #e8ede9' }}>
             {[
               { icon: '🚚', label: 'Free shipping', sub: 'over €59 / $79' },
               { icon: '↩️', label: '30-day returns', sub: 'Hassle-free' },
@@ -199,6 +207,13 @@ export default function Product() {
                 <div style={{ fontSize: 11, fontWeight: 700, color: '#333' }}>{label}</div>
                 <div style={{ fontSize: 10, color: '#999' }}>{sub}</div>
               </div>
+            ))}
+          </div>
+
+          {/* PAYMENT METHODS */}
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 12, flexWrap: 'wrap' }}>
+            {['VISA', 'Mastercard', 'PayPal', 'Klarna', 'iDEAL'].map(method => (
+              <span key={method} style={{ fontSize: 11, color: '#999', background: '#f5f5f5', borderRadius: 4, padding: '3px 8px', fontWeight: 600, letterSpacing: 0.3 }}>{method}</span>
             ))}
           </div>
 
