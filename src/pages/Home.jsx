@@ -59,7 +59,10 @@ export default function Home() {
       {/* HERO — new outdoor photo */}
       <section style={{
         position: "relative", minHeight: isMobile ? 420 : 520,
-        background: `linear-gradient(to right, rgba(30,50,40,.72) 55%, rgba(30,50,40,.3) 100%), url("/images/Men and female hiking on mountain.png") center/cover no-repeat`,
+        backgroundImage: `linear-gradient(to right, rgba(30,50,40,.72) 55%, rgba(30,50,40,.3) 100%), url("/images/Men and female hiking on mountain.png")`,
+        backgroundPosition: isMobile ? "center" : "center 25%",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
         display: "flex", alignItems: "center",
       }}>
         <div style={{ maxWidth: 640, padding: isMobile ? "60px 24px" : "80px 64px", color: "#fff" }}>
@@ -192,19 +195,15 @@ export default function Home() {
           <img src="/images/Male _ black mesh _ bino's hunting.png" alt="Outdoor hunting" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </div>
         <div style={{ overflow: "hidden", height: isMobile ? 180 : "100%" }}>
-          <img src="/images/Family.png" alt="Family outdoors" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          <img src="/images/Buddies camping together.png" alt="Buddies camping" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </div>
         <div style={{ overflow: "hidden", height: isMobile ? 180 : "100%" }}>
           <img src="/images/Female _ White mesh _ Forest solo.png" alt="Solo forest walk" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </div>
       </section>
 
-      {/* STATS BAR — outdoor photo background with overlay */}
-      <section style={{
-        position: "relative",
-        background: `linear-gradient(rgba(30,50,40,0.78), rgba(30,50,40,0.78)), url("/images/Buddies camping together.png") center/cover no-repeat`,
-        padding: "40px 24px"
-      }}>
+      {/* STATS BAR — solid green background (original style) */}
+      <section style={{ background: c.sage, padding: "32px 24px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(5,1fr)", gap: 24, textAlign: "center", color: "#fff" }}>
           {[
             { num: "1.5M+", label: "Tick bites/year US" },
