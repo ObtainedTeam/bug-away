@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Nav from './components/Nav';
 import Footer from './components/Footer';
 import Cart from './components/Cart';
+import ScrollToTop from './components/ScrollToTop';
 import { CurrencyProvider } from './currency';
 import Home from './pages/Home';
 import Shop from './pages/Shop';
@@ -19,6 +20,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <CurrencyProvider>
+        <ScrollToTop />
         <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet"/>
         <style>{`
           * { box-sizing: border-box; margin: 0; padding: 0; }

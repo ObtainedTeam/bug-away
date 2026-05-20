@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { c, useIsMobile, BTN, H2, LBL } from '../theme';
 import { products } from '../data';
-import { useCurrency } from '../currency.jsx';
+import { useCurrency, formatPrice, getPrice } from '../currency.jsx';
 
 const CATS = [
   { label: "All", key: "all" },
@@ -15,7 +15,7 @@ const CATS = [
 export default function Shop() {
   const [activeFilter, setActiveFilter] = useState("all");
   const isMobile = useIsMobile();
-  const { symbol } = useCurrency();
+  const { symbol, isUS } = useCurrency();
 
   const visible = activeFilter === "all"
     ? products
@@ -23,10 +23,10 @@ export default function Shop() {
 
   return (
     <div>
-      {/* HERO */}
+      {/* HERO — new outdoor photo */}
       <div style={{
         position: "relative", minHeight: isMobile ? 200 : 280,
-        background: `linear-gradient(to right, rgba(30,50,40,.72) 55%, rgba(30,50,40,.3) 100%), url('/images/combo-lifestyle-couple-forest-green.jpg') center/cover no-repeat`,
+        background: `linear-gradient(to right, rgba(30,50,40,.72) 55%, rgba(30,50,40,.3) 100%), url("/images/Men and female hiking on mountain.png") center/cover no-repeat`,
         display: "flex", alignItems: "center",
       }}>
         <div style={{ padding: isMobile ? "40px 24px" : "60px 64px", color: "#fff" }}>
@@ -61,55 +61,58 @@ export default function Shop() {
       {/* PRODUCT GRID */}
       <section style={{ padding: isMobile ? "24px 16px" : "40px 40px" }}>
         <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2,1fr)" : "repeat(3,1fr)", gap: isMobile ? 12 : 24 }}>
-          {visible.map(product => (
-            <Link key={product.id} to={`/product/${product.id}`} style={{ textDecoration: "none" }}>
-              <div style={{ background: "#fff", borderRadius: 12, overflow: "hidden", border: "1px solid #e8ede9", transition: "box-shadow 0.2s, transform 0.2s" }}
-                onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 8px 32px rgba(0,0,0,0.10)"; e.currentTarget.style.transform = "translateY(-4px)"; }}
-                onMouseLeave={e => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.transform = "none"; }}
-              >
-                {/* IMAGE */}
-                <div style={{ height: isMobile ? 200 : 340, background: "#f3f4f2", overflow: "hidden", position: "relative" }}>
-                  <img src={product.images[0]} alt={product.name}
-                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                    onError={e => e.target.style.display = "none"}
-                  />
-                  {product.badge && (
-                    <div style={{ position: "absolute", top: 10, left: 10, background: c.sageD, color: "#fff", fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 20 }}>
-                      {product.badge}
-                    </div>
-                  )}
-                  {product.colorHex && (
-                    <div style={{ position: "absolute", bottom: 10, left: 12, display: "flex", gap: 5 }}>
-                      {product.colorHex.slice(0, 4).map((col, i) => (
-                        <div key={i} style={{ width: 12, height: 12, borderRadius: "50%", background: col, border: "1.5px solid rgba(255,255,255,0.8)" }} />
-                      ))}
-                    </div>
-                  )}
-                </div>
+          {visible.map(product => {
+            const price = getPrice(product, isUS);
+            return (
+              <Link key={product.id} to={`/product/${product.id}`} style={{ textDecoration: "none" }}>
+                <div style={{ background: "#fff", borderRadius: 12, overflow: "hidden", border: "1px solid #e8ede9", transition: "box-shadow 0.2s, transform 0.2s" }}
+                  onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 8px 32px rgba(0,0,0,0.10)"; e.currentTarget.style.transform = "translateY(-4px)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.transform = "none"; }}
+                >
+                  {/* IMAGE — 4:5 portrait, object-position center top so faces stay visible */}
+                  <div style={{ aspectRatio: "4 / 5", background: "#f3f4f2", overflow: "hidden", position: "relative" }}>
+                    <img src={product.images[0]} alt={product.name}
+                      style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top", display: "block" }}
+                      onError={e => e.target.style.display = "none"}
+                    />
+                    {product.badge && (
+                      <div style={{ position: "absolute", top: 10, left: 10, background: c.sageD, color: "#fff", fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 20 }}>
+                        {product.badge}
+                      </div>
+                    )}
+                    {product.colorHex && (
+                      <div style={{ position: "absolute", bottom: 10, left: 12, display: "flex", gap: 5 }}>
+                        {product.colorHex.slice(0, 4).map((col, i) => (
+                          <div key={i} style={{ width: 12, height: 12, borderRadius: "50%", background: col, border: "1.5px solid rgba(255,255,255,0.8)" }} />
+                        ))}
+                      </div>
+                    )}
+                  </div>
 
-                {/* INFO */}
-                <div style={{ padding: isMobile ? "12px" : "18px 20px 20px" }}>
-                  <div style={{ fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: c.sage, fontWeight: 700, marginBottom: 3 }}>
-                    {product.category}
-                  </div>
-                  <div style={{ fontSize: isMobile ? 13 : 15, fontWeight: 700, color: "#1a1a1a", marginBottom: 4 }}>
-                    {product.name}
-                  </div>
-                  {!isMobile && (
-                    <div style={{ fontSize: 12, color: "#888", marginBottom: 8, lineHeight: 1.5 }}>
-                      {product.desc.substring(0, 80)}…
+                  {/* INFO */}
+                  <div style={{ padding: isMobile ? "12px" : "18px 20px 20px" }}>
+                    <div style={{ fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: c.sage, fontWeight: 700, marginBottom: 3 }}>
+                      {product.category}
                     </div>
-                  )}
-                  <div style={{ fontSize: 15, color: "#333", marginBottom: 12, fontWeight: 600 }}>
-                    {symbol}{product.price.toFixed(2)}
-                  </div>
-                  <div style={{ ...BTN, width: "100%", fontSize: 11, padding: "10px 0", textAlign: "center", borderRadius: 6 }}>
-                    View Product
+                    <div style={{ fontSize: isMobile ? 13 : 15, fontWeight: 700, color: "#1a1a1a", marginBottom: 4 }}>
+                      {product.name}
+                    </div>
+                    {!isMobile && (
+                      <div style={{ fontSize: 12, color: "#888", marginBottom: 8, lineHeight: 1.5 }}>
+                        {product.desc.substring(0, 80)}…
+                      </div>
+                    )}
+                    <div style={{ fontSize: 15, color: "#333", marginBottom: 12, fontWeight: 600 }}>
+                      {formatPrice(price, symbol)}
+                    </div>
+                    <div style={{ ...BTN, width: "100%", fontSize: 11, padding: "10px 0", textAlign: "center", borderRadius: 6 }}>
+                      View Product
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
 
         {visible.length === 0 && (

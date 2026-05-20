@@ -4,7 +4,7 @@ import { c, useIsMobile, BTN, BTNO, H2, LBL } from '../theme';
 import { products, reviews } from '../data';
 import { SHOPIFY_IDS, SHOPIFY_HANDLES, fetchProduct, buyNow } from '../shopify';
 import { CartContext } from '../components/Cart';
-import { useCurrency, formatPrice } from '../currency.jsx';
+import { useCurrency, formatPrice, getPrice } from '../currency.jsx';
 
 const Star = ({ filled }) => (
   <span style={{ color: filled ? "#F59E0B" : "#ddd", fontSize: 16 }}>★</span>
@@ -13,7 +13,7 @@ const Star = ({ filled }) => (
 export default function Product() {
   const { id } = useParams();
   const isMobile = useIsMobile();
-  const { symbol } = useCurrency();
+  const { symbol, isUS } = useCurrency();
   const product = products.find(p => p.id === id) || products[0];
 
   const [selectedColor, setSelectedColor] = useState(product.colors[0]);
@@ -36,6 +36,8 @@ export default function Product() {
     ? (productReviews.reduce((s, r) => s + r.rating, 0) / productReviews.length).toFixed(1)
     : 4.9;
   const reviewCount = productReviews.length || 48;
+
+  const price = getPrice(product, isUS);
 
   const handleAddToCart = () => {
     if (!selectedSize) { alert('Please select a size'); return; }
@@ -99,9 +101,9 @@ export default function Product() {
             <span style={{ fontSize: 13, color: '#999' }}>({reviewCount} reviews)</span>
           </div>
 
-          {/* PRICE */}
+          {/* PRICE — region-aware */}
           <div style={{ fontSize: 32, fontWeight: 900, color: c.sageD, marginBottom: 20 }}>
-            {symbol}{product.price.toFixed(2)}
+            {formatPrice(price, symbol)}
             <span style={{ fontSize: 13, color: '#999', fontWeight: 400, marginLeft: 8 }}>Incl. VAT</span>
           </div>
 
@@ -198,7 +200,7 @@ export default function Product() {
           {/* TRUST BADGES */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, padding: '16px 0', borderTop: '1px solid #e8ede9', borderBottom: '1px solid #e8ede9' }}>
             {[
-              { icon: '🚚', label: 'Free shipping', sub: 'over €59 / $79' },
+              { icon: '🚚', label: 'Free shipping', sub: 'over €69 / $79' },
               { icon: '↩️', label: '30-day returns', sub: 'Hassle-free' },
               { icon: '🌿', label: 'Chemical-free', sub: 'No DEET, no permethrin' },
             ].map(({ icon, label, sub }) => (
@@ -326,28 +328,31 @@ export default function Product() {
         </div>
       </section>
 
-      {/* RELATED PRODUCTS */}
+      {/* RELATED PRODUCTS — region-aware prices */}
       <section style={{ background: '#fff', padding: isMobile ? '48px 20px' : '72px 40px' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <h2 style={{ ...H2, marginBottom: 32 }}>Complete your protection</h2>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4,1fr)', gap: 20 }}>
-            {relatedProducts.map(p => (
-              <Link key={p.id} to={`/product/${p.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                <div style={{ background: '#F7F9F8', borderRadius: 14, overflow: 'hidden', transition: 'transform .2s' }}
-                  onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-4px)'}
-                  onMouseLeave={e => e.currentTarget.style.transform = ''}
-                >
-                  <div style={{ height: isMobile ? 140 : 200, overflow: 'hidden' }}>
-                    <img src={p.images[0]} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            {relatedProducts.map(p => {
+              const relPrice = getPrice(p, isUS);
+              return (
+                <Link key={p.id} to={`/product/${p.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <div style={{ background: '#F7F9F8', borderRadius: 14, overflow: 'hidden', transition: 'transform .2s' }}
+                    onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-4px)'}
+                    onMouseLeave={e => e.currentTarget.style.transform = ''}
+                  >
+                    <div style={{ aspectRatio: '4 / 5', overflow: 'hidden' }}>
+                      <img src={p.images[0]} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
+                    </div>
+                    <div style={{ padding: '14px 16px' }}>
+                      <div style={{ fontSize: 11, color: c.sage, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>{p.category}</div>
+                      <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 6 }}>{p.name}</div>
+                      <div style={{ fontWeight: 800, color: c.sageD }}>{formatPrice(relPrice, symbol)}</div>
+                    </div>
                   </div>
-                  <div style={{ padding: '14px 16px' }}>
-                    <div style={{ fontSize: 11, color: c.sage, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>{p.category}</div>
-                    <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 6 }}>{p.name}</div>
-                    <div style={{ fontWeight: 800, color: c.sageD }}>{symbol}{p.price.toFixed(2)}</div>
-                  </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>

@@ -1,16 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { c, useIsMobile } from '../theme';
-import { SHOPIFY_HANDLES, getVariantId } from '../shopify';
-import { useCurrency, formatPrice } from '../currency.jsx';
+import { SHOPIFY_HANDLES, getVariantId, COMBO_FOR_SINGLE } from '../shopify';
+import { useCurrency, formatPrice, getPrice, FREE_GIFT_THRESHOLD } from '../currency.jsx';
+import { products } from '../data';
 
 const DOMAIN = 'bug-away-3.myshopify.com';
-const FREE_GIFT_THRESHOLD = 79;
-const SINGLE_PRICE = 44.99;
-const COMBO_PRICE = 78.99;
-const SAVINGS = ((SINGLE_PRICE * 2) - COMBO_PRICE).toFixed(2);
-
-
 
 export const CartContext = {
   items: [],
@@ -30,11 +25,26 @@ export const CartContext = {
     const item = this.items.find(i => i.key === key);
     if (item) { if (qty <= 0) this.remove(key); else { item.quantity = qty; this.notify(); } }
   },
+  // Replace a single item with the matching combo set (same size, same color when possible).
+  // Used by the "Make it a set" upsell.
+  swapToSet(singleKey, comboProductId) {
+    const single = this.items.find(i => i.key === singleKey);
+    const combo = products.find(p => p.id === comboProductId);
+    if (!single || !combo) return;
+    this.items = this.items.filter(i => i.key !== singleKey);
+    const targetColor = combo.colors.includes(single.color) ? single.color : combo.colors[0];
+    const targetSize  = combo.sizes.includes(single.size)  ? single.size  : combo.sizes[0];
+    const key = `${combo.id}-${targetSize}-${targetColor}`;
+    const existing = this.items.find(i => i.key === key);
+    if (existing) existing.quantity += single.quantity;
+    else this.items.push({ key, product: combo, size: targetSize, color: targetColor, quantity: single.quantity });
+    this.notify();
+  },
 };
 
 export default function Cart({ isOpen, onClose }) {
   const isMobile = useIsMobile();
-  const { symbol } = useCurrency();
+  const { symbol, isUS, region } = useCurrency();
   const [items, setItems] = useState([...CartContext.items]);
   const [discountCode, setDiscountCode] = useState('');
   const [showDiscount, setShowDiscount] = useState(false);
@@ -46,28 +56,40 @@ export default function Cart({ isOpen, onClose }) {
     return () => CartContext.unsubscribe(setItems);
   }, []);
 
-  const total = items.reduce((sum, i) => sum + i.product.price * i.quantity, 0);
-  const count = items.reduce((sum, i) => sum + i.quantity, 0);
-  const remaining = Math.max(0, FREE_GIFT_THRESHOLD - total);
-  const progress = Math.min(100, (total / FREE_GIFT_THRESHOLD) * 100);
+  const threshold = FREE_GIFT_THRESHOLD[region] || FREE_GIFT_THRESHOLD.EU;
 
-  const hasMenJacket = items.some(i => i.product.id === 'ba-jacket-men');
-  const hasMenPants = items.some(i => i.product.id === 'ba-pants-men');
-  const hasWomenJacket = items.some(i => i.product.id === 'ba-jacket-women');
-  const hasWomenPants = items.some(i => i.product.id === 'ba-pants-women');
+  // Region-aware totals: use getPrice per item.
+  const total = items.reduce((sum, i) => sum + getPrice(i.product, isUS) * i.quantity, 0);
+  const count = items.reduce((sum, i) => sum + i.quantity, 0);
+  const remaining = Math.max(0, threshold - total);
+  const progress = Math.min(100, (total / threshold) * 100);
+
+  // Detect a single item (jacket OR pants) that has a matching combo and no combo in cart.
+  // The upsell offers to swap that single item for the combo set.
+  const hasCombo = items.some(i => i.product.category === 'BUNDLES');
+  const singleCandidate = !hasCombo
+    ? items.find(i => COMBO_FOR_SINGLE[i.product.id])
+    : null;
 
   let upsell = null;
-  if (hasMenJacket && !hasMenPants) {
-    upsell = { text: "Add the matching pants and save", product: { id: 'ba-pants-men', name: 'Bug Away Pants — Men', price: SINGLE_PRICE, images: ['/images/pants-men-white-front.jpg'], colorHex: ['#6B9E7A'], colors: ['Sage Green'] } };
-  } else if (hasMenPants && !hasMenJacket) {
-    upsell = { text: "Add the matching jacket and save", product: { id: 'ba-jacket-men', name: 'Bug Away Jacket — Men', price: SINGLE_PRICE, images: ['/images/jacket-men-white-front.jpg'], colorHex: ['#6B9E7A'], colors: ['Sage Green'] } };
-  } else if (hasWomenJacket && !hasWomenPants) {
-    upsell = { text: "Add the matching pants and save", product: { id: 'ba-pants-women', name: 'Bug Away Pants — Women', price: SINGLE_PRICE, images: ['/images/pants-women-white-front.jpg'], colorHex: ['#6B9E7A'], colors: ['Sage Green'] } };
-  } else if (hasWomenPants && !hasWomenJacket) {
-    upsell = { text: "Add the matching jacket and save", product: { id: 'ba-jacket-women', name: 'Bug Away Jacket — Women', price: SINGLE_PRICE, images: ['/images/jacket-women-white-front.jpg'], colorHex: ['#6B9E7A'], colors: ['Sage Green'] } };
+  if (singleCandidate) {
+    const comboId = COMBO_FOR_SINGLE[singleCandidate.product.id];
+    const comboProduct = products.find(p => p.id === comboId);
+    if (comboProduct) {
+      const singlePrice = getPrice(singleCandidate.product, isUS);
+      const comboPrice  = getPrice(comboProduct, isUS);
+      const savings = (singlePrice * 2) - comboPrice;
+      upsell = {
+        singleKey: singleCandidate.key,
+        comboProduct,
+        comboPrice,
+        savings,
+        twoSinglesPrice: singlePrice * 2,
+      };
+    }
   }
 
-  // Build cart URL with all items
+  // Checkout: build Shopify cart URL with all variants
   const handleCheckout = () => {
     if (items.length === 0) return;
     const cartParts = items
@@ -107,11 +129,11 @@ export default function Cart({ isOpen, onClose }) {
           <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, color: '#999', lineHeight: 1 }}>✕</button>
         </div>
 
-        {/* Free gift bar */}
+        {/* Free gift bar — region-aware threshold */}
         <div style={{ padding: '14px 20px', background: '#F7F9F8', borderBottom: '1px solid #e8ede9', flexShrink: 0 }}>
           {remaining > 0 ? (
             <p style={{ fontSize: 12, color: '#555', marginBottom: 8 }}>
-              Only <strong style={{ color: c.sageD }}>{symbol}{remaining.toFixed(0)}</strong> away from a free gift!
+              Only <strong style={{ color: c.sageD }}>{formatPrice(remaining, symbol)}</strong> away from a free gift!
             </p>
           ) : (
             <p style={{ fontSize: 12, color: c.sageD, marginBottom: 8, fontWeight: 600 }}>
@@ -123,7 +145,7 @@ export default function Cart({ isOpen, onClose }) {
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 5 }}>
             <span style={{ fontSize: 10, color: '#aaa' }}>{symbol}0</span>
-            <span style={{ fontSize: 10, color: '#aaa' }}>Free gift at {symbol}{FREE_GIFT_THRESHOLD}</span>
+            <span style={{ fontSize: 10, color: '#aaa' }}>Free gift at {formatPrice(threshold, symbol)}</span>
           </div>
         </div>
 
@@ -138,50 +160,53 @@ export default function Cart({ isOpen, onClose }) {
               </Link>
             </div>
           ) : (
-            items.map(item => (
-              <div key={item.key} style={{ display: 'flex', gap: 12, marginBottom: 16, paddingBottom: 16, borderBottom: '1px solid #e8ede9' }}>
-                <div style={{ width: 72, height: 72, borderRadius: 8, overflow: 'hidden', background: '#f3f4f2', flexShrink: 0 }}>
-                  <img src={item.product.images[0]} alt={item.product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => e.target.style.display = 'none'} />
-                </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: '#1a1a1a', marginBottom: 3, lineHeight: 1.3 }}>{item.product.name}</div>
-                  <div style={{ fontSize: 11, color: '#999', marginBottom: 8 }}>{item.color} · Size {item.size}</div>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #e8ede9', borderRadius: 6, overflow: 'hidden' }}>
-                      <button onClick={() => CartContext.updateQty(item.key, item.quantity - 1)} style={{ width: 28, height: 28, background: 'none', border: 'none', cursor: 'pointer', fontSize: 14 }}>−</button>
-                      <span style={{ width: 28, textAlign: 'center', fontSize: 12, fontWeight: 600 }}>{item.quantity}</span>
-                      <button onClick={() => CartContext.updateQty(item.key, item.quantity + 1)} style={{ width: 28, height: 28, background: 'none', border: 'none', cursor: 'pointer', fontSize: 14 }}>+</button>
-                    </div>
-                    <span style={{ fontSize: 14, fontWeight: 700 }}>{formatPrice(item.product.price * item.quantity, symbol)}</span>
+            items.map(item => {
+              const itemPrice = getPrice(item.product, isUS);
+              return (
+                <div key={item.key} style={{ display: 'flex', gap: 12, marginBottom: 16, paddingBottom: 16, borderBottom: '1px solid #e8ede9' }}>
+                  <div style={{ width: 72, height: 72, borderRadius: 8, overflow: 'hidden', background: '#f3f4f2', flexShrink: 0 }}>
+                    <img src={item.product.images[0]} alt={item.product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => e.target.style.display = 'none'} />
                   </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: '#1a1a1a', marginBottom: 3, lineHeight: 1.3 }}>{item.product.name}</div>
+                    <div style={{ fontSize: 11, color: '#999', marginBottom: 8 }}>{item.color} · Size {item.size}</div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #e8ede9', borderRadius: 6, overflow: 'hidden' }}>
+                        <button onClick={() => CartContext.updateQty(item.key, item.quantity - 1)} style={{ width: 28, height: 28, background: 'none', border: 'none', cursor: 'pointer', fontSize: 14 }}>−</button>
+                        <span style={{ width: 28, textAlign: 'center', fontSize: 12, fontWeight: 600 }}>{item.quantity}</span>
+                        <button onClick={() => CartContext.updateQty(item.key, item.quantity + 1)} style={{ width: 28, height: 28, background: 'none', border: 'none', cursor: 'pointer', fontSize: 14 }}>+</button>
+                      </div>
+                      <span style={{ fontSize: 14, fontWeight: 700 }}>{formatPrice(itemPrice * item.quantity, symbol)}</span>
+                    </div>
+                  </div>
+                  <button onClick={() => CartContext.remove(item.key)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#ccc', fontSize: 16, alignSelf: 'flex-start', flexShrink: 0 }}>🗑</button>
                 </div>
-                <button onClick={() => CartContext.remove(item.key)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#ccc', fontSize: 16, alignSelf: 'flex-start', flexShrink: 0 }}>🗑</button>
-              </div>
-            ))
+              );
+            })
           )}
 
-          {/* Upsell */}
+          {/* Upsell — Make it a set (swap single -> combo, show actual savings) */}
           {upsell && items.length > 0 && (
             <div style={{ background: '#F0F5F2', border: '1px solid #d4e6da', borderRadius: 12, padding: 14, marginTop: 8 }}>
               <div style={{ fontSize: 11, fontWeight: 700, color: c.sageD, marginBottom: 8 }}>
-                🎯 {upsell.text} — save {symbol}{SAVINGS}
+                🎯 Make it a set — save {formatPrice(upsell.savings, symbol)}
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <div style={{ width: 52, height: 52, borderRadius: 6, overflow: 'hidden', background: '#e8f0eb', flexShrink: 0 }}>
-                  <img src={upsell.product.images[0]} alt={upsell.product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => e.target.style.display = 'none'} />
+                  <img src={upsell.comboProduct.images[0]} alt={upsell.comboProduct.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => e.target.style.display = 'none'} />
                 </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 2 }}>{upsell.product.name}</div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 2 }}>{upsell.comboProduct.name}</div>
                   <div style={{ fontSize: 11, color: '#888' }}>
-                    <span style={{ textDecoration: 'line-through', marginRight: 4 }}>{formatPrice(upsell.product.price, symbol)}</span>
-                    <span style={{ color: c.sageD, fontWeight: 700 }}>Bundle & save!</span>
+                    <span style={{ textDecoration: 'line-through', marginRight: 6 }}>{formatPrice(upsell.twoSinglesPrice, symbol)}</span>
+                    <span style={{ color: c.sageD, fontWeight: 700 }}>{formatPrice(upsell.comboPrice, symbol)}</span>
                   </div>
                 </div>
                 <button
-                  onClick={() => CartContext.add(upsell.product, items[0]?.size || 'M', upsell.product.colors[0])}
+                  onClick={() => CartContext.swapToSet(upsell.singleKey, upsell.comboProduct.id)}
                   style={{ background: c.sageD, color: '#fff', border: 'none', borderRadius: 6, padding: '7px 12px', fontSize: 11, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}
                 >
-                  Add +
+                  Make it a set
                 </button>
               </div>
             </div>

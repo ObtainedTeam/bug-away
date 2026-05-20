@@ -2,21 +2,22 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { c, useIsMobile, BTN, H2, LBL } from "../theme";
 import { products } from "../data";
-import { useCurrency } from "../currency";
+import { useCurrency, formatPrice, getPrice } from "../currency";
 
 const Star = () => <span style={{ color: "#F59E0B" }}>★</span>;
 
 function ProductCard({ product }) {
-  const { symbol } = useCurrency();
+  const { symbol, isUS } = useCurrency();
   const isMobile = useIsMobile();
+  const price = getPrice(product, isUS);
   return (
     <Link to={`/product/${product.id}`} style={{ textDecoration: "none", color: "inherit" }}>
       <div style={{ background: "#fff", borderRadius: 16, overflow: "hidden", boxShadow: "0 2px 12px rgba(0,0,0,0.07)", transition: "transform .2s, box-shadow .2s", cursor: "pointer" }}
         onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 8px 24px rgba(0,0,0,0.13)"; }}
         onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.07)"; }}
       >
-        <div style={{ position: "relative", height: isMobile ? 220 : 300, background: "#f3f4f2", overflow: "hidden" }}>
-          <img src={product.images[0]} alt={product.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        <div style={{ position: "relative", aspectRatio: "4 / 5", background: "#f3f4f2", overflow: "hidden" }}>
+          <img src={product.images[0]} alt={product.name} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top" }} />
           {product.badge && (
             <span style={{ position: "absolute", top: 12, left: 12, background: c.sage, color: "#fff", borderRadius: 20, padding: "4px 12px", fontSize: 11, fontWeight: 700 }}>{product.badge}</span>
           )}
@@ -25,7 +26,7 @@ function ProductCard({ product }) {
           <div style={{ fontSize: 11, color: c.sage, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>{product.category}</div>
           <div style={{ fontFamily: "Archivo, sans-serif", fontWeight: 700, fontSize: 15, marginBottom: 8 }}>{product.name}</div>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span style={{ fontWeight: 800, fontSize: 16, color: c.sageD }}>{symbol}{product.price.toFixed(2)}</span>
+            <span style={{ fontWeight: 800, fontSize: 16, color: c.sageD }}>{formatPrice(price, symbol)}</span>
             <span style={{ ...BTN, fontSize: 12, padding: "6px 14px" }}>View</span>
           </div>
         </div>
@@ -50,15 +51,15 @@ const DISEASES = [
 
 export default function Home() {
   const isMobile = useIsMobile();
-  const { symbol } = useCurrency();
+  const { symbol, isUS } = useCurrency();
   const bestsellers = products.filter(p => p.badge === "Best Seller");
 
   return (
     <div>
-      {/* HERO */}
+      {/* HERO — new outdoor photo */}
       <section style={{
         position: "relative", minHeight: isMobile ? 420 : 520,
-        background: `linear-gradient(to right, rgba(30,50,40,.72) 55%, rgba(30,50,40,.3) 100%), url('/images/combo-lifestyle-couple-forest-green.jpg') center/cover no-repeat`,
+        background: `linear-gradient(to right, rgba(30,50,40,.72) 55%, rgba(30,50,40,.3) 100%), url("/images/Men and female hiking on mountain.png") center/cover no-repeat`,
         display: "flex", alignItems: "center",
       }}>
         <div style={{ maxWidth: 640, padding: isMobile ? "60px 24px" : "80px 64px", color: "#fff" }}>
@@ -92,16 +93,15 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SHOP BY CATEGORY */}
+      {/* SHOP BY CATEGORY — kept as studio/product imagery per spec (not lifestyle) */}
       <section style={{ background: "#F7F9F8", padding: isMobile ? "48px 0" : "72px 0" }}>
         <div style={{ maxWidth: 1400, margin: "0 auto", padding: isMobile ? "0 16px" : "0 32px" }}>
           <div style={{ ...LBL, marginBottom: 8, paddingLeft: isMobile ? 4 : 8 }}>SHOP BY CATEGORY</div>
           <h2 style={{ ...H2, marginBottom: 28, paddingLeft: isMobile ? 4 : 8 }}>Protection for everyone</h2>
 
-          {/* Desktop: 2 large left + 2 stacked right */}
           {!isMobile ? (
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gridTemplateRows: "340px", gap: 12 }}>
-              {/* Men — tall left */}
+              {/* Men */}
               <Link to="/shop?cat=men" style={{ textDecoration: "none", gridColumn: "1 / 2", gridRow: "1 / 2" }}>
                 <div style={{ position: "relative", borderRadius: 20, overflow: "hidden", height: "100%", cursor: "pointer" }}
                   onMouseEnter={e => { e.currentTarget.querySelector("img").style.transform = "scale(1.05)"; e.currentTarget.querySelector(".overlay").style.opacity = "0.75"; }}
@@ -146,17 +146,17 @@ export default function Home() {
                 </div>
               </Link>
 
-              {/* Bundles */}
+              {/* Bundles — new bundle lifestyle photo */}
               <Link to="/shop?cat=bundles" style={{ textDecoration: "none", gridColumn: "4 / 5", gridRow: "1 / 2" }}>
                 <div style={{ position: "relative", borderRadius: 20, overflow: "hidden", height: "100%", cursor: "pointer" }}
                   onMouseEnter={e => { e.currentTarget.querySelector("img").style.transform = "scale(1.05)"; e.currentTarget.querySelector(".overlay").style.opacity = "0.75"; }}
                   onMouseLeave={e => { e.currentTarget.querySelector("img").style.transform = "scale(1)"; e.currentTarget.querySelector(".overlay").style.opacity = "0.5"; }}
                 >
-                  <img src="/images/combo-lifestyle-couple-coffee-tent.jpg" alt="Bundles" style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform .5s" }} />
+                  <img src="/images/Couple _ camping.png" alt="Bundles" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top", transition: "transform .5s" }} />
                   <div className="overlay" style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.1) 60%)", transition: "opacity .3s", opacity: 0.5 }} />
                   <div style={{ position: "absolute", bottom: 24, left: 24, color: "#fff" }}>
                     <div style={{ fontFamily: "Archivo, sans-serif", fontWeight: 900, fontSize: 26, letterSpacing: "-0.02em" }}>Bundles</div>
-                    <div style={{ fontSize: 13, opacity: 0.85, marginTop: 4 }}>Save €11 →</div>
+                    <div style={{ fontSize: 13, opacity: 0.85, marginTop: 4 }}>Best value →</div>
                   </div>
                 </div>
               </Link>
@@ -168,7 +168,7 @@ export default function Home() {
                 { label: "Men", img: "/images/jacket-men-white-front.jpg", link: "/shop?cat=men", sub: "Shop →" },
                 { label: "Women", img: "/images/jacket-women-white-front.jpg", link: "/shop?cat=women", sub: "Shop →" },
                 { label: "Kids", img: "/images/kids-set-green-flatlay.jpg", link: "/shop?cat=kids", sub: "Shop →" },
-                { label: "Bundles", img: "/images/combo-lifestyle-couple-coffee-tent.jpg", link: "/shop?cat=bundles", sub: "Save €11 →" },
+                { label: "Bundles", img: "/images/Couple _ camping.png", link: "/shop?cat=bundles", sub: "Best value →" },
               ].map(({ label, img, link, sub }) => (
                 <Link key={label} to={link} style={{ textDecoration: "none" }}>
                   <div style={{ position: "relative", borderRadius: 16, overflow: "hidden", height: 220, cursor: "pointer" }}>
@@ -186,21 +186,25 @@ export default function Home() {
         </div>
       </section>
 
-      {/* NATURE PHOTO STRIP */}
+      {/* NATURE PHOTO STRIP — new outdoor photos */}
       <section style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr 1fr", height: isMobile ? "auto" : 300, overflow: "hidden" }}>
         <div style={{ overflow: "hidden", height: isMobile ? 180 : "100%" }}>
-          <img src="/images/combo-lifestyle-couple-forest-white.jpg" alt="Family protection" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          <img src="/images/Male _ black mesh _ bino's hunting.png" alt="Outdoor hunting" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </div>
         <div style={{ overflow: "hidden", height: isMobile ? 180 : "100%" }}>
-          <img src="/images/kids-lifestyle-forest-playing.jpg" alt="Kids in forest" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          <img src="/images/Family.png" alt="Family outdoors" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </div>
         <div style={{ overflow: "hidden", height: isMobile ? 180 : "100%" }}>
-          <img src="/images/jacket-men-lifestyle-birdwatching.jpg" alt="Birdwatching outdoors" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          <img src="/images/Female _ White mesh _ Forest solo.png" alt="Solo forest walk" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </div>
       </section>
 
-      {/* STATS BAR */}
-      <section style={{ background: c.sage, padding: "32px 24px" }}>
+      {/* STATS BAR — outdoor photo background with overlay */}
+      <section style={{
+        position: "relative",
+        background: `linear-gradient(rgba(30,50,40,0.78), rgba(30,50,40,0.78)), url("/images/Buddies camping together.png") center/cover no-repeat`,
+        padding: "40px 24px"
+      }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(5,1fr)", gap: 24, textAlign: "center", color: "#fff" }}>
           {[
             { num: "1.5M+", label: "Tick bites/year US" },
@@ -217,16 +221,20 @@ export default function Home() {
         </div>
       </section>
 
-      {/* BESTSELLERS */}
-      <section style={{ background: "#fff", padding: isMobile ? "48px 20px" : "72px 40px" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+      {/* BESTSELLERS — 3 columns on desktop (was 4), 2 on mobile edge-to-edge */}
+      <section style={{ background: "#fff", padding: isMobile ? "48px 0" : "72px 40px" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", paddingLeft: isMobile ? 16 : 0, paddingRight: isMobile ? 16 : 0 }}>
           <div style={{ ...LBL, marginBottom: 8 }}>OUR PICKS</div>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 32 }}>
             <h2 style={{ ...H2, margin: 0 }}>Best Sellers</h2>
             <Link to="/shop" style={{ fontSize: 13, color: c.sage, textDecoration: "none", fontWeight: 600 }}>View all →</Link>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(4, 1fr)", gap: 20 }}>
-            {bestsellers.map(p => <ProductCard key={p.id} product={p} />)}
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(3, 1fr)",
+            gap: isMobile ? 8 : 20
+          }}>
+            {bestsellers.slice(0, isMobile ? 4 : 3).map(p => <ProductCard key={p.id} product={p} />)}
           </div>
         </div>
       </section>
@@ -253,7 +261,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SEE IT IN ACTION VIDEO */}
+      {/* SEE IT IN ACTION VIDEO — unchanged per spec */}
       <section style={{ background: "#1a2e24", padding: isMobile ? "48px 20px" : "72px 40px" }}>
         <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
           <div style={{ ...LBL, color: c.sageL, marginBottom: 8 }}>SEE IT IN ACTION</div>
@@ -264,16 +272,16 @@ export default function Home() {
         </div>
       </section>
 
-      {/* WHO IS IT FOR */}
+      {/* WHO IS IT FOR — Hikers + Families updated, Gardeners unchanged */}
       <section style={{ background: "#fff", padding: isMobile ? "48px 20px" : "72px 40px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <div style={{ ...LBL, marginBottom: 8 }}>WHO IS IT FOR</div>
           <h2 style={{ ...H2, marginBottom: 36 }}>Designed for outdoor life</h2>
           <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3,1fr)", gap: 24 }}>
             {[
-              { label: "Hikers", icon: "🥾", desc: "Hours in the forest without constantly checking for ticks. Focus on the trail, not the bugs.", img: "/images/jacket-men-lifestyle-forest-walking.jpg", link: "/shop?cat=men" },
+              { label: "Hikers", icon: "🥾", desc: "Hours in the forest without constantly checking for ticks. Focus on the trail, not the bugs.", img: "/images/2 guys _ white and black mesh _ hiking.png", link: "/shop?cat=men" },
               { label: "Gardeners", icon: "🌿", desc: "Weeding, planting, pruning — tick territory. Bug Away lets you garden without worry.", img: "/images/jacket-women-lifestyle-gardening.jpg", link: "/shop?cat=women" },
-              { label: "Families", icon: "👨‍👩‍👧", desc: "Kids playing in tall grass or exploring nature — protected without any chemical sprays.", img: "/images/kids-lifestyle-jumping-stream.jpg", link: "/shop?cat=kids" },
+              { label: "Families", icon: "👨‍👩‍👧", desc: "Kids playing in tall grass or exploring nature — protected without any chemical sprays.", img: "/images/Family.png", link: "/shop?cat=kids" },
             ].map(({ label, icon, desc, img, link }) => (
               <Link key={label} to={link} style={{ textDecoration: "none", color: "inherit" }}>
                 <div style={{ background: "#F7F9F8", borderRadius: 16, overflow: "hidden", boxShadow: "0 2px 10px rgba(0,0,0,0.05)", transition: "transform .2s" }}
