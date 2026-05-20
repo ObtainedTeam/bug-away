@@ -278,9 +278,9 @@ export default function Home() {
           <h2 style={{ ...H2, marginBottom: 36 }}>Designed for outdoor life</h2>
           <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3,1fr)", gap: 24 }}>
             {[
-              { label: "Hikers", icon: "🥾", desc: "Hours in the forest without constantly checking for ticks. Focus on the trail, not the bugs.", img: "/images/2 guys _ white and black mesh _ hiking.png", link: "/shop?cat=men" },
+              { label: "Hikers", icon: "🥾", desc: "Hours in the forest without constantly checking for ticks. Focus on the trail, not the bugs.", img: "/images/2 guys  _ white and black mesh_ hiking.png", link: "/shop?cat=men" },
               { label: "Gardeners", icon: "🌿", desc: "Weeding, planting, pruning — tick territory. Bug Away lets you garden without worry.", img: "/images/jacket-women-lifestyle-gardening.jpg", link: "/shop?cat=women" },
-              { label: "Families", icon: "👨‍👩‍👧", desc: "Kids playing in tall grass or exploring nature — protected without any chemical sprays.", img: "/images/Family.png", link: "/shop?cat=kids" },
+              { label: "Families", icon: "👨‍👩‍👧", desc: "Kids playing in tall grass or exploring nature — protected without any chemical sprays.", img: "/images/Family .png", link: "/shop?cat=kids" },
             ].map(({ label, icon, desc, img, link }) => (
               <Link key={label} to={link} style={{ textDecoration: "none", color: "inherit" }}>
                 <div style={{ background: "#F7F9F8", borderRadius: 16, overflow: "hidden", boxShadow: "0 2px 10px rgba(0,0,0,0.05)", transition: "transform .2s" }}
