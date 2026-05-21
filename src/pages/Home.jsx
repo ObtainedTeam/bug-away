@@ -56,16 +56,44 @@ export default function Home() {
 
   return (
     <div>
-      {/* HERO — new outdoor photo */}
+      {/* HERO — looping video with green overlay */}
       <section style={{
         position: "relative", minHeight: isMobile ? 420 : 520,
-        backgroundImage: `linear-gradient(to right, rgba(30,50,40,.72) 55%, rgba(30,50,40,.3) 100%), url("/images/Men and female hiking on mountain.png")`,
-        backgroundPosition: isMobile ? "center" : "center 25%",
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
         display: "flex", alignItems: "center",
+        overflow: "hidden",
       }}>
-        <div style={{ maxWidth: 640, padding: isMobile ? "60px 24px" : "80px 64px", color: "#fff" }}>
+        {/* Background video — autoplay, muted, loops, plays inline on iOS */}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          poster="/images/Men and female hiking on mountain.png"
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: isMobile ? "center" : "center 25%",
+            zIndex: 0,
+          }}
+        >
+          {isMobile && <source src="/videos/hero-mobile.mp4" type="video/mp4" />}
+          <source src="/videos/hero.mp4" type="video/mp4" />
+        </video>
+
+        {/* Green gradient overlay — same look as the photo version */}
+        <div style={{
+          position: "absolute",
+          inset: 0,
+          background: "linear-gradient(to right, rgba(30,50,40,.72) 55%, rgba(30,50,40,.3) 100%)",
+          zIndex: 1,
+        }} />
+
+        {/* Hero content */}
+        <div style={{ position: "relative", zIndex: 2, maxWidth: 640, padding: isMobile ? "60px 24px" : "80px 64px", color: "#fff" }}>
           <span style={{ display: "inline-block", background: "rgba(255,255,255,0.15)", backdropFilter: "blur(4px)", border: "1px solid rgba(255,255,255,0.3)", borderRadius: 24, padding: "5px 16px", fontSize: 12, marginBottom: 20 }}>
             🛡️ Insecticide-free · Tick-proof · Eco-responsible
           </span>
