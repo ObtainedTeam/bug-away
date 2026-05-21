@@ -29,7 +29,10 @@ export default function HowItWorks() {
     <div>
       <section style={{
         position: "relative", minHeight: isMobile ? 280 : 360,
-        background: `linear-gradient(to right, rgba(30,50,40,.75) 60%, rgba(30,50,40,.35) 100%), url('/images/jacket-men-lifestyle-birdwatching.jpg') center/cover no-repeat`,
+        backgroundImage: `linear-gradient(to right, rgba(30,50,40,.75) 60%, rgba(30,50,40,.35) 100%), url("/images/Male _ black mesh _ bino's hunting.png")`,
+        backgroundPosition: isMobile ? "center" : "center 25%",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
         display: "flex", alignItems: "center",
       }}>
         <div style={{ maxWidth: 700, padding: isMobile ? "60px 24px" : "80px 64px", color: "#fff" }}>
@@ -107,9 +110,9 @@ export default function HowItWorks() {
 
       <section style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr 1fr", gap: 0 }}>
         {[
-          { src: "/images/jacket-men-lifestyle-forest-walking.jpg", alt: "Hiking in Bug Away" },
-          { src: "/images/jacket-women-lifestyle-gardening.jpg", alt: "Gardening protected" },
-          { src: "/images/combo-lifestyle-couple-forest-white.jpg", alt: "Couple outdoors" },
+          { src: "/images/MAle _ Black Mesh _ Fly fishing.png", alt: "Fly fishing in Bug Away" },
+          { src: "/images/Female _ White mesh _ Forest solo.png", alt: "Solo forest walk" },
+          { src: "/images/Couple _ camping.png", alt: "Couple camping" },
         ].map(({ src, alt }) => (
           <div key={alt} style={{ height: isMobile ? 200 : 320, overflow: "hidden" }}>
             <img src={src} alt={alt} style={{ width: "100%", height: "100%", objectFit: "cover" }} />

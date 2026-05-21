@@ -14,7 +14,10 @@ export default function About() {
     <div>
       <section style={{
         position: "relative", minHeight: isMobile ? 300 : 420,
-        background: `linear-gradient(to right, rgba(30,50,40,.72) 55%, rgba(30,50,40,.3) 100%), url('/images/combo-lifestyle-couple-forest-green.jpg') center/cover no-repeat`,
+        backgroundImage: `linear-gradient(to right, rgba(30,50,40,.72) 55%, rgba(30,50,40,.3) 100%), url("/images/Couple _ camping.png")`,
+        backgroundPosition: isMobile ? "center" : "center 30%",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
         display: "flex", alignItems: "center",
       }}>
         <div style={{ maxWidth: 700, padding: isMobile ? "60px 24px" : "80px 64px", color: "#fff" }}>
@@ -44,7 +47,7 @@ export default function About() {
             </p>
           </div>
           <div style={{ borderRadius: 20, overflow: "hidden", height: isMobile ? 280 : 400 }}>
-            <img src="/images/jacket-men-lifestyle-bicycle-forest.jpg" alt="Outdoor adventure with Bug Away"
+            <img src="/images/2 guys black and white _ white and black mesh_ hiking.png" alt="Outdoor adventure with Bug Away"
               style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </div>
         </div>
@@ -78,12 +81,12 @@ export default function About() {
         </div>
       </section>
 
-      {/* 3 foto collage — alle drie bestaan in de images map */}
+      {/* 3 foto collage — vervangen door nieuwe outdoor foto's */}
       <section style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr 1fr", gap: 0 }}>
         {[
-          { src: "/images/combo-lifestyle-couple-forest-white.jpg", alt: "Couple in forest" },
-          { src: "/images/kids-lifestyle-jumping-stream.jpg", alt: "Kids outdoors" },
-          { src: "/images/jacket-women-lifestyle-meadow-sunset.jpg", alt: "Woman in meadow" },
+          { src: "/images/Male _ black mesh _ bino's hunting.png", alt: "Outdoor hunting" },
+          { src: "/images/Family .png", alt: "Family outdoors" },
+          { src: "/images/Female _ White mesh _ Forest solo.png", alt: "Solo forest walk" },
         ].map(({ src, alt }) => (
           <div key={alt} style={{ height: isMobile ? 200 : 320, overflow: "hidden" }}>
             <img src={src} alt={alt} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -94,7 +97,7 @@ export default function About() {
       <section style={{ background: "#fff", padding: isMobile ? "48px 20px" : "72px 40px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 48, alignItems: "center" }}>
           <div style={{ borderRadius: 20, overflow: "hidden", height: isMobile ? 260 : 380 }}>
-            <img src="/images/combo-lifestyle-couple-coffee-tent.jpg" alt="Bug Away lifestyle"
+            <img src="/images/Buddies camping together.png" alt="Bug Away lifestyle"
               style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </div>
           <div>
