@@ -2,11 +2,10 @@ const DOMAIN = 'bug-away-3.myshopify.com';
 
 // Normalize color names between website and Shopify.
 // Website uses: 'Arctic White', 'Black'
-// Shopify currently has: 'Arctic White', 'Zwart' (for older products), and is expected
-// to have 'Black' for the new variants once Thomas creates them.
+// Shopify uses: 'Arctic White', 'Zwart'
 function normColor(c) {
-  if (c === 'Stone Gray') return 'Stone Grey';   // legacy mapping
-  if (c === 'Black')      return 'Black';        // assumes Shopify uses 'Black' for new variants
+  if (c === 'Black')      return 'Zwart';
+  if (c === 'Stone Gray') return 'Stone Grey';   // legacy fallback, not used in current UI
   return c;
 }
 
@@ -17,77 +16,60 @@ function normSize(s) {
   return s;
 }
 
-// ====================================================================
-// VARIANT MAPS
-// ====================================================================
-// IMPORTANT: Black variant IDs do NOT exist yet in Shopify.
-// Until you create Black variants in Shopify and paste the IDs below,
-// any checkout attempt with Black will fall back to the product page
-// (via the handle) instead of going straight to a pre-filled cart.
-// To add Black: create the variants in Shopify, then add entries below
-// in the same format, e.g. "M|Black": <variantId>.
-// ====================================================================
-
 // ba-jacket-men: Size|Color
 const JACKET_MEN = {
-  "XS|Sage Green":56675277242748,"XS|Stone Grey":56675277275516,"XS|Arctic White":56675277308284,
-  "S|Sage Green":56675277373820,"S|Stone Grey":56675277406588,"S|Arctic White":56675277439356,
-  "M|Sage Green":56675277504892,"M|Stone Grey":56675277537660,"M|Arctic White":56675277570428,
-  "L|Sage Green":56675277635964,"L|Stone Grey":56675277668732,"L|Arctic White":56675277701500,
-  "XL|Sage Green":56675277767036,"XL|Stone Grey":56675277799804,"XL|Arctic White":56675277832572,
-  "2XL|Sage Green":56675277898108,"2XL|Stone Grey":56675277930876,"2XL|Arctic White":56675277963644,
-  "3XL|Sage Green":56675278029180,"3XL|Stone Grey":56675278061948,"3XL|Arctic White":56675278094716,
-  // "XS|Black": <add Shopify variant id here>
-  // "S|Black":  <add Shopify variant id here>
-  // "M|Black":  <add Shopify variant id here>
-  // "L|Black":  <add Shopify variant id here>
-  // "XL|Black": <add Shopify variant id here>
-  // "2XL|Black":<add Shopify variant id here>
-  // "3XL|Black":<add Shopify variant id here>
+  "XS|Arctic White":56675277308284, "XS|Zwart":56675277341052,
+  "S|Arctic White":56675277439356,  "S|Zwart":56675277472124,
+  "M|Arctic White":56675277570428,  "M|Zwart":56675277603196,
+  "L|Arctic White":56675277701500,  "L|Zwart":56675277734268,
+  "XL|Arctic White":56675277832572, "XL|Zwart":56675277865340,
+  "2XL|Arctic White":56675277963644,"2XL|Zwart":56675277996412,
+  "3XL|Arctic White":56675278094716,"3XL|Zwart":56675278127484,
 };
 
 // ba-pants-men: Size|Color
 const PANTS_MEN = {
-  "XS|Sage Green":56708819157372,"XS|Stone Grey":56708819190140,"XS|Arctic White":56708819222908,
-  "S|Sage Green":56708819288444,"S|Stone Grey":56708819321212,"S|Arctic White":56708819353980,
-  "M|Sage Green":56708819419516,"M|Stone Grey":56708819452284,"M|Arctic White":56708819485052,
-  "L|Sage Green":56708819550588,"L|Stone Grey":56708819583356,"L|Arctic White":56708819616124,
-  "XL|Sage Green":56708819681660,"XL|Stone Grey":56708819714428,"XL|Arctic White":56708819747196,
-  "2XL|Sage Green":56708819812732,"2XL|Stone Grey":56708819845500,"2XL|Arctic White":56708819878268,
-  "3XL|Sage Green":56708819943804,"3XL|Stone Grey":56708819976572,"3XL|Arctic White":56708820009340,
-  // Black entries to be added once created in Shopify
+  "XS|Arctic White":56708819222908, "XS|Zwart":56708819255676,
+  "S|Arctic White":56708819353980,  "S|Zwart":56708819386748,
+  "M|Arctic White":56708819485052,  "M|Zwart":56708819517820,
+  "L|Arctic White":56708819616124,  "L|Zwart":56708819648892,
+  "XL|Arctic White":56708819747196, "XL|Zwart":56708819779964,
+  "2XL|Arctic White":56708819878268,"2XL|Zwart":56708819911036,
+  "3XL|Arctic White":56708820009340,"3XL|Zwart":56708820042108,
 };
 
 // ba-jacket-women: Color|Size, only XS-L
 const JACKET_WOMEN = {
-  "Sage Green|XS":56708821254524,"Sage Green|S":56708821287292,"Sage Green|M":56708821320060,"Sage Green|L":56708821352828,
-  "Stone Grey|XS":56708821385596,"Stone Grey|S":56708821418364,"Stone Grey|M":56708821451132,"Stone Grey|L":56708821483900,
-  "Arctic White|XS":56708821516668,"Arctic White|S":56708821549436,"Arctic White|M":56708821582204,"Arctic White|L":56708821614972,
-  // Black entries to be added once created in Shopify
+  "Arctic White|XS":56708821516668, "Arctic White|S":56708821549436,
+  "Arctic White|M":56708821582204,  "Arctic White|L":56708821614972,
+  "Zwart|XS":56708821647740,        "Zwart|S":56708821680508,
+  "Zwart|M":56708821713276,         "Zwart|L":56708821746044,
 };
 
 // ba-pants-women: Color|Size, only XS-L
 const PANTS_WOMEN = {
-  "Sage Green|XS":56708820763004,"Sage Green|S":56708820828540,"Sage Green|M":56708820795772,"Sage Green|L":56708820861308,
-  "Stone Grey|XS":56708820631932,"Stone Grey|S":56708820697468,"Stone Grey|M":56708820664700,"Stone Grey|L":56708820730236,
-  "Arctic White|XS":56708820369788,"Arctic White|S":56708820435324,"Arctic White|M":56708820402556,"Arctic White|L":56708820468092,
-  // Black entries to be added once created in Shopify
+  "Arctic White|XS":56708820369788, "Arctic White|S":56708820435324,
+  "Arctic White|M":56708820402556,  "Arctic White|L":56708820468092,
+  "Zwart|XS":56708820500860,        "Zwart|S":56708820566396,
+  "Zwart|M":56708820533628,         "Zwart|L":56708820599164,
 };
 
 // ba-combo-adults: Color|Size, only XS-L
 const COMBO = {
-  "Sage Green|XS":56708822368636,"Sage Green|S":56708822335868,"Sage Green|M":56708822303100,"Sage Green|L":56708822270332,
-  "Stone Grey|XS":56708822499708,"Stone Grey|S":56708822466940,"Stone Grey|M":56708822434172,"Stone Grey|L":56708822401404,
-  "Arctic White|XS":56708822106492,"Arctic White|S":56708822073724,"Arctic White|M":56708822040956,"Arctic White|L":56708822008188,
-  // Black entries to be added once created in Shopify
+  "Arctic White|XS":56708822106492, "Arctic White|S":56708822073724,
+  "Arctic White|M":56708822040956,  "Arctic White|L":56708822008188,
+  "Zwart|XS":56708822237564,        "Zwart|S":56708822204796,
+  "Zwart|M":56708822172028,         "Zwart|L":56708822139260,
 };
 
 // ba-kids-set: Color|Size
+// NOTE: All variant IDs (including Arctic White) were updated on 2026-05-20
+// after Thomas recreated the kids variants in Shopify.
 const KIDS = {
-  "Sage Green|4-6Y":56708823089532,"Sage Green|6-8Y":56708823122300,"Sage Green|8-10Y":56708823155068,"Sage Green|10-12Y":56708823187836,
-  "Arctic White|4-6Y":56708823220604,"Arctic White|6-8Y":56708823253372,"Arctic White|8-10Y":56708823286140,"Arctic White|10-12Y":56708823318908,
-  "Stone Grey|4-6Y":56708823351676,"Stone Grey|6-8Y":56708823384444,"Stone Grey|8-10Y":56708823417212,"Stone Grey|10-12Y":56708823449980,
-  // Black entries to be added once created in Shopify
+  "Arctic White|4-6Y":56795880128892, "Arctic White|6-8Y":56795880161660,
+  "Arctic White|8-10Y":56795880194428,"Arctic White|10-12Y":56795880227196,
+  "Zwart|4-6Y":56795879670140,        "Zwart|6-8Y":56795879702908,
+  "Zwart|8-10Y":56795879735676,       "Zwart|10-12Y":56795879768444,
 };
 
 const VARIANT_MAPS = {
@@ -141,10 +123,13 @@ export async function buyNow(productId, size, color) {
   const handle = SHOPIFY_HANDLES[productId];
   if (variantId) {
     window.location.href = `https://${DOMAIN}/cart/${variantId}:1`;
-  } else if (handle) {
-    // Graceful fallback when a variant (e.g. Black before Shopify is updated) does not exist yet.
-    window.location.href = `https://${DOMAIN}/products/${handle}`;
   } else {
-    window.location.href = `https://${DOMAIN}`;
+    // Safety: never silently redirect to the product page from a Buy Now click,
+    // because that breaks ad attribution and confuses the buyer.
+    console.error(`No variant found for ${productId} / size ${size} / color ${color}`);
+    alert(`Sorry, this combination (${color}, size ${size}) is not available yet. Please choose another size or color.`);
+    if (handle) {
+      window.location.href = `https://${DOMAIN}/products/${handle}`;
+    }
   }
 }

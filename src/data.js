@@ -12,9 +12,8 @@ const STD = [
 const PRICE_SINGLE = { usd: 44.99, eur: 38.99 };
 const PRICE_SET    = { usd: 79.99, eur: 68.99 };
 
-// New product colors: only Arctic White and Black.
-// IMPORTANT: Black variant IDs must exist in Shopify before checkout works for Black.
-// See shopify.js — Black entries currently fall back to the product page.
+// Product colors: Arctic White and Black.
+// Black maps to 'Zwart' in Shopify via normColor() in shopify.js.
 const COLORS = ["Arctic White", "Black"];
 const COLOR_HEX = ["#F5F5F0", "#1a1a1a"];
 
