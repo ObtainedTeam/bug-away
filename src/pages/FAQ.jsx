@@ -119,7 +119,7 @@ export default function FAQ() {
           <p style={{ color: "rgba(255,255,255,0.8)", fontSize: 15, marginBottom: 28 }}>
             We're happy to help. Reach out via email and we'll get back to you within 24 hours.
           </p>
-          <a href="mailto:hello@bugawaygear.com" style={{ ...BTN, textDecoration: "none", display: "inline-block" }}>
+          <a href="mailto:info@bugawaygear.com" style={{ ...BTN, textDecoration: "none", display: "inline-block" }}>
             Contact us
           </a>
         </div>
