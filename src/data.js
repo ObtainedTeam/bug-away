@@ -272,7 +272,7 @@ Lyme disease is not just an adult concern — children are particularly vulnerab
       "/images/proof-mosquito.jpg",
       "/images/proof-ticks.jpg",
       "/images/proof-spider.jpg",
-      "/images/size-guide-chart.png",
+      "/images/size-guide-kids.png",
     ],
   },
 ];
