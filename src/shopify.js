@@ -1,4 +1,4 @@
-const DOMAIN = 'checkout.bugawaystore.com';
+const DOMAIN = 'checkout.bugawaygear.com';
 
 // Normalize color names between website and Shopify.
 // Website uses: 'Arctic White', 'Black'
