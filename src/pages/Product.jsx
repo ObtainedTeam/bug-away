@@ -157,9 +157,23 @@ export default function Product() {
           {showSizeGuide && (
             <div style={{ background: '#F7F9F8', borderRadius: 12, padding: 16, marginBottom: 20 }}>
               <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 12 }}>Size Guide</div>
-              <img src="/images/size-guide-chart.png" alt="Size chart" style={{ width: '100%', borderRadius: 8 }} />
+              {product.id.includes('kids') && (
+                <img src="/images/size-guide-kids.png" alt="Kids size chart" style={{ width: '100%', borderRadius: 8 }} />
+              )}
+              {product.id.includes('pants') && (
+                <img src="/images/size-guide-pants.png" alt="Pants size chart" style={{ width: '100%', borderRadius: 8 }} />
+              )}
+              {product.id.includes('jacket') && (
+                <img src="/images/size-guide-chart.png" alt="Jacket size chart" style={{ width: '100%', borderRadius: 8 }} />
+              )}
+              {product.id.includes('combo') && (
+                <>
+                  <img src="/images/size-guide-chart.png" alt="Jacket size chart" style={{ width: '100%', borderRadius: 8, marginBottom: 8 }} />
+                  <img src="/images/size-guide-pants.png" alt="Pants size chart" style={{ width: '100%', borderRadius: 8 }} />
+                </>
+              )}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginTop: 10 }}>
-                <img src="/images/size-guide-jacket.png" alt="Jacket measurements" style={{ width: '100%', borderRadius: 8 }} />
+                <img src="/images/size-guide-jacket.png" alt="How to measure" style={{ width: '100%', borderRadius: 8 }} />
                 <img src="/images/size-guide-fittype.png" alt="Fit type" style={{ width: '100%', borderRadius: 8 }} />
               </div>
               <p style={{ fontSize: 12, color: '#888', marginTop: 8 }}>When in doubt between two sizes, size up. A slightly looser fit provides better airflow and protection.</p>

@@ -87,7 +87,7 @@ export default function HowItWorks() {
         <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
           <div style={{ ...LBL, marginBottom: 8 }}>HOW THE LAYERS WORK</div>
           <h2 style={{ ...H2, marginBottom: 32 }}>The layering system</h2>
-          <img src="/images/how-it-works-infographic.jpg" alt="How Bug Away layering works"
+          <img src="/images/how-it-works-infographic.png" alt="How Bug Away layering works"
             style={{ width: "100%", borderRadius: 16, boxShadow: "0 4px 20px rgba(0,0,0,0.08)" }} />
         </div>
       </section>

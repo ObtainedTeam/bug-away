@@ -92,9 +92,11 @@ export default function FAQ() {
           <h2 style={{ ...H2, marginBottom: 36 }}>Size guide</h2>
           <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3,1fr)", gap: 20 }}>
             {[
-              { src: "/images/size-guide-jacket.png", alt: "Jacket size guide — measurement points", label: "Jacket measurements" },
+              { src: "/images/size-guide-jacket.png", alt: "How to measure", label: "How to measure" },
               { src: "/images/size-guide-fittype.png", alt: "Fit type guide", label: "Fit type" },
-              { src: "/images/size-guide-chart.png", alt: "Full size chart", label: "Size chart (XS–XXXL)" },
+              { src: "/images/size-guide-chart.png", alt: "Jacket size chart", label: "Jacket size chart" },
+              { src: "/images/size-guide-pants.png", alt: "Pants size chart", label: "Pants size chart" },
+              { src: "/images/size-guide-kids.png", alt: "Kids size chart", label: "Kids size chart" },
             ].map(({ src, alt, label }) => (
               <div key={label} style={{ background: "#fff", borderRadius: 14, overflow: "hidden", boxShadow: "0 2px 10px rgba(0,0,0,0.06)" }}>
                 <img src={src} alt={alt} style={{ width: "100%", display: "block" }}
