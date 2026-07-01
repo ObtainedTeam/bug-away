@@ -51,6 +51,7 @@ Wear it as a base layer under your regular jacket, or on its own on warm days. I
     // Order: studio front -> studio side -> studio back -> studio detail -> new lifestyle (4:5) -> detail collage -> STD
     images: [
       "/images/Male _ White mesh _ front 1_1.jpg",
+      "/images/jacket-men-white-closeup.jpg",
       "/images/Male _ White mesh _ Side profile 1_1.jpg",
       "/images/Male _ White mesh _ backside 1_1.jpg",
       "/images/Male _ White mesh _ torso close up front 1_1.jpg",
