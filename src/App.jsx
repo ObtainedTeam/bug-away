@@ -12,6 +12,8 @@ import HowItWorks from './pages/HowItWorks';
 import About from './pages/About';
 import Blog from './pages/Blog';
 import FAQ from './pages/FAQ';
+import Pets from './pages/Pets';
+import Accessories from './pages/Accessories';
 import Legal from './pages/Legal';
 
 export default function App() {
@@ -41,6 +43,8 @@ export default function App() {
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<Blog />} />
             <Route path="/faq" element={<FAQ />} />
+            <Route path="/pets" element={<Pets />} />
+            <Route path="/accessories" element={<Accessories />} />
             <Route path="/privacy" element={<Legal />} />
             <Route path="/returns" element={<Legal />} />
             <Route path="/terms" element={<Legal />} />
