@@ -17,9 +17,19 @@ export default function Shop() {
   const isMobile = useIsMobile();
   const { symbol, isUS } = useCurrency();
 
+  const PRIORITY_ORDER = ['ba-combo-men', 'ba-combo-women', 'ba-kids-set'];
+  const sortedProducts = [...products].sort((a, b) => {
+    const ai = PRIORITY_ORDER.indexOf(a.id);
+    const bi = PRIORITY_ORDER.indexOf(b.id);
+    if (ai !== -1 && bi !== -1) return ai - bi;
+    if (ai !== -1) return -1;
+    if (bi !== -1) return 1;
+    return 0;
+  });
+
   const visible = activeFilter === "all"
-    ? products
-    : products.filter(p => p.category === activeFilter);
+    ? sortedProducts
+    : sortedProducts.filter(p => p.category === activeFilter);
 
   return (
     <div>
