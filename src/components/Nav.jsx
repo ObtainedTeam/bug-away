@@ -16,6 +16,8 @@ const SHOP_DROPDOWN = [
   { label: "Women", path: "/shop?cat=WOMEN" },
   { label: "Kids", path: "/shop?cat=KIDS" },
   { label: "Bundles", path: "/shop?cat=BUNDLES" },
+  { label: "Pets — Coming Soon", path: "/pets" },
+  { label: "Accessories — Coming Soon", path: "/accessories" },
 ];
 
 export default function Nav({ cartCount, onCartOpen }) {
@@ -28,7 +30,7 @@ export default function Nav({ cartCount, onCartOpen }) {
     <>
       {/* ANNOUNCEMENT BAR */}
       <div style={{ background: c.sage, color: "#fff", textAlign: "center", fontSize: 12, fontWeight: 600, padding: "8px 16px", letterSpacing: 0.5 }}>
-        🌿 Free shipping in the US · Chemical-free · Eco-responsible
+        🌿 Free shipping over $150 in the US · Chemical-free · Eco-responsible
       </div>
 
       {/* NAV */}

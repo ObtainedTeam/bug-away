@@ -129,19 +129,20 @@ export default function Cart({ isOpen, onClose }) {
           <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, color: '#999', lineHeight: 1 }}>✕</button>
         </div>
 
-        {/* Free gift bar — region-aware threshold */}
+        {/* Free shipping bar */}
         <div style={{ padding: '14px 20px', background: '#F7F9F8', borderBottom: '1px solid #e8ede9', flexShrink: 0 }}>
-          {remaining > 0 ? (
+          {total < 150 ? (
             <p style={{ fontSize: 12, color: '#555', marginBottom: 8 }}>
-              Only <strong style={{ color: c.sageD }}>{formatPrice(remaining, symbol)}</strong> away from a free gift!
+              🚚 Only <strong style={{ color: c.sageD }}>{formatPrice(150 - total, '$')}</strong> away from free shipping!
             </p>
           ) : (
             <p style={{ fontSize: 12, color: c.sageD, marginBottom: 8, fontWeight: 600 }}>
-              🎁 You've unlocked your free gift!
+              🚚 You've unlocked free shipping!
             </p>
           )}
           <div style={{ height: 4, background: '#e0e8e3', borderRadius: 2, overflow: 'hidden' }}>
-            <div style={{ height: '100%', width: `${progress}%`, background: c.sageD, borderRadius: 2, transition: 'width 0.4s ease' }} />
+            <div style={{ height: '100%', width: `${Math.min(100, (total / 150) * 100)}%`, background: c.sageD, borderRadius: 2, transition: 'width 0.4s ease' }} />
+          </div>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 5 }}>
             <span style={{ fontSize: 10, color: '#aaa' }}>{symbol}0</span>
