@@ -143,10 +143,9 @@ export default function Cart({ isOpen, onClose }) {
           <div style={{ height: 4, background: '#e0e8e3', borderRadius: 2, overflow: 'hidden' }}>
             <div style={{ height: '100%', width: `${Math.min(100, (total / 150) * 100)}%`, background: c.sageD, borderRadius: 2, transition: 'width 0.4s ease' }} />
           </div>
-          </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 5 }}>
-            <span style={{ fontSize: 10, color: '#aaa' }}>{symbol}0</span>
-            <span style={{ fontSize: 10, color: '#aaa' }}>Free gift at {formatPrice(threshold, symbol)}</span>
+            <span style={{ fontSize: 10, color: '#aaa' }}>$0</span>
+            <span style={{ fontSize: 10, color: '#aaa' }}>Free shipping at $150</span>
           </div>
         </div>
 
