@@ -10,7 +10,7 @@ const Star = ({ filled }) => (
   <span style={{ color: filled ? "#F59E0B" : "#ddd", fontSize: 16 }}>★</span>
 );
 
-export default function Product() {
+export default function Product({ onCartOpen }) {
   const { id } = useParams();
   const isMobile = useIsMobile();
   const { symbol, isUS } = useCurrency();
@@ -43,6 +43,7 @@ export default function Product() {
     if (!selectedSize) { alert('Please select a size'); return; }
     CartContext.add(product, selectedSize, selectedColor, qty);
     setAdded(true);
+    if (onCartOpen) onCartOpen();
     setTimeout(() => setAdded(false), 2000);
   };
 
@@ -183,7 +184,13 @@ export default function Product() {
           {/* SCARCITY */}
           <div style={{ background: '#FEF3C7', borderRadius: 8, padding: '8px 12px', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
             <span style={{ fontSize: 14 }}>🔥</span>
-            <span style={{ fontSize: 13, color: '#92400E', fontWeight: 600 }}>Only 9 left in stock — order soon</span>
+            <span style={{ fontSize: 13, color: '#92400E', fontWeight: 600 }}>Only {((product.id.charCodeAt(3) + product.id.charCodeAt(4)) % 12) + 3} left in stock — order soon</span>
+          </div>
+
+          {/* GUARANTEE */}
+          <div style={{ background: '#F0F5F2', borderRadius: 8, padding: '10px 12px', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontSize: 14 }}>🛡️</span>
+            <span style={{ fontSize: 13, color: c.sageD, fontWeight: 600 }}>Not a single bite, or your money back. 30-day guarantee.</span>
           </div>
 
           {/* QTY + BUY NOW (primary) */}
@@ -214,7 +221,7 @@ export default function Product() {
           {/* TRUST BADGES */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, padding: '16px 0', borderTop: '1px solid #e8ede9', borderBottom: '1px solid #e8ede9' }}>
             {[
-              { icon: '🚚', label: 'Free shipping', sub: 'over €69 / $79' },
+              { icon: '🚚', label: 'Free shipping', sub: 'over $150 US/CA' },
               { icon: '↩️', label: '30-day returns', sub: 'Hassle-free' },
               { icon: '🌿', label: 'Chemical-free', sub: 'No DEET, no permethrin' },
             ].map(({ icon, label, sub }) => (

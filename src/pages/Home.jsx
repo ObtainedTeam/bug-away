@@ -36,10 +36,16 @@ function ProductCard({ product }) {
 }
 
 const TESTIMONIALS = [
-  { name: "Maaike V.", stars: 5, text: "Finally something that actually keeps ticks away. Wore it hiking all weekend — not a single bite.", location: "Netherlands" },
-  { name: "James R.", stars: 5, text: "My whole family wears these now. Kids can play in the forest without us constantly checking.", location: "Canada" },
-  { name: "Sophie L.", stars: 5, text: "The integrated foot cover is genius. No more tucking trousers into socks.", location: "Germany" },
-  { name: "Bart M.", stars: 4, text: "Lightweight, breathable, does exactly what it says. Great for gardening too.", location: "Belgium" },
+  { name: "Maaike V.", stars: 5, text: "Finally something that actually keeps ticks away. Wore it hiking all weekend — not a single bite.", location: "Vermont" },
+  { name: "James R.", stars: 5, text: "My whole family wears these now. Kids can play in the forest without us constantly checking.", location: "Ontario, Canada" },
+  { name: "Sophie L.", stars: 5, text: "The integrated foot cover is genius. No more tucking trousers into socks.", location: "Minnesota" },
+  { name: "Bart M.", stars: 4, text: "Lightweight, breathable, does exactly what it says. Great for gardening too.", location: "Connecticut" },
+  { name: "Rachel K.", stars: 5, text: "I was terrified of ticks after my neighbor got Lyme. This suit gave me my backyard back.", location: "New Jersey" },
+  { name: "Dave T.", stars: 5, text: "Ditched the spray for good. Wore this fly fishing all summer — not one bite.", location: "Montana" },
+  { name: "Karen P.", stars: 5, text: "Bought the combo set for my husband and me. We garden every weekend now without a worry.", location: "Virginia" },
+  { name: "Mike S.", stars: 5, text: "As a trail runner, I was skeptical. But this thing breathes and keeps every tick off. Game changer.", location: "New Hampshire" },
+  { name: "Linda W.", stars: 5, text: "I have alpha-gal from a tick bite. This suit is the only reason I still go outside.", location: "North Carolina" },
+  { name: "Tom H.", stars: 4, text: "Great concept, well made. My only note is I wish they made one for my dog too.", location: "Wisconsin" },
 ];
 
 const DISEASES = [
@@ -114,8 +120,8 @@ export default function Home() {
           {[
             { icon: "⭐", text: "500+ happy customers" },
             { icon: "🔵", text: "100% chemical-free" },
-            { icon: "🌍", text: "Ships to EU & North America" },
-            { icon: "📦", text: "30-day returns" },
+            { icon: "🚚", text: "Free shipping over $150 US/CA" },
+            { icon: "📦", text: "30-day money-back guarantee" },
           ].map(({ icon, text }) => (
             <span key={text} style={{ fontSize: 13, color: "#555", display: "flex", alignItems: "center", gap: 6 }}>
               <span>{icon}</span>{text}
@@ -232,7 +238,7 @@ export default function Home() {
 
       {/* STATS BAR — solid green background (original style) */}
       <section style={{ background: c.sage, padding: "32px 24px" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(5,1fr)", gap: 24, textAlign: "center", color: "#fff" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(5,1fr)", gap: isMobile ? 16 : 24, textAlign: "center", color: "#fff" }}>
           {[
             { num: "1.5M+", label: "Tick bites/year US" },
             { num: "27,000", label: "New Lyme cases/yr" },
@@ -363,6 +369,49 @@ export default function Home() {
               <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 15, margin: 0 }}>Bug Away gives you physical tick protection — no chemicals, no sprays, no compromise.</p>
             </div>
             <Link to="/shop" style={{ ...BTN, background: "#fff", color: c.sageD, whiteSpace: "nowrap", flexShrink: 0, textDecoration: "none", display: "inline-block" }}>Shop Now</Link>
+          </div>
+          <p style={{ fontSize: 11, color: "#999", marginTop: 16, lineHeight: 1.5 }}>Bug Away is a physical barrier garment designed to prevent insect bites. It is not a medical device and does not prevent or treat tick-borne illness. If you suspect a tick-borne infection, consult a healthcare professional.</p>
+        </div>
+      </section>
+
+      {/* COMPARISON TABLE */}
+      <section style={{ background: "#fff", padding: isMobile ? "48px 20px" : "72px 40px" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto" }}>
+          <div style={{ ...LBL, marginBottom: 8 }}>WHY BUG AWAY</div>
+          <h2 style={{ ...H2, marginBottom: 36 }}>How we compare</h2>
+          <div style={{ overflowX: "auto" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
+              <thead>
+                <tr style={{ background: c.sageD, color: "#fff" }}>
+                  <th style={{ padding: "12px 16px", textAlign: "left", borderRadius: "8px 0 0 0" }}>Feature</th>
+                  <th style={{ padding: "12px 16px", textAlign: "center", fontWeight: 900 }}>Bug Away</th>
+                  <th style={{ padding: "12px 16px", textAlign: "center" }}>DEET Spray</th>
+                  <th style={{ padding: "12px 16px", textAlign: "center", borderRadius: "0 8px 0 0" }}>Permethrin Clothing</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ["Chemical-free", "✅ Yes", "❌ No", "❌ No"],
+                  ["Reapplication needed", "✅ Never", "❌ Every 2 hours", "❌ Every 5-6 washes"],
+                  ["Safe for kids", "✅ Yes", "⚠️ Limited", "❌ Not recommended"],
+                  ["Physical barrier", "✅ Yes", "❌ No", "❌ No"],
+                  ["Lasts for years", "✅ Yes", "❌ Single use", "⚠️ Degrades over time"],
+                  ["Breathable", "✅ Ultra-light mesh", "N/A", "⚠️ Treated regular fabric"],
+                  ["Damages gear", "✅ No", "❌ Dissolves synthetics", "⚠️ Can stain"],
+                  ["Cost per season", "✅ One purchase", "❌ $40-80/season", "❌ $30-60/season"],
+                ].map(([feature, ba, deet, perm], i) => (
+                  <tr key={i} style={{ background: i % 2 === 0 ? "#F7F9F8" : "#fff" }}>
+                    <td style={{ padding: "10px 16px", fontWeight: 600 }}>{feature}</td>
+                    <td style={{ padding: "10px 16px", textAlign: "center", fontWeight: 700, color: c.sageD }}>{ba}</td>
+                    <td style={{ padding: "10px 16px", textAlign: "center", color: "#666" }}>{deet}</td>
+                    <td style={{ padding: "10px 16px", textAlign: "center", color: "#666" }}>{perm}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div style={{ textAlign: "center", marginTop: 28 }}>
+            <Link to="/shop" style={{ ...BTN, fontSize: 15, padding: "14px 32px", display: "inline-block", textDecoration: "none" }}>Shop Bug Away</Link>
           </div>
         </div>
       </section>

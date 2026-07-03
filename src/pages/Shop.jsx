@@ -120,6 +120,20 @@ export default function Shop() {
             No products found in this category.
           </div>
         )}
+
+        {/* COMING SOON */}
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 20, marginTop: 40 }}>
+          {[
+            { label: "Pets", icon: "🐕", desc: "Tick protection for your four-legged family members. Coming soon." },
+            { label: "Accessories", icon: "🎒", desc: "Gloves, gaiters, head nets and more. Coming soon." },
+          ].map(({ label, icon, desc }) => (
+            <div key={label} style={{ background: "#F7F9F8", borderRadius: 12, padding: 32, textAlign: "center", border: "2px dashed #d5ddd8" }}>
+              <div style={{ fontSize: 40, marginBottom: 12 }}>{icon}</div>
+              <div style={{ fontFamily: "Archivo, sans-serif", fontWeight: 800, fontSize: 20, marginBottom: 8, color: c.sageD }}>{label}</div>
+              <p style={{ fontSize: 14, color: "#888", margin: 0 }}>{desc}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* SIZE GUIDE BANNER */}
