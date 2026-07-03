@@ -226,33 +226,55 @@ export default function Home() {
       {/* NATURE PHOTO STRIP — new outdoor photos */}
       <section style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr 1fr", height: isMobile ? "auto" : 300, overflow: "hidden" }}>
         <div style={{ overflow: "hidden", height: isMobile ? 180 : "100%" }}>
-          <img src="/images/Male _ black mesh _ bino's hunting.png" alt="Outdoor hunting" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          <img src="/images/Male _ black mesh _ bino's hunting.png" alt="Outdoor hunting" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 30%" }} />
         </div>
         <div style={{ overflow: "hidden", height: isMobile ? 180 : "100%" }}>
-          <img src="/images/Buddies camping together.png" alt="Buddies camping" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          <img src="/images/Buddies camping together.png" alt="Buddies camping" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 40%" }} />
         </div>
         <div style={{ overflow: "hidden", height: isMobile ? 180 : "100%" }}>
-          <img src="/images/Female _ White mesh _ Forest solo.png" alt="Solo forest walk" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          <img src="/images/Female _ White mesh _ Forest solo.png" alt="Solo forest walk" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 20%" }} />
         </div>
       </section>
 
-      {/* STATS BAR — solid green background (original style) */}
-      <section style={{ background: c.sage, padding: "32px 24px" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(5,1fr)", gap: isMobile ? 16 : 24, textAlign: "center", color: "#fff" }}>
-          {[
-            { num: "1.5M+", label: "Tick bites/year US" },
-            { num: "27,000", label: "New Lyme cases/yr" },
-            { num: "100%", label: "Chemical-free" },
-            { num: "360°", label: "Body coverage" },
-            { num: "< 80g", label: "Per set" },
-          ].map(({ num, label }) => (
-            <div key={label}>
-              <div style={{ fontFamily: "Archivo, sans-serif", fontWeight: 900, fontSize: isMobile ? 22 : 28 }}>{num}</div>
-              <div style={{ fontSize: 12, opacity: 0.82, marginTop: 4 }}>{label}</div>
-            </div>
-          ))}
-        </div>
-      </section>
+      {/* STATS BAR — desktop: solid green bar. Mobile: overlay on photo strip */}
+      {!isMobile && (
+        <section style={{ background: c.sage, padding: "32px 24px" }}>
+          <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 24, textAlign: "center", color: "#fff" }}>
+            {[
+              { num: "1.5M+", label: "Tick bites/year US" },
+              { num: "27,000", label: "New Lyme cases/yr" },
+              { num: "100%", label: "Chemical-free" },
+              { num: "360°", label: "Body coverage" },
+              { num: "< 80g", label: "Per set" },
+            ].map(({ num, label }) => (
+              <div key={label}>
+                <div style={{ fontFamily: "Archivo, sans-serif", fontWeight: 900, fontSize: 28 }}>{num}</div>
+                <div style={{ fontSize: 12, opacity: 0.82, marginTop: 4 }}>{label}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+      {isMobile && (
+        <section style={{ position: "relative", overflow: "hidden" }}>
+          <img src="/images/Buddies camping together.png" alt="" style={{ width: "100%", height: 200, objectFit: "cover", objectPosition: "center 40%", display: "block" }} />
+          <div style={{ position: "absolute", inset: 0, background: "rgba(30,50,40,0.75)" }} />
+          <div style={{ position: "absolute", inset: 0, display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center", gap: 8, padding: "16px 12px" }}>
+            {[
+              { num: "1.5M+", label: "Tick bites/yr" },
+              { num: "27K", label: "Lyme cases/yr" },
+              { num: "100%", label: "Chemical-free" },
+              { num: "360°", label: "Coverage" },
+              { num: "< 80g", label: "Per set" },
+            ].map(({ num, label }) => (
+              <div key={label} style={{ textAlign: "center", width: "30%", color: "#fff" }}>
+                <div style={{ fontFamily: "Archivo, sans-serif", fontWeight: 900, fontSize: 20 }}>{num}</div>
+                <div style={{ fontSize: 10, opacity: 0.8, marginTop: 2 }}>{label}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* BESTSELLERS — 3 columns on desktop (was 4), 2 on mobile edge-to-edge */}
       <section style={{ background: "#fff", padding: isMobile ? "48px 0" : "72px 40px" }}>
