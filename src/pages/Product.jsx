@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { c, useIsMobile, BTN, BTNO, H2, LBL } from '../theme';
 import { products, reviews } from '../data';
@@ -24,6 +24,20 @@ export default function Product({ onCartOpen }) {
   const [added, setAdded] = useState(false);
   const [activeTab, setActiveTab] = useState('description');
   const [showSizeGuide, setShowSizeGuide] = useState(false);
+  const [showSticky, setShowSticky] = useState(false);
+  const buyBtnRef = useRef(null);
+
+  useEffect(() => {
+    if (!isMobile) return;
+    const onScroll = () => {
+      if (buyBtnRef.current) {
+        const rect = buyBtnRef.current.getBoundingClientRect();
+        setShowSticky(rect.bottom < 0);
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [isMobile]);
 
   useEffect(() => {
     setSelectedColor(product.colors[0]);
@@ -194,7 +208,7 @@ export default function Product({ onCartOpen }) {
           </div>
 
           {/* QTY + BUY NOW (primary) */}
-          <div style={{ display: 'flex', gap: 10, marginBottom: 10, alignItems: 'center' }}>
+          <div ref={buyBtnRef} style={{ display: 'flex', gap: 10, marginBottom: 10, alignItems: 'center' }}>
             <div style={{ display: 'flex', alignItems: 'center', border: '2px solid #e8ede9', borderRadius: 10, overflow: 'hidden' }}>
               <button onClick={() => setQty(Math.max(1, qty - 1))} style={{ width: 40, height: 48, background: 'none', border: 'none', cursor: 'pointer', fontSize: 18 }}>−</button>
               <span style={{ width: 40, textAlign: 'center', fontWeight: 700, fontSize: 15 }}>{qty}</span>
@@ -310,6 +324,31 @@ export default function Product({ onCartOpen }) {
         )}
       </div>
 
+      {/* COMMON QUESTIONS — inline objection handling */}
+      <section style={{ background: '#fff', padding: isMobile ? '48px 20px' : '72px 40px' }}>
+        <div style={{ maxWidth: 800, margin: '0 auto' }}>
+          <div style={{ ...LBL, marginBottom: 8 }}>COMMON QUESTIONS</div>
+          <h2 style={{ ...H2, marginBottom: 32 }}>Everything you need to know</h2>
+          {[
+            { q: "Won't I overheat wearing an extra layer?", a: "No. The mesh is specifically designed for airflow. It weighs under 80g for the full suit and breathes freely in summer heat. Most customers report no noticeable temperature difference. The mesh creates a physical barrier without trapping heat the way solid fabric does." },
+            { q: "Does it actually stop ticks?", a: "Yes. The mesh openings are smaller than 0.6mm. An adult deer tick is approximately 1-3mm and physically cannot pass through or bite through the weave. It's the same principle as a window screen, engineered into wearable clothing." },
+            { q: "How do I wash it?", a: "Machine wash on cold, gentle cycle. Hang dry or tumble dry on low. No special detergent needed. The mesh maintains its integrity wash after wash with zero loss of protection, unlike permethrin-treated clothing that degrades after 5-6 washes." },
+            { q: "How does it fit over my regular clothes?", a: "Bug Away is designed as an over-garment. You wear it right over your hiking clothes, fishing outfit, or gardening gear. The fit is slightly oversized by design so it floats over your base layer without restricting movement." },
+            { q: "How long does it last?", a: "Years. The noseeum-grade nylon mesh is durable and doesn't degrade with use or washing. There's no chemical treatment that wears off. As long as the mesh isn't torn, the protection is the same on day one as it is on day one thousand." },
+            { q: "What about mosquitoes and other insects?", a: "The mesh blocks any biting insect larger than 0.6mm. That includes mosquitoes, black flies, no-see-ums, harvest mites, gnats, and horse flies. If it bites, the mesh stops it." },
+            { q: "What if it doesn't work for me?", a: "We offer a 30-day money-back guarantee. If you get bitten through the mesh, we'll refund you in full. No questions asked." },
+          ].map(({ q, a }, i) => (
+            <details key={i} style={{ borderBottom: '1px solid #e8ede9', cursor: 'pointer' }}>
+              <summary style={{ padding: '16px 0', fontSize: 15, fontWeight: 700, color: '#333', listStyle: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                {q}
+                <span style={{ fontSize: 18, color: '#999', flexShrink: 0, marginLeft: 12 }}>+</span>
+              </summary>
+              <p style={{ fontSize: 14, color: '#555', lineHeight: 1.7, padding: '0 0 16px', margin: 0 }}>{a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
       {/* HOW IT WORKS VIDEO SECTION */}
       <section style={{ background: '#1a2e24', padding: isMobile ? '48px 20px' : '72px 40px' }}>
         <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center' }}>
@@ -377,6 +416,24 @@ export default function Product({ onCartOpen }) {
           </div>
         </div>
       </section>
+
+      {/* STICKY MOBILE BAR */}
+      {isMobile && showSticky && (
+        <div style={{
+          position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 200,
+          background: '#fff', borderTop: '1px solid #e8ede9',
+          padding: '10px 16px', display: 'flex', gap: 10, alignItems: 'center',
+          boxShadow: '0 -4px 16px rgba(0,0,0,0.1)',
+        }}>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: '#333', lineHeight: 1.2 }}>{product.name}</div>
+            <div style={{ fontSize: 15, fontWeight: 800, color: c.sageD }}>{formatPrice(price, symbol)}</div>
+          </div>
+          <button onClick={handleBuyNow} style={{ ...BTN, fontSize: 14, padding: '12px 24px', whiteSpace: 'nowrap' }}>
+            Buy Now →
+          </button>
+        </div>
+      )}
     </div>
   );
 }
