@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { c, useIsMobile, BTN } from '../theme';
+import { subscribe } from '../brevo';
 
 export default function ExitPopup() {
   const isMobile = useIsMobile();
@@ -35,10 +36,10 @@ export default function ExitPopup() {
     sessionStorage.setItem('exitPopupDismissed', 'true');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email) return;
-    // Brevo integration will be connected here
+    try { await subscribe(email, 'tickGuide'); } catch (e) { console.error(e); }
     setSubmitted(true);
     setTimeout(() => {
       dismiss();

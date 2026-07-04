@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { c, useIsMobile, BTN } from '../theme';
+import { subscribe } from '../brevo';
 
 export default function NewsletterPopup() {
   const isMobile = useIsMobile();
@@ -18,10 +19,10 @@ export default function NewsletterPopup() {
     localStorage.setItem('newsletterDismissed', 'true');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email) return;
-    // Brevo integration will be connected here
+    try { await subscribe(email, 'newsletter'); } catch (e) { console.error(e); }
     setSubmitted(true);
     setTimeout(() => dismiss(), 3000);
   };
