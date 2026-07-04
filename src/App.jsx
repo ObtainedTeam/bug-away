@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Nav from './components/Nav';
 import Footer from './components/Footer';
 import Cart from './components/Cart';
+import ExitPopup from './components/ExitPopup';
+import NewsletterPopup from './components/NewsletterPopup';
 import ScrollToTop from './components/ScrollToTop';
 import { CurrencyProvider } from './currency';
 import Home from './pages/Home';
@@ -32,6 +34,8 @@ export default function App() {
         `}</style>
         <Nav onCartOpen={() => setCartOpen(true)} />
         <Cart isOpen={cartOpen} onClose={() => setCartOpen(false)} />
+        <ExitPopup />
+        <NewsletterPopup />
         <main>
           <Routes>
             <Route path="/" element={<Home />} />
