@@ -144,7 +144,7 @@ export default function Home() {
                   onMouseEnter={e => { e.currentTarget.querySelector("img").style.transform = "scale(1.05)"; e.currentTarget.querySelector(".overlay").style.opacity = "0.75"; }}
                   onMouseLeave={e => { e.currentTarget.querySelector("img").style.transform = "scale(1)"; e.currentTarget.querySelector(".overlay").style.opacity = "0.5"; }}
                 >
-                  <img src="/images/jacket-men-white-front.jpg" alt="Men" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top", transition: "transform .5s" }} />
+                  <img src="/images/2 guys _ white and black mesh_ hiking.png" alt="Men" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top", transition: "transform .5s" }} />
                   <div className="overlay" style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.1) 60%)", transition: "opacity .3s", opacity: 0.5 }} />
                   <div style={{ position: "absolute", bottom: 24, left: 24, color: "#fff" }}>
                     <div style={{ fontFamily: "Archivo, sans-serif", fontWeight: 900, fontSize: 26, letterSpacing: "-0.02em" }}>Men</div>
@@ -159,7 +159,7 @@ export default function Home() {
                   onMouseEnter={e => { e.currentTarget.querySelector("img").style.transform = "scale(1.05)"; e.currentTarget.querySelector(".overlay").style.opacity = "0.75"; }}
                   onMouseLeave={e => { e.currentTarget.querySelector("img").style.transform = "scale(1)"; e.currentTarget.querySelector(".overlay").style.opacity = "0.5"; }}
                 >
-                  <img src="/images/jacket-women-white-front.jpg" alt="Women" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top", transition: "transform .5s" }} />
+                  <img src="/images/Female _ White mesh _ mountain solo.png" alt="Women" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top", transition: "transform .5s" }} />
                   <div className="overlay" style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.1) 60%)", transition: "opacity .3s", opacity: 0.5 }} />
                   <div style={{ position: "absolute", bottom: 24, left: 24, color: "#fff" }}>
                     <div style={{ fontFamily: "Archivo, sans-serif", fontWeight: 900, fontSize: 26, letterSpacing: "-0.02em" }}>Women</div>
@@ -202,8 +202,8 @@ export default function Home() {
             /* Mobile: 2 columns, tall cards */
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
               {[
-                { label: "Men", img: "/images/jacket-men-white-front.jpg", link: "/shop?cat=men", sub: "Shop →" },
-                { label: "Women", img: "/images/jacket-women-white-front.jpg", link: "/shop?cat=women", sub: "Shop →" },
+                { label: "Men", img: "/images/2 guys _ white and black mesh_ hiking.png", link: "/shop?cat=men", sub: "Shop →" },
+                { label: "Women", img: "/images/Female _ White mesh _ mountain solo.png", link: "/shop?cat=women", sub: "Shop →" },
                 { label: "Kids", img: "/images/kids-set-green-flatlay.jpg", link: "/shop?cat=kids", sub: "Shop →" },
                 { label: "Bundles", img: "/images/Couple _ camping.png", link: "/shop?cat=bundles", sub: "Best value →" },
               ].map(({ label, img, link, sub }) => (
