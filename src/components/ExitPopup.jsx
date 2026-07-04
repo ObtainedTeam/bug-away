@@ -13,7 +13,7 @@ export default function ExitPopup() {
 
     // Desktop: exit intent (mouse leaves viewport top)
     const handleMouseLeave = (e) => {
-      if (e.clientY <= 0) setShow(true);
+      if (e.clientY <= 0 && !sessionStorage.getItem('exitPopupDismissed')) setShow(true);
     };
 
     // Mobile: show after 30 seconds on site
