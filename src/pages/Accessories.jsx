@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { c, useIsMobile, BTN, H2, LBL } from "../theme";
+import { subscribe } from "../brevo";
 
 export default function Accessories() {
   const isMobile = useIsMobile();
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email) return;
-    // Brevo/email signup will be connected here
+    try { await subscribe(email, 'accessories'); } catch (e) { console.error(e); }
     setSubmitted(true);
   };
 
