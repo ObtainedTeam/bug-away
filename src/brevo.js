@@ -1,8 +1,8 @@
 const LIST_IDS = {
-  newsletter: 4,
-  tickGuide: 5,
-  pets: 6,
-  accessories: 7,
+  newsletter: 9,
+  tickGuide: 8,
+  pets: 7,
+  accessories: 10,
 };
 
 export async function subscribe(email, list) {
