@@ -5,6 +5,7 @@
  *   dist/blog/<slug>/index.html   statische artikelpagina, crawlbaar, in huisstijl
  *   dist/blog-articles.json       lijst die src/pages/Blog.jsx uitleest
  *   dist/sitemap.xml              volledige sitemap: pagina's + producten + artikelen
+ *   dist/llms.txt                 markdown-kaart van de site voor AI-modellen
  *
  * Draait NA `vite build`.
  *
@@ -224,6 +225,79 @@ ${entries.join('\n')}
   log(`sitemap.xml: ${STATIC_PAGES.length} pagina's + ${products.length} producten + ${articles.length} artikelen = ${entries.length} URLs`);
 }
 
+/* ------------------------------------------------------------------ */
+/* llms.txt                                                            */
+/* ------------------------------------------------------------------ */
+
+/**
+ * https://llmstxt.org — een markdown-kaart van de site voor AI-modellen.
+ *
+ * Eerlijk over wat dit doet: de meetbare opbrengst is vandaag ongeveer nul.
+ * De AI-crawlers halen dit bestand nauwelijks op, ze lezen gewoon je HTML.
+ * Daarom kost dit hier ook niks: het wordt bij elke build meegegenereerd uit
+ * data die we toch al hebben, en er is geen onderhoud aan. Blijkt het over een
+ * jaar wel te tellen, dan stond hij er al.
+ *
+ * Sitemap is een kale URL-lijst voor crawlers. Dit is context: wat verkoop je,
+ * waarom is het anders, welke pagina gaat waarover.
+ */
+async function writeLlmsTxt(articles) {
+  const clean = (t = '') => String(t).replace(/\s+/g, ' ').trim();
+  const usd = (p) => (p?.prices?.usd != null ? `$${p.prices.usd}` : '');
+
+  const productLines = products.map((p) => {
+    const price = usd(p);
+    const sizes = p.sizes?.length ? ` Sizes ${p.sizes[0]}–${p.sizes[p.sizes.length - 1]}.` : '';
+    return `- [${clean(p.name)}](${SITE_URL}/product/${p.id}): ${clean(p.desc)}${
+      price ? ` ${price} USD.` : ''
+    }${sizes}`;
+  });
+
+  const articleLines = articles.map(
+    (a) => `- [${clean(a.title)}](${SITE_URL}/blog/${a._slug}): ${clean(a.excerpt || a.meta_description || '')}`
+  );
+
+  const body = `# Bug Away
+
+> Chemical-free tick and insect protective clothing for the US and Canada. Bug Away uses no-see-um-grade mesh with openings under 0.6mm, which stops ticks, mosquitoes, black flies and gnats physically rather than with an insecticide.
+
+Most insect-protective clothing is treated with permethrin. That treatment washes out somewhere between the twentieth and the seventieth wash, and the wearer has no way of knowing when the protection is gone. Bug Away takes the other approach: the mesh openings are smaller than the insects, so nothing gets through because nothing fits through. There is no chemical, nothing to reapply, and nothing to wash out. The protection lasts as long as the garment does.
+
+Key facts:
+- Mesh openings under 0.6mm, finer than a no-see-um and far finer than a tick
+- No permethrin or any other insecticide, which also makes it safe around cats, who cannot metabolise permethrin
+- Free shipping on US orders over $150
+- Sizes XS through 3XL, plus a kids range
+- Best worn loose; fabric pressed flat against skin gives a mosquito something to bite through
+
+## Products
+
+${productLines.join('\n')}
+
+## Guides
+${articleLines.length ? '\n' + articleLines.join('\n') : '\n(No articles published yet.)'}
+
+## About
+
+- [How It Works](${SITE_URL}/how-it-works): How no-see-um-grade mesh blocks ticks and mosquitoes without insecticide.
+- [Shop](${SITE_URL}/shop): Full catalogue of jackets, pants, combo sets and kids gear.
+- [Blog](${SITE_URL}/blog): Tick awareness, insect protection and field-tested gear advice.
+- [FAQ](${SITE_URL}/faq): Sizing, care, shipping and returns.
+- [About](${SITE_URL}/about): Who Bug Away is and why the brand is insecticide-free.
+
+## Optional
+
+- [Pets](${SITE_URL}/pets): Tick protection for dogs.
+- [Accessories](${SITE_URL}/accessories): Head, neck, hand and ankle coverage.
+- [Returns](${SITE_URL}/returns)
+- [Privacy](${SITE_URL}/privacy)
+- [Terms](${SITE_URL}/terms)
+`;
+
+  await writeFile(path.join(OUT_DIR, 'llms.txt'), body, 'utf8');
+  log(`llms.txt: ${products.length} producten + ${articles.length} artikelen`);
+}
+
 async function main() {
   if (!API_KEY) {
     log('BABYLOVE_API_KEY ontbreekt, blog wordt overgeslagen.');
@@ -239,6 +313,7 @@ async function main() {
   if (summaries.length === 0) {
     await writeFile(path.join(OUT_DIR, 'blog-articles.json'), '[]', 'utf8');
     await writeSitemap([]);
+    await writeLlmsTxt([]);
     return;
   }
 
@@ -322,6 +397,7 @@ async function main() {
   log(`blog-articles.json geschreven (${manifest.length})`);
 
   await writeSitemap(articles);
+  await writeLlmsTxt(articles);
 
   log('klaar.');
 }
