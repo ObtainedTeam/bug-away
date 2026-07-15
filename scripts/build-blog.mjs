@@ -4,7 +4,7 @@
  * Haalt BabyLoveGrowth artikelen op en schrijft:
  *   dist/blog/<slug>/index.html   statische artikelpagina, crawlbaar, in huisstijl
  *   dist/blog-articles.json       lijst die src/pages/Blog.jsx uitleest
- *   dist/blog-sitemap.xml
+ *   dist/sitemap.xml              volledige sitemap: pagina's + producten + artikelen
  *
  * Draait NA `vite build`.
  *
@@ -21,6 +21,7 @@
 import { readFile, writeFile, mkdir, copyFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
+import { products } from '../src/data.js';
 
 const API_BASE = 'https://api.babylovegrowth.ai/api/integrations/v1';
 const API_KEY = process.env.BABYLOVE_API_KEY;
@@ -173,6 +174,56 @@ async function fetchArticleList() {
   return all;
 }
 
+/* ------------------------------------------------------------------ */
+/* sitemap                                                             */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Er stond geen sitemap.xml in de repo, dus Google had nooit een kaart van de
+ * site. Deze dekt alles: vaste pagina's, de 7 productpagina's uit src/data.js
+ * en de artikelen.
+ *
+ * /shop/men en /shop?cat=MEN staan er bewust NIET in. Shop.jsx filtert op
+ * lokale state en negeert de route-param, dus die URLs renderen allemaal
+ * dezelfde ongefilterde shop. Dat in een sitemap zetten is duplicate content.
+ */
+const STATIC_PAGES = [
+  ['/', '1.0', 'weekly'],
+  ['/shop', '0.9', 'weekly'],
+  ['/blog', '0.8', 'daily'],
+  ['/how-it-works', '0.7', 'monthly'],
+  ['/faq', '0.6', 'monthly'],
+  ['/about', '0.5', 'monthly'],
+  ['/pets', '0.4', 'monthly'],
+  ['/accessories', '0.4', 'monthly'],
+  ['/privacy', '0.3', 'yearly'],
+  ['/returns', '0.3', 'yearly'],
+  ['/terms', '0.3', 'yearly'],
+];
+
+async function writeSitemap(articles) {
+  const today = new Date().toISOString().slice(0, 10);
+  const url = (loc, lastmod, freq, pri) =>
+    `  <url><loc>${SITE_URL}${loc}</loc><lastmod>${lastmod}</lastmod><changefreq>${freq}</changefreq><priority>${pri}</priority></url>`;
+
+  const entries = [
+    ...STATIC_PAGES.map(([loc, pri, freq]) => url(loc, today, freq, pri)),
+    ...products.map((p) => url(`/product/${p.id}`, today, 'weekly', '0.8')),
+    ...articles.map((a) => url(`/blog/${a._slug}`, (a.created_at || today).slice(0, 10), 'monthly', '0.7')),
+  ];
+
+  await writeFile(
+    path.join(OUT_DIR, 'sitemap.xml'),
+    `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${entries.join('\n')}
+</urlset>
+`,
+    'utf8'
+  );
+  log(`sitemap.xml: ${STATIC_PAGES.length} pagina's + ${products.length} producten + ${articles.length} artikelen = ${entries.length} URLs`);
+}
+
 async function main() {
   if (!API_KEY) {
     log('BABYLOVE_API_KEY ontbreekt, blog wordt overgeslagen.');
@@ -187,6 +238,7 @@ async function main() {
   log(`${summaries.length} artikelen gevonden`);
   if (summaries.length === 0) {
     await writeFile(path.join(OUT_DIR, 'blog-articles.json'), '[]', 'utf8');
+    await writeSitemap([]);
     return;
   }
 
@@ -269,27 +321,8 @@ async function main() {
   await writeFile(path.join(OUT_DIR, 'blog-articles.json'), JSON.stringify(manifest), 'utf8');
   log(`blog-articles.json geschreven (${manifest.length})`);
 
-  /* --- sitemap --- */
-  const urls = [
-    `  <url><loc>${SITE_URL}/blog</loc><changefreq>daily</changefreq><priority>0.8</priority></url>`,
-    ...articles.map((a) => {
-      const lastmod = a.created_at ? a.created_at.slice(0, 10) : '';
-      return `  <url><loc>${SITE_URL}/blog/${a._slug}</loc>${
-        lastmod ? `<lastmod>${lastmod}</lastmod>` : ''
-      }<changefreq>monthly</changefreq><priority>0.7</priority></url>`;
-    }),
-  ].join('\n');
+  await writeSitemap(articles);
 
-  await writeFile(
-    path.join(OUT_DIR, 'blog-sitemap.xml'),
-    `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls}
-</urlset>
-`,
-    'utf8'
-  );
-  log('blog-sitemap.xml geschreven');
   log('klaar.');
 }
 

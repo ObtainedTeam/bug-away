@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Geen zoekresultaten of checkout in de index
+Disallow: /cart
+Disallow: /checkout
+
+Sitemap: https://www.bugawaygear.com/sitemap.xml
