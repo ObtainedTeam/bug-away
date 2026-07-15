@@ -1,0 +1,22 @@
+<!--
+  Plak hier je eigen nav uit de React app, als platte HTML.
+  Dit is een fallback zodat de pagina niet kaal is.
+  Let op: dit is statische HTML, geen React. Gebruik gewone <a href="/...">.
+-->
+<header class="site-header">
+  <a class="site-logo" href="/">BUG AWAY</a>
+  <nav class="site-nav">
+    <a href="/shop">Shop</a>
+    <a href="/pets">Pets</a>
+    <a href="/accessories">Accessories</a>
+    <a href="/blog" aria-current="page">Blog</a>
+  </nav>
+</header>
+
+<style>
+.site-header{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;max-width:1080px;margin:0 auto;padding:1.1rem 1.25rem;border-bottom:1px solid var(--line)}
+.site-logo{font-weight:800;letter-spacing:.06em;font-size:1rem;text-decoration:none;color:var(--ink)}
+.site-nav{display:flex;gap:1.25rem;font-size:.9375rem}
+.site-nav a{text-decoration:none;color:var(--ink-soft)}
+.site-nav a:hover,.site-nav a[aria-current]{color:var(--accent)}
+</style>
