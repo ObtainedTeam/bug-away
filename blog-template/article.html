@@ -19,34 +19,127 @@
 <meta name="twitter:description" content="{{META_DESCRIPTION}}">
 <meta name="twitter:image" content="{{OG_IMAGE}}">
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/blog/blog.css">
 {{JSON_LD}}
 </head>
 <body>
-{{HEADER}}
 
-<main class="post">
+<div class="bar">🌿 Free shipping over $150 in the US · Chemical-free · Eco-responsible</div>
+
+<nav class="nav">
+  <div class="nav-in">
+    <a class="logo" href="/">BUG AWAY</a>
+    <div class="nav-links">
+      <a href="/shop">SHOP</a>
+      <a href="/how-it-works">HOW IT WORKS</a>
+      <a href="/about">ABOUT</a>
+      <a href="/blog" class="on">BLOG</a>
+      <a href="/faq">FAQ</a>
+    </div>
+  </div>
+</nav>
+
+<main>
   <article>
-    <header class="post-head">
-      <a class="post-back" href="/blog">All articles</a>
-      <h1 class="post-title">{{HEADING}}</h1>
-      <time class="post-date" datetime="{{DATE_ISO}}">{{DATE_HUMAN}}</time>
+    <header class="head">
+      <div class="head-in">
+        <a class="back" href="/blog">← All articles</a>
+        <div class="cat">{{CATEGORY}}</div>
+        <h1>{{HEADING}}</h1>
+        <div class="meta">
+          <time datetime="{{DATE_ISO}}">{{DATE_HUMAN}}</time>
+          <span class="dot"></span>
+          <span>{{READ_TIME}}</span>
+        </div>
+      </div>
     </header>
 
-    {{HERO}}
+    <div class="wrap">
+      {{HERO}}
+      <div class="body">
+        {{CONTENT}}
+      </div>
 
-    <div class="post-body">
-      {{CONTENT}}
+      <aside class="cta">
+        <div class="cta-t">Protection that can't wash out</div>
+        <p>No permethrin, no repellent, nothing to reapply. No-see-um-grade mesh keeps ticks and mosquitoes out because they physically cannot fit through the weave.</p>
+        <a class="cta-b" href="/shop">Shop the gear</a>
+      </aside>
     </div>
   </article>
 
-  <aside class="post-cta">
-    <h2>Chemical-free tick protection</h2>
-    <p>No permethrin to wash out. No-see-um-grade mesh keeps ticks, mosquitoes and black flies out because they physically cannot get through the weave.</p>
-    <a class="post-cta-btn" href="/shop">Shop the gear</a>
-  </aside>
+  <section class="sub">
+    <div class="sub-in">
+      <h2>Stay updated on tick season</h2>
+      <p>Get our latest articles and tick protection tips straight to your inbox.</p>
+      <form class="sub-f" id="nf">
+        <input type="email" id="ne" placeholder="Your email address" required autocomplete="email">
+        <button type="submit" id="nb">Subscribe</button>
+      </form>
+      <div class="sub-m" id="nm" role="status"></div>
+    </div>
+  </section>
 </main>
 
-{{FOOTER}}
+<footer class="ft">
+  <div class="ft-grid">
+    <div class="ft-brand">
+      <a class="ft-logo" href="/">Bug Away</a>
+      <p>Insecticide-free protection against ticks and mosquitoes. For hikers, families and everyone who enjoys the outdoors.</p>
+      <div class="ft-tags"><span>♻️ Eco</span><span>🌿 Chemical-free</span><span>🐝 Bee-safe</span></div>
+    </div>
+    <div>
+      <div class="ft-h">Collection</div>
+      <a href="/shop/men">Men</a><a href="/shop/women">Women</a><a href="/shop/kids">Kids</a><a href="/shop/bundles">Bundles</a><a href="/shop/extras">Extras</a>
+    </div>
+    <div>
+      <div class="ft-h">Info</div>
+      <a href="/how-it-works">How It Works</a><a href="/blog">Ticks &amp; Lyme</a><a href="/faq">Size Guide</a><a href="/faq">FAQ</a>
+    </div>
+    <div>
+      <div class="ft-h">Service</div>
+      <a href="/faq">Shipping</a><a href="/faq">Returns</a><a href="/about">Contact</a><a href="/shop">Reviews</a>
+    </div>
+  </div>
+  <div class="ft-bot">
+    <span>© 2026 Bug Away. All rights reserved.</span>
+    <div class="ft-legal">
+      <a href="/privacy">Privacy</a><a href="/returns">Returns</a><a href="/terms">Terms</a>
+      <span>Visa</span><span>Mastercard</span><span>iDEAL</span><span>PayPal</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Zelfde endpoint en list id als src/brevo.js (newsletter = 9).
+document.getElementById('nf').addEventListener('submit', async function (e) {
+  e.preventDefault();
+  var email = document.getElementById('ne').value.trim();
+  var btn = document.getElementById('nb');
+  var msg = document.getElementById('nm');
+  if (!email) return;
+  btn.disabled = true;
+  msg.textContent = '';
+  try {
+    var res = await fetch('/api/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, listId: 9 }),
+    });
+    var data = await res.json().catch(function () { return {}; });
+    if (!res.ok) throw new Error(data.error || 'Signup failed');
+    msg.textContent = "You're in. Check your inbox.";
+    msg.className = 'sub-m ok';
+    document.getElementById('ne').value = '';
+  } catch (err) {
+    msg.textContent = err.message || 'Something went wrong. Try again.';
+    msg.className = 'sub-m err';
+  }
+  btn.disabled = false;
+});
+</script>
 </body>
 </html>
