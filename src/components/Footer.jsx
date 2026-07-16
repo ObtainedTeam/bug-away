@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { c, useIsMobile } from '../theme';
+import { c } from '../theme';
 
 const cols = [
   { head:"Collection", links:[{l:"Men",to:"/shop/men"},{l:"Women",to:"/shop/women"},{l:"Kids",to:"/shop/kids"},{l:"Bundles",to:"/shop/bundles"},{l:"Extras",to:"/shop/extras"}] },
@@ -8,12 +8,30 @@ const cols = [
 ];
 
 export default function Footer() {
-  const isMobile = useIsMobile();
   return (
-    <footer style={{ background:c.dark, color:c.mist, padding:isMobile?"36px 20px 24px":"48px 60px 32px" }}>
-      <div style={{ display:"grid", gridTemplateColumns:isMobile?"1fr 1fr":"2fr 1fr 1fr 1fr", gap:isMobile?24:48, marginBottom:32 }}>
+    <>
+      <style>{`
+        .ft-root { padding: 48px 60px 32px; }
+        .ft-grid { grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; }
+        .ft-brand { grid-column: auto; }
+        .ft-news { flex-direction: row; align-items: center; }
+        .ft-form { width: auto; }
+        .ft-input { min-width: 220px; }
+        .ft-bot { flex-direction: row; align-items: center; gap: 0; }
+        @media (max-width: 767px) {
+          .ft-root { padding: 36px 20px 24px; }
+          .ft-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
+          .ft-brand { grid-column: 1/-1; }
+          .ft-news { flex-direction: column; align-items: flex-start; }
+          .ft-form { width: 100%; }
+          .ft-input { min-width: 0; }
+          .ft-bot { flex-direction: column; align-items: flex-start; gap: 12px; }
+        }
+      `}</style>
+    <footer className="ft-root" style={{ background:c.dark, color:c.mist }}>
+      <div className="ft-grid" style={{ display:"grid", marginBottom:32 }}>
         {/* Brand */}
-        <div style={{ gridColumn:isMobile?"1/-1":"auto" }}>
+        <div className="ft-brand">
           <Link to="/" style={{ fontSize:19, fontWeight:800, letterSpacing:"0.1em", color:"#fff", textTransform:"uppercase", textDecoration:"none", display:"block", marginBottom:14 }}>Bug Away</Link>
           <p style={{ fontSize:13, lineHeight:1.7, color:c.gray, fontFamily:"'Poppins',sans-serif", maxWidth:240, marginBottom:16 }}>
             Insecticide-free protection against ticks and mosquitoes. For hikers, families and everyone who enjoys the outdoors.
@@ -46,16 +64,16 @@ export default function Footer() {
 
       {/* Newsletter */}
       <div style={{ borderTop:`1px solid rgba(255,255,255,0.08)`, borderBottom:`1px solid rgba(255,255,255,0.08)`, padding:"24px 0", marginBottom:24 }}>
-        <div style={{ display:"flex", flexDirection:isMobile?"column":"row", alignItems:isMobile?"flex-start":"center", justifyContent:"space-between", gap:16 }}>
+        <div className="ft-news" style={{ display:"flex", justifyContent:"space-between", gap:16 }}>
           <div>
             <div style={{ fontSize:14, fontWeight:700, color:"#fff", marginBottom:4 }}>Stay protected this season</div>
             <div style={{ fontSize:12, color:c.gray, fontFamily:"'Poppins',sans-serif" }}>Tick alerts, tips and exclusive offers — no spam.</div>
           </div>
-          <div style={{ display:"flex", gap:8, width:isMobile?"100%":"auto" }}>
+          <div className="ft-form" style={{ display:"flex", gap:8 }}>
             <input
               type="email"
               placeholder="Your email address"
-              style={{ flex:1, padding:"10px 16px", borderRadius:4, border:`1px solid rgba(255,255,255,0.15)`, background:"rgba(255,255,255,0.08)", color:"#fff", fontFamily:"'Poppins',sans-serif", fontSize:12, outline:"none", minWidth:isMobile?"0":"220px" }}
+              style={{ flex:1, padding:"10px 16px", borderRadius:4, border:`1px solid rgba(255,255,255,0.15)`, background:"rgba(255,255,255,0.08)", color:"#fff", fontFamily:"'Poppins',sans-serif", fontSize:12, outline:"none", minWidth:0 }} className="ft-input"
             />
             <button style={{ background:c.sageD, color:"#fff", border:"none", borderRadius:4, padding:"10px 20px", fontSize:11, fontFamily:"'Poppins',sans-serif", letterSpacing:"0.08em", textTransform:"uppercase", cursor:"pointer", fontWeight:600, whiteSpace:"nowrap" }}>
               Sign Up
@@ -65,7 +83,7 @@ export default function Footer() {
       </div>
 
       {/* Bottom bar */}
-      <div style={{ display:"flex", flexDirection:isMobile?"column":"row", justifyContent:"space-between", alignItems:isMobile?"flex-start":"center", gap:isMobile?12:0 }}>
+      <div className="ft-bot" style={{ display:"flex", justifyContent:"space-between" }}>
         <span style={{ fontSize:11, color:c.grayD, fontFamily:"'Poppins',sans-serif" }}>© 2025 Bug Away. All rights reserved.</span>
         <div style={{ display:"flex", gap:16, flexWrap:"wrap", alignItems:"center" }}>
           <Link to="/privacy" style={{ fontSize:11, color:c.grayD, fontFamily:"'Poppins',sans-serif", textDecoration:"none" }}>Privacy</Link>
@@ -75,5 +93,6 @@ export default function Footer() {
         </div>
       </div>
     </footer>
+    </>
   );
 }

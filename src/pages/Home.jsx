@@ -332,22 +332,23 @@ export default function Home() {
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <div style={{ ...LBL, marginBottom: 8 }}>WHO IS IT FOR</div>
           <h2 style={{ ...H2, marginBottom: 36 }}>Designed for outdoor life</h2>
-          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3,1fr)", gap: 24 }}>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(4,1fr)", gap: isMobile ? 12 : 24 }}>
             {[
-              { label: "Hikers", icon: "🥾", desc: "Hours in the forest without constantly checking for ticks. Focus on the trail, not the bugs.", img: "/images/2 guys  _ white and black mesh_ hiking.png", link: "/shop?cat=men" },
-              { label: "Gardeners", icon: "🌿", desc: "Weeding, planting, pruning — tick territory. Bug Away lets you garden without worry.", img: "/images/jacket-women-lifestyle-gardening.jpg", link: "/shop?cat=women" },
-              { label: "Families", icon: "👨‍👩‍👧", desc: "Kids playing in tall grass or exploring nature — protected without any chemical sprays.", img: "/images/Family .png", link: "/shop?cat=kids" },
+              { label: "Hikers", icon: "🥾", desc: "Hours in the forest without constantly checking for ticks. Focus on the trail, not the bugs.", img: "/images/2 guys  _ white and black mesh_ hiking.png", link: "/hiking" },
+              { label: "Gardeners", icon: "🌿", desc: "Weeding, planting, pruning — tick territory. Bug Away lets you garden without worry.", img: "/images/jacket-women-lifestyle-gardening.jpg", link: "/gardening" },
+              { label: "Anglers", icon: "🎣", desc: "Standing still in wet ground at dusk. Everything that bites lives where the fish are.", img: "/images/2 males _ Black MEesh _ Fly fishing.png", link: "/fishing" },
+              { label: "Families", icon: "👨‍👩‍👧", desc: "Kids playing in tall grass or exploring nature — protected without any chemical sprays.", img: "/images/Family .png", link: "/families" },
             ].map(({ label, icon, desc, img, link }) => (
               <Link key={label} to={link} style={{ textDecoration: "none", color: "inherit" }}>
                 <div style={{ background: "#F7F9F8", borderRadius: 16, overflow: "hidden", boxShadow: "0 2px 10px rgba(0,0,0,0.05)", transition: "transform .2s" }}
                   onMouseEnter={e => e.currentTarget.style.transform = "translateY(-4px)"}
                   onMouseLeave={e => e.currentTarget.style.transform = ""}
                 >
-                  <div style={{ height: 200, overflow: "hidden" }}>
+                  <div style={{ height: isMobile ? 130 : 180, overflow: "hidden" }}>
                     <img src={img} alt={label} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   </div>
-                  <div style={{ padding: 24 }}>
-                    <div style={{ fontSize: 28, marginBottom: 8 }}>{icon}</div>
+                  <div style={{ padding: isMobile ? 14 : 20 }}>
+                    <div style={{ fontSize: 24, marginBottom: 6 }}>{icon}</div>
                     <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 6 }}>{label} →</div>
                     <p style={{ color: "#666", fontSize: 14, lineHeight: 1.6, margin: 0 }}>{desc}</p>
                   </div>

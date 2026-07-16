@@ -8,9 +8,14 @@ export const c = {
 };
 
 export const useIsMobile = () => {
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  // Tijdens prerenderen bestaat window niet. Start op false (desktop) en
+  // corrigeer in de effect, die draait alleen in de browser.
+  const [isMobile, setIsMobile] = useState(
+    typeof window === 'undefined' ? false : window.innerWidth < 768
+  );
   useEffect(() => {
     const h = () => setIsMobile(window.innerWidth < 768);
+    h();
     window.addEventListener('resize', h);
     return () => window.removeEventListener('resize', h);
   }, []);

@@ -23,6 +23,7 @@ import { readFile, writeFile, mkdir, copyFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { products } from '../src/data.js';
+import { activities } from '../src/data/activities.js';
 
 const API_BASE = 'https://api.babylovegrowth.ai/api/integrations/v1';
 const API_KEY = process.env.BABYLOVE_API_KEY;
@@ -191,6 +192,10 @@ async function fetchArticleList() {
 const STATIC_PAGES = [
   ['/', '1.0', 'weekly'],
   ['/shop', '0.9', 'weekly'],
+  // Activiteitenpagina's: hoge prioriteit, dit zijn de SEO-landingspagina's.
+  // Afgeleid uit activities.js zodat een nieuwe activiteit vanzelf meeloopt.
+  ...activities.map((a) => [`/${a.slug}`, '0.9', 'monthly']),
+  ['/why-choose-us', '0.8', 'monthly'],
   ['/blog', '0.8', 'daily'],
   ['/how-it-works', '0.7', 'monthly'],
   ['/faq', '0.6', 'monthly'],
@@ -277,8 +282,13 @@ ${productLines.join('\n')}
 ## Guides
 ${articleLines.length ? '\n' + articleLines.join('\n') : '\n(No articles published yet.)'}
 
+## By activity
+
+${activities.map((a) => `- [${a.h1}](${SITE_URL}/${a.slug}): ${clean(a.metaDescription)}`).join('\n')}
+
 ## About
 
+- [Why Choose Bug Away](${SITE_URL}/why-choose-us): Honest comparison against permethrin clothing, DEET sprays and regular clothing, including what Bug Away does not do.
 - [How It Works](${SITE_URL}/how-it-works): How no-see-um-grade mesh blocks ticks and mosquitoes without insecticide.
 - [Shop](${SITE_URL}/shop): Full catalogue of jackets, pants, combo sets and kids gear.
 - [Blog](${SITE_URL}/blog): Tick awareness, insect protection and field-tested gear advice.
@@ -295,15 +305,22 @@ ${articleLines.length ? '\n' + articleLines.join('\n') : '\n(No articles publish
 `;
 
   await writeFile(path.join(OUT_DIR, 'llms.txt'), body, 'utf8');
-  log(`llms.txt: ${products.length} producten + ${articles.length} artikelen`);
+  log(`llms.txt: ${products.length} producten + ${activities.length} activiteiten + ${articles.length} artikelen`);
 }
 
 async function main() {
+  if (!existsSync(OUT_DIR)) throw new Error('dist/ bestaat niet. Draai dit na `vite build`.');
+
+  // Sitemap en llms.txt hangen niet aan BLG: die gaan over je eigen pagina's en
+  // producten. Zonder API key slaan we alleen de artikelen over. Anders zou een
+  // verlopen key je sitemap van de site laten verdwijnen.
   if (!API_KEY) {
-    log('BABYLOVE_API_KEY ontbreekt, blog wordt overgeslagen.');
+    log('BABYLOVE_API_KEY ontbreekt, artikelen overgeslagen. Sitemap en llms.txt worden wel geschreven.');
+    await writeFile(path.join(OUT_DIR, 'blog-articles.json'), '[]', 'utf8');
+    await writeSitemap([]);
+    await writeLlmsTxt([]);
     return;
   }
-  if (!existsSync(OUT_DIR)) throw new Error('dist/ bestaat niet. Draai dit na `vite build`.');
 
   const articleTpl = await readFile(path.join(TEMPLATE_DIR, 'article.html'), 'utf8');
 

@@ -17,12 +17,14 @@ import FAQ from './pages/FAQ';
 import Pets from './pages/Pets';
 import Accessories from './pages/Accessories';
 import Legal from './pages/Legal';
+import Activity from './pages/Activity';
+import WhyChooseUs from './pages/WhyChooseUs';
+import { activities } from './data/activities';
 
-export default function App() {
+export function AppShell() {
   const [cartOpen, setCartOpen] = useState(false);
 
   return (
-    <BrowserRouter>
       <CurrencyProvider>
         <ScrollToTop />
         <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet"/>
@@ -47,6 +49,13 @@ export default function App() {
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<Blog />} />
             <Route path="/faq" element={<FAQ />} />
+            {/* Activiteitenpagina's — inhoud staat in src/data/activities.js.
+                Eén component, vier routes. Nieuwe activiteit = blok in dat bestand. */}
+            {activities.map(a => (
+              <Route key={a.slug} path={`/${a.slug}`}
+                element={<Activity onCartOpen={() => setCartOpen(true)} />} />
+            ))}
+            <Route path="/why-choose-us" element={<WhyChooseUs />} />
             <Route path="/pets" element={<Pets />} />
             <Route path="/accessories" element={<Accessories />} />
             <Route path="/privacy" element={<Legal />} />
@@ -57,6 +66,13 @@ export default function App() {
         </main>
         <Footer />
       </CurrencyProvider>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AppShell />
     </BrowserRouter>
   );
 }
