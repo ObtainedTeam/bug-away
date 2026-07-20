@@ -5,7 +5,7 @@ import { SHOPIFY_HANDLES, getVariantId, COMBO_FOR_SINGLE } from '../shopify';
 import { useCurrency, formatPrice, getPrice, FREE_GIFT_THRESHOLD } from '../currency.jsx';
 import { products } from '../data';
 
-const DOMAIN = 'bug-away-3.myshopify.com';
+const DOMAIN = 'checkout.bugawaygear.com';
 
 export const CartContext = {
   items: [],
