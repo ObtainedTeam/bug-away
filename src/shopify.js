@@ -118,6 +118,11 @@ export const SHOPIFY_IDS = {
   'ba-kids-set':     'gid://shopify/Product/15972000825724',
 };
 
+// Products that count toward the Family Bundle deal (buy 4 sets, get 1 free).
+// Mirrors the Shopify automatic "Buy 3 Get 1 free" discount on the
+// "Family Bundle Sets" collection — keep both in sync.
+export const FAMILY_BUNDLE_SET_IDS = ['ba-combo-men', 'ba-combo-women', 'ba-kids-set'];
+
 // Single -> matching combo set mapping, used by the cart upsell.
 export const COMBO_FOR_SINGLE = {
   'ba-jacket-men':   'ba-combo-men',
