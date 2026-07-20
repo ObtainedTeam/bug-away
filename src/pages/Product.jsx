@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { c, useIsMobile, BTN, BTNO, H2, LBL } from '../theme';
 import { products, reviews } from '../data';
-import { SHOPIFY_IDS, SHOPIFY_HANDLES, fetchProduct, buyNow } from '../shopify';
+import { SHOPIFY_IDS, SHOPIFY_HANDLES, fetchProduct, buyNow, FAMILY_BUNDLE_SET_IDS } from '../shopify';
 import { CartContext } from '../components/Cart';
 import { useCurrency, formatPrice, getPrice } from '../currency.jsx';
 
@@ -121,6 +121,18 @@ export default function Product({ onCartOpen }) {
             {formatPrice(price, symbol)}
             <span style={{ fontSize: 13, color: '#999', fontWeight: 400, marginLeft: 8 }}>Incl. VAT</span>
           </div>
+
+          {/* FAMILY BUNDLE DEAL — only on set products */}
+          {FAMILY_BUNDLE_SET_IDS.includes(product.id) && (
+            <div style={{ background: '#F0F5F2', border: '1px solid #d4e6da', borderRadius: 12, padding: '12px 16px', marginBottom: 20 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, color: c.sageD, letterSpacing: 0.5, marginBottom: 4 }}>
+                👨‍👩‍👧‍👦 FAMILY BUNDLE — BUY 4 SETS, GET 1 FREE
+              </div>
+              <div style={{ fontSize: 12, color: '#555', lineHeight: 1.5 }}>
+                Mix &amp; match men's, women's and kids' sets. The 4th set is free — applied automatically at checkout.
+              </div>
+            </div>
+          )}
 
           {/* SHORT DESC */}
           <p style={{ fontSize: 14, color: '#555', lineHeight: 1.7, marginBottom: 24 }}>{product.desc}</p>
