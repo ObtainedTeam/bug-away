@@ -276,6 +276,24 @@ export default function Home() {
         </section>
       )}
 
+      {/* FAMILY BUNDLE PROMO — buy 4 sets, get 1 free */}
+      <section style={{ background: "#1a2e24", padding: isMobile ? "40px 20px" : "56px 40px" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: isMobile ? "flex-start" : "center", justifyContent: "space-between", gap: isMobile ? 20 : 40 }}>
+          <div>
+            <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: 1.5, color: "#9dc4ab", textTransform: "uppercase", marginBottom: 10 }}>Family Bundle Deal</div>
+            <h2 style={{ fontFamily: "Archivo, sans-serif", fontSize: isMobile ? 26 : 34, fontWeight: 900, color: "#fff", margin: "0 0 10px", lineHeight: 1.15 }}>
+              Buy 4 Sets, Get 1 <span style={{ color: "#9dc4ab" }}>FREE</span>
+            </h2>
+            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.75)", lineHeight: 1.6, margin: 0, maxWidth: 520 }}>
+              Protect the whole family. Mix &amp; match men's, women's and kids' sets — the 4th set is on us, applied automatically at checkout.
+            </p>
+          </div>
+          <Link to="/shop" style={{ background: "#fff", color: c.sageD, padding: "14px 32px", borderRadius: 8, fontSize: 13, fontWeight: 800, letterSpacing: "0.08em", textTransform: "uppercase", textDecoration: "none", whiteSpace: "nowrap", flexShrink: 0 }}>
+            Shop the Sets →
+          </Link>
+        </div>
+      </section>
+
       {/* BESTSELLERS — 3 columns on desktop (was 4), 2 on mobile edge-to-edge */}
       <section style={{ background: "#fff", padding: isMobile ? "48px 0" : "72px 40px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", paddingLeft: isMobile ? 16 : 0, paddingRight: isMobile ? 16 : 0 }}>
