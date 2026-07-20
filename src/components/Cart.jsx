@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { c, useIsMobile } from '../theme';
-import { SHOPIFY_HANDLES, getVariantId, COMBO_FOR_SINGLE } from '../shopify';
+import { SHOPIFY_HANDLES, getVariantId, COMBO_FOR_SINGLE, FAMILY_BUNDLE_SET_IDS } from '../shopify';
 import { useCurrency, formatPrice, getPrice, FREE_GIFT_THRESHOLD } from '../currency.jsx';
 import { products } from '../data';
 
@@ -63,6 +63,19 @@ export default function Cart({ isOpen, onClose }) {
   const count = items.reduce((sum, i) => sum + i.quantity, 0);
   const remaining = Math.max(0, threshold - total);
   const progress = Math.min(100, (total / threshold) * 100);
+
+  // Family Bundle: buy 4 sets, get 1 free. Mirrors the Shopify automatic
+  // "Buy 3 Get 1 free" discount on the Family Bundle Sets collection, so the
+  // cart total here matches the Shopify checkout total exactly.
+  // The cheapest set(s) become free, one per 4 sets in the cart.
+  const bundleUnitPrices = items
+    .filter(i => FAMILY_BUNDLE_SET_IDS.includes(i.product.id))
+    .flatMap(i => Array(i.quantity).fill(getPrice(i.product, isUS)))
+    .sort((a, b) => a - b);
+  const setCount = bundleUnitPrices.length;
+  const freeSets = Math.floor(setCount / 4);
+  const bundleDiscount = bundleUnitPrices.slice(0, freeSets).reduce((s, p) => s + p, 0);
+  const netTotal = total - bundleDiscount;
 
   // Detect a single item (jacket OR pants) that has a matching combo and no combo in cart.
   // The upsell offers to swap that single item for the combo set.
@@ -131,9 +144,9 @@ export default function Cart({ isOpen, onClose }) {
 
         {/* Free shipping bar */}
         <div style={{ padding: '14px 20px', background: '#F7F9F8', borderBottom: '1px solid #e8ede9', flexShrink: 0 }}>
-          {total < 150 ? (
+          {netTotal < 150 ? (
             <p style={{ fontSize: 12, color: '#555', marginBottom: 8 }}>
-              🚚 Only <strong style={{ color: c.sageD }}>{formatPrice(150 - total, '$')}</strong> away from free shipping!
+              🚚 Only <strong style={{ color: c.sageD }}>{formatPrice(150 - netTotal, '$')}</strong> away from free shipping!
             </p>
           ) : (
             <p style={{ fontSize: 12, color: c.sageD, marginBottom: 8, fontWeight: 600 }}>
@@ -141,7 +154,7 @@ export default function Cart({ isOpen, onClose }) {
             </p>
           )}
           <div style={{ height: 4, background: '#e0e8e3', borderRadius: 2, overflow: 'hidden' }}>
-            <div style={{ height: '100%', width: `${Math.min(100, (total / 150) * 100)}%`, background: c.sageD, borderRadius: 2, transition: 'width 0.4s ease' }} />
+            <div style={{ height: '100%', width: `${Math.min(100, (netTotal / 150) * 100)}%`, background: c.sageD, borderRadius: 2, transition: 'width 0.4s ease' }} />
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 5 }}>
             <span style={{ fontSize: 10, color: '#aaa' }}>$0</span>
@@ -183,6 +196,29 @@ export default function Cart({ isOpen, onClose }) {
                 </div>
               );
             })
+          )}
+
+          {/* Family Bundle — buy 4 sets, get 1 free */}
+          {items.length > 0 && setCount > 0 && (
+            <div style={{ background: '#F0F5F2', border: '1px solid #d4e6da', borderRadius: 12, padding: 14, marginTop: 8, marginBottom: 8 }}>
+              {freeSets > 0 ? (
+                <div style={{ fontSize: 12, fontWeight: 700, color: c.sageD }}>
+                  👨‍👩‍👧‍👦 Family Bundle applied — {freeSets === 1 ? '1 set' : `${freeSets} sets`} FREE ({formatPrice(bundleDiscount, symbol)} off)
+                </div>
+              ) : (
+                <>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: c.sageD, marginBottom: 6 }}>
+                    👨‍👩‍👧‍👦 Family Bundle — buy 4 sets, get 1 FREE
+                  </div>
+                  <div style={{ fontSize: 11, color: '#666', marginBottom: 8 }}>
+                    Add {4 - setCount} more {4 - setCount === 1 ? 'set' : 'sets'} — mix &amp; match men's, women's and kids' — and one is free.
+                  </div>
+                  <div style={{ height: 4, background: '#dbe7df', borderRadius: 2, overflow: 'hidden' }}>
+                    <div style={{ height: '100%', width: `${(setCount / 4) * 100}%`, background: c.sageD, borderRadius: 2, transition: 'width 0.4s ease' }} />
+                  </div>
+                </>
+              )}
+            </div>
           )}
 
           {/* Upsell — Make it a set (swap single -> combo, show actual savings) */}
@@ -238,9 +274,21 @@ export default function Cart({ isOpen, onClose }) {
             <div style={{ padding: '16px 20px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
                 <span style={{ fontSize: 13, color: '#666' }}>Subtotal</span>
-                <span style={{ fontSize: 15, fontWeight: 700 }}>{formatPrice(total, symbol)}</span>
+                <span style={{ fontSize: 15, fontWeight: bundleDiscount > 0 ? 400 : 700, color: bundleDiscount > 0 ? '#999' : '#1a1a1a', textDecoration: bundleDiscount > 0 ? 'line-through' : 'none' }}>{formatPrice(total, symbol)}</span>
               </div>
-              <p style={{ fontSize: 11, color: '#aaa', marginBottom: 14 }}>Taxes and shipping calculated at checkout</p>
+              {bundleDiscount > 0 && (
+                <>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                    <span style={{ fontSize: 13, color: c.sageD, fontWeight: 600 }}>Family Bundle — {freeSets === 1 ? '1 free set' : `${freeSets} free sets`}</span>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: c.sageD }}>−{formatPrice(bundleDiscount, symbol)}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                    <span style={{ fontSize: 13, fontWeight: 700 }}>Total</span>
+                    <span style={{ fontSize: 15, fontWeight: 700 }}>{formatPrice(netTotal, symbol)}</span>
+                  </div>
+                </>
+              )}
+              <p style={{ fontSize: 11, color: '#aaa', marginBottom: 14 }}>{bundleDiscount > 0 ? 'Discount applied automatically at checkout. Taxes and shipping calculated at checkout' : 'Taxes and shipping calculated at checkout'}</p>
               <button onClick={handleCheckout} style={{ width: '100%', background: c.sageD, color: '#fff', border: 'none', padding: 14, borderRadius: 8, fontSize: 13, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', cursor: 'pointer', marginBottom: 8 }}>
                 Checkout →
               </button>
