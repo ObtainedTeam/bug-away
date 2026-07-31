@@ -21,7 +21,7 @@ const SHOP_DROPDOWN = [
   { label: "Kids", path: "/shop?cat=KIDS" },
   { label: "Bundles", path: "/shop?cat=BUNDLES" },
   { label: "Pets — Coming Soon", path: "/pets" },
-  { label: "Accessories — Coming Soon", path: "/accessories" },
+  { label: "Accessories", path: "/accessories" },
 ];
 
 export default function Nav({ cartCount, onCartOpen }) {

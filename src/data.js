@@ -12,6 +12,13 @@ const STD = [
 const PRICE_SINGLE = { usd: 44.99, eur: 38.99 };
 const PRICE_SET    = { usd: 79.99, eur: 68.99 };
 
+// Accessoires (losse producten zonder maat/kleur). COMPARE = doorstreepprijs.
+const PRICE_TICK_KIT   = { usd: 14.99, eur: 12.99 };
+const COMPARE_TICK_KIT = { usd: 24.99, eur: 21.99 };
+const PRICE_LAMP       = { usd: 59.99, eur: 51.99 };
+const COMPARE_LAMP     = { usd: 99.00, eur: 85.99 };
+const PRICE_SPRAY      = { usd: 14.99, eur: 12.99 };
+
 // Product colors: Arctic White and Black.
 // Black maps to 'Zwart' in Shopify via normColor() in shopify.js.
 const COLORS = ["Arctic White", "Black"];
@@ -308,6 +315,150 @@ Lyme disease is not just an adult concern — children are particularly vulnerab
       "/images/proof-ticks.jpg",
       "/images/proof-spider.jpg",
       "/images/size-guide-kids.png",
+    ],
+  },
+
+  /* ---------------- ACCESSOIRES (losse producten, geen maat/kleur) ---------------- */
+  {
+    id: "ba-tick-kit",
+    name: "Bug Away Tick Removal Kit",
+    category: "ACCESSORIES",
+    simple: true,
+    price: PRICE_TICK_KIT.eur,
+    prices: PRICE_TICK_KIT,
+    comparePrices: COMPARE_TICK_KIT,
+    badge: "New",
+    desc: "A complete tick-removal kit for people and pets. Graduated twister hooks, a lever pen, precision tweezers and a tick card with built-in magnifier, all in a snap-close carry pouch. Remove ticks cleanly, head and all, in seconds.",
+    longDesc: `Wearing Bug Away means most ticks never reach skin. But dogs, cats and the occasional gap happen, and when a tick does latch on, how you remove it matters. Squeeze it, twist it off or yank it and you risk leaving the head embedded or pushing its stomach contents into the bite — which is exactly what raises the odds of infection.
+
+This kit gives you the right tool for every situation. The graduated twister hooks slide under the tick and lift it out whole with a gentle rotation, no squeezing. The lever pen does the same one-handed. The precision slant-tip tweezers grip tiny nymphs close to the skin. The tick card with a built-in magnifier tucks into a wallet for the trailhead, and the stainless fork handles the stubborn ones.
+
+Everything lives in a slim snap-close pouch that fits a glovebox, a daypack or a kitchen drawer. Stainless steel and durable TPR, washable, reusable for years. No chemicals, nothing to run out of.
+
+Keep one where the dog gets checked after every walk, and one wherever you head outdoors.`,
+    features: [
+      "Graduated twister hooks — lift the tick out whole, no squeezing",
+      "One-handed tick lever pen for quick removal",
+      "Precision slant-tip tweezers for tiny nymph ticks",
+      "Tick card with built-in magnifier — wallet-sized for the trail",
+      "Stainless steel fork for stubborn ticks",
+      "Snap-close carry pouch — glovebox, daypack or drawer",
+      "Safe for people, dogs, cats and other pets",
+      "Stainless steel + durable TPR — washable and reusable",
+      "100% chemical-free — nothing to run out of",
+    ],
+    whatsIncluded: [
+      "Tick card with built-in magnifier",
+      "Curved tick twister hook",
+      "3 graduated tick-remover hooks (small, medium, large)",
+      "One-handed tick lever pen",
+      "Precision slant-tip tweezers",
+      "Stainless steel tick fork",
+      "Snap-close carry pouch",
+    ],
+    highlights: [
+      { icon: "🐾", label: "People & pets", sub: "Safe for both" },
+      { icon: "♻️", label: "Reusable", sub: "Lasts for years" },
+      { icon: "🌿", label: "Chemical-free", sub: "Nothing to run out of" },
+    ],
+    useCases: ["Dog & cat owners", "Hiking & camping", "Gardening", "After walks in tall grass", "Travel first-aid kit", "Trailhead essential"],
+    images: [
+      "/images/tick-kit-hero.jpg",
+      "/images/tick-kit-contents.jpg",
+      "/images/tick-kit-uses.jpg",
+    ],
+  },
+  {
+    id: "ba-mosquito-lamp",
+    name: "Bug Away Indoor Insect Zapper",
+    category: "ACCESSORIES",
+    simple: true,
+    price: PRICE_LAMP.eur,
+    prices: PRICE_LAMP,
+    comparePrices: COMPARE_LAMP,
+    badge: null,
+    desc: "A quiet, chemical-free insect zapper for indoors. UV light draws in mosquitoes, flies, moths and gnats, and an electric grid handles them on contact. Covers up to 1,600 sq ft. Wall-mount or hang it and forget it — no sprays, no smell, no fumes.",
+    longDesc: `Bug Away clothing keeps insects off you outdoors. This handles the ones that make it inside.
+
+A UV-A tube glows at the wavelength flying insects are drawn to. Mosquitoes, house flies, moths, gnats and fruit flies fly toward the light, meet the electrified metal grid and are dealt with on contact. There is no spray drifting through your kitchen, no plug-in chemical, no citronella smell. Just light and a grid.
+
+At 40 watts it covers a large room — up to roughly 1,600 square feet — so one unit handles a living room, a kitchen or an open-plan space. The tough ABS housing mounts flat to a wall or hangs from the built-in hook, and the grid pulls out for a quick clean.
+
+Run it in the evening in the room you are sitting in, or overnight in the bedroom. Chemical-free, odorless, and a natural companion to the mesh you wear outside.`,
+    features: [
+      "UV-A light attracts flying insects — mosquitoes, flies, moths, gnats and fruit flies",
+      "Electric grid handles them on contact — no spray, no chemicals, no smell",
+      "Covers up to ~1,600 sq ft (150 m²) — one unit for a large room",
+      "40 W, runs on standard AC power",
+      "Tough ABS housing — wall-mount or hang from the built-in hook",
+      "Pull-out grid for easy cleaning",
+      "Odorless and fume-free — safe to run in living spaces",
+      "Chemical-free companion to Bug Away mesh",
+    ],
+    specs: [
+      { label: "Coverage", value: "Up to 1,600 sq ft (150 m²)" },
+      { label: "Power", value: "40 W" },
+      { label: "Voltage", value: "AC 110 V" },
+      { label: "Grid voltage", value: "~2,000 V" },
+      { label: "Housing", value: "ABS" },
+      { label: "Dimensions", value: "9.8 × 3.0 × 10.0 in (25 × 7.5 × 25.5 cm)" },
+      { label: "Mounting", value: "Wall-mount or hang" },
+      { label: "Use", value: "Indoor" },
+    ],
+    highlights: [
+      { icon: "🔇", label: "Quiet & odorless", sub: "No spray, no smell" },
+      { icon: "📐", label: "Up to 1,600 sq ft", sub: "One large room" },
+      { icon: "🌿", label: "Chemical-free", sub: "Just light + grid" },
+    ],
+    useCases: ["Living rooms & kitchens", "Bedrooms", "Home office", "Garages & basements", "Cabins", "Screened porches"],
+    images: [
+      "/images/mosquito-lamp-hero.jpg",
+      "/images/mosquito-lamp-product.jpg",
+    ],
+  },
+  {
+    id: "ba-repellent-spray",
+    name: "Bug Away Natural Insect Repellent",
+    category: "ACCESSORIES",
+    simple: true,
+    price: PRICE_SPRAY.eur,
+    prices: PRICE_SPRAY,
+    badge: null,
+    desc: "A plant-based, DEET-free repellent spray for the skin Bug Away doesn't cover. Lemon eucalyptus and citronella keep mosquitoes and biting insects away for up to 6 hours, in a light, non-sticky mist. 120 ml.",
+    longDesc: `The mesh covers most of you. This covers the rest — your face, your hands, wherever skin is exposed.
+
+Bug Away Natural Insect Repellent is built on plant-based actives: lemon eucalyptus oil, citronella oil and isopulegol. No DEET, no synthetic solvents. It goes on as a fine, non-sticky mist and keeps mosquitoes and biting insects away for up to six hours, even as you sweat.
+
+Shake, hold six to eight inches from the skin and spray in a sweeping motion over exposed areas. Reapply every couple of hours or after heavy sweating. It slips into a daypack, a glovebox or a jacket pocket for the moments the mesh can't reach.
+
+External use only. Avoid eyes and mouth. Not recommended for children under 3, or for puppies and kittens under 4 months. A natural companion to Bug Away mesh, not a replacement for it.`,
+    features: [
+      "Plant-based, DEET-free actives — lemon eucalyptus, citronella and isopulegol",
+      "Up to 6 hours of protection against mosquitoes and biting insects",
+      "Light, non-sticky fine mist — comfortable on skin",
+      "Works even when you're sweating",
+      "120 ml (4.04 fl oz) — daypack and glovebox friendly",
+      "MSDS and ISO documented",
+      "For the exposed skin mesh clothing can't cover",
+    ],
+    specs: [
+      { label: "Volume", value: "120 ml (4.04 fl oz)" },
+      { label: "Active ingredients", value: "Lemon eucalyptus oil 2.5%, citronella oil 1.5%, isopulegol 0.5%" },
+      { label: "Formula", value: "Plant-based, DEET-free" },
+      { label: "Protection", value: "Up to 6 hours" },
+      { label: "Documentation", value: "MSDS & ISO" },
+      { label: "Use", value: "External use only. Not for children under 3, or puppies/kittens under 4 months" },
+    ],
+    highlights: [
+      { icon: "🌿", label: "DEET-free", sub: "Plant-based actives" },
+      { icon: "⏱️", label: "Up to 6 hours", sub: "Even when sweating" },
+      { icon: "💧", label: "Non-sticky", sub: "Light fine mist" },
+    ],
+    useCases: ["Hiking & trail walking", "Camping", "Fishing", "Dog walking", "Backyard evenings", "Travel"],
+    images: [
+      "/images/repellent-lifestyle-spray.jpg",
+      "/images/repellent-lifestyle-hiking.jpg",
+      "/images/repellent-lifestyle-family.jpg",
     ],
   },
 ];

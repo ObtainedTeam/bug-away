@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { c, useIsMobile, BTN, H2, LBL } from '../theme';
 import { products } from '../data';
+import { isPurchasable } from '../shopify';
 import { useCurrency, formatPrice, getPrice } from '../currency.jsx';
 
 const CATS = [
@@ -10,6 +11,7 @@ const CATS = [
   { label: "Women", key: "WOMEN" },
   { label: "Kids", key: "KIDS" },
   { label: "Bundles", key: "BUNDLES" },
+  { label: "Accessories", key: "ACCESSORIES" },
 ];
 
 export default function Shop() {
@@ -90,6 +92,11 @@ export default function Shop() {
                         {product.badge}
                       </div>
                     )}
+                    {product.simple && !isPurchasable(product.id) && (
+                      <div style={{ position: "absolute", top: 10, right: 10, background: "#eef2f0", color: "#7c8a83", fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 20 }}>
+                        Coming soon
+                      </div>
+                    )}
                     {product.colorHex && (
                       <div style={{ position: "absolute", bottom: 10, left: 12, display: "flex", gap: 5 }}>
                         {product.colorHex.slice(0, 4).map((col, i) => (
@@ -114,6 +121,11 @@ export default function Shop() {
                     )}
                     <div style={{ fontSize: 15, color: "#333", marginBottom: 12, fontWeight: 600 }}>
                       {formatPrice(price, symbol)}
+                      {product.comparePrices && (
+                        <span style={{ fontSize: 12, color: "#aaa", textDecoration: "line-through", marginLeft: 8, fontWeight: 400 }}>
+                          {formatPrice(isUS ? product.comparePrices.usd : product.comparePrices.eur, symbol)}
+                        </span>
+                      )}
                     </div>
                     <div style={{ ...BTN, width: "100%", fontSize: 11, padding: "10px 0", textAlign: "center", borderRadius: 6 }}>
                       View Product
@@ -131,18 +143,13 @@ export default function Shop() {
           </div>
         )}
 
-        {/* COMING SOON */}
-        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 20, marginTop: 40 }}>
-          {[
-            { label: "Pets", icon: "🐕", desc: "Tick protection for your four-legged family members. Coming soon." },
-            { label: "Accessories", icon: "🎒", desc: "Gloves, gaiters, head nets and more. Coming soon." },
-          ].map(({ label, icon, desc }) => (
-            <div key={label} style={{ background: "#F7F9F8", borderRadius: 12, padding: 32, textAlign: "center", border: "2px dashed #d5ddd8" }}>
-              <div style={{ fontSize: 40, marginBottom: 12 }}>{icon}</div>
-              <div style={{ fontFamily: "Archivo, sans-serif", fontWeight: 800, fontSize: 20, marginBottom: 8, color: c.sageD }}>{label}</div>
-              <p style={{ fontSize: 14, color: "#888", margin: 0 }}>{desc}</p>
-            </div>
-          ))}
+        {/* COMING SOON — pets only; accessories are shoppable now */}
+        <div style={{ marginTop: 40 }}>
+          <div style={{ background: "#F7F9F8", borderRadius: 12, padding: 32, textAlign: "center", border: "2px dashed #d5ddd8" }}>
+            <div style={{ fontSize: 40, marginBottom: 12 }}>🐕</div>
+            <div style={{ fontFamily: "Archivo, sans-serif", fontWeight: 800, fontSize: 20, marginBottom: 8, color: c.sageD }}>Pets</div>
+            <p style={{ fontSize: 14, color: "#888", margin: 0 }}>Tick protection for your four-legged family members. Coming soon.</p>
+          </div>
         </div>
       </section>
 

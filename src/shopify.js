@@ -88,6 +88,23 @@ const KIDS = {
   "Zwart|8-10Y":56795879735676,       "Zwart|10-12Y":56795879768444,
 };
 
+// Losse accessoires zonder maat of kleur: één variant per product.
+// null = nog niet aangemaakt in Shopify, het product staat dan op de site als
+// "Coming soon". Zet hier het echte Shopify-variant-ID zodra het product is
+// aangemaakt (Producten > het product > variant > ... > kopieer het ID uit de
+// URL, of vraag mij). Daarmee worden de bestelknop op de productpagina, de
+// accessoirekaart én het cross-sell-blok in de winkelmand automatisch actief.
+export const SIMPLE_VARIANTS = {
+  'ba-tick-kit':        null,  // TODO: Shopify-variant-ID invullen
+  'ba-mosquito-lamp':   null,  // TODO: Shopify-variant-ID invullen
+  'ba-repellent-spray': null,  // TODO: Shopify-variant-ID invullen
+};
+
+// Winkelmand-aanbeveling: het vaste anker onderin de mand.
+export const CART_CROSSSELL_ANCHOR = 'ba-tick-kit';
+// Eén contextuele tweede aanbeveling, getoond bij kledingproducten in de mand.
+export const CART_CROSSSELL_CONTEXTUAL = 'ba-repellent-spray';
+
 const VARIANT_MAPS = {
   'ba-jacket-men':   { map: JACKET_MEN,   order: 'size|color' },
   'ba-pants-men':    { map: PANTS_MEN,    order: 'size|color' },
@@ -106,6 +123,9 @@ export const SHOPIFY_HANDLES = {
   'ba-combo-men':    'bug-away-combo-set-jacket-pants',
   'ba-combo-women':  'bug-away-combo-set-women-jacket-pants',
   'ba-kids-set':     'bug-away-kids-set',
+  'ba-tick-kit':        'bug-away-tick-removal-kit',
+  'ba-mosquito-lamp':   'bug-away-indoor-insect-zapper',
+  'ba-repellent-spray': 'bug-away-natural-insect-repellent',
 };
 
 export const SHOPIFY_IDS = {
@@ -132,12 +152,20 @@ export const COMBO_FOR_SINGLE = {
 };
 
 export function getVariantId(productId, size, color) {
+  // Losse accessoires: één variant, ongeacht maat/kleur (kan null zijn = coming soon).
+  if (productId in SIMPLE_VARIANTS) return SIMPLE_VARIANTS[productId];
   const entry = VARIANT_MAPS[productId];
   if (!entry) return null;
   const c = normColor(color || '');
   const s = normSize(size || '');
   const key = entry.order === 'size|color' ? `${s}|${c}` : `${c}|${s}`;
   return entry.map[key] || null;
+}
+
+// Kan dit product/deze combinatie besteld worden? Voor accessoires betekent dat:
+// het Shopify-variant-ID staat ingevuld (niet meer null).
+export function isPurchasable(productId, size, color) {
+  return getVariantId(productId, size, color) != null;
 }
 
 export async function fetchProduct() { return null; }

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { c, useIsMobile } from '../theme';
-import { SHOPIFY_HANDLES, getVariantId, COMBO_FOR_SINGLE, FAMILY_BUNDLE_SET_IDS } from '../shopify';
+import { SHOPIFY_HANDLES, getVariantId, isPurchasable, COMBO_FOR_SINGLE, FAMILY_BUNDLE_SET_IDS, CART_CROSSSELL_ANCHOR, CART_CROSSSELL_CONTEXTUAL } from '../shopify';
 import { useCurrency, formatPrice, getPrice, FREE_GIFT_THRESHOLD } from '../currency.jsx';
 import { products } from '../data';
 
@@ -102,6 +102,24 @@ export default function Cart({ isOpen, onClose }) {
     }
   }
 
+  // Winkelmand-aanbevelingen. Anker = tick removal kit: altijd getoond zolang
+  // hij niet in de mand zit (bestelbaar => Add-knop, coming soon => View-link,
+  // zodat het blok nu al zichtbaar is en vanzelf actief wordt zodra het
+  // variant-ID erin staat). Contextueel = repellent spray: alleen bij kleding
+  // in de mand, en pas zodra die bestelbaar is.
+  const anchorProduct = products.find((p) => p.id === CART_CROSSSELL_ANCHOR);
+  const anchorInCart = items.some((i) => i.product.id === CART_CROSSSELL_ANCHOR);
+  const anchorBuyable = anchorProduct ? isPurchasable(anchorProduct.id) : false;
+  const showAnchor = anchorProduct && !anchorInCart && items.length > 0;
+
+  const contextualProduct = products.find((p) => p.id === CART_CROSSSELL_CONTEXTUAL);
+  const hasApparel = items.some((i) => ['MEN', 'WOMEN', 'KIDS', 'BUNDLES'].includes(i.product.category));
+  const contextualInCart = items.some((i) => i.product.id === CART_CROSSSELL_CONTEXTUAL);
+  const showContextual = contextualProduct && hasApparel && !contextualInCart
+    && contextualProduct.id !== CART_CROSSSELL_ANCHOR && isPurchasable(contextualProduct.id);
+
+  const compareOf = (p) => (p.comparePrices ? (isUS ? p.comparePrices.usd : p.comparePrices.eur) : null);
+
   // Checkout: build Shopify cart URL with all variants
   const handleCheckout = () => {
     if (items.length === 0) return;
@@ -182,7 +200,11 @@ export default function Cart({ isOpen, onClose }) {
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: 13, fontWeight: 700, color: '#1a1a1a', marginBottom: 3, lineHeight: 1.3 }}>{item.product.name}</div>
-                    <div style={{ fontSize: 11, color: '#999', marginBottom: 8 }}>{item.color} · Size {item.size}</div>
+                    {(item.color || item.size) && (
+                      <div style={{ fontSize: 11, color: '#999', marginBottom: 8 }}>
+                        {[item.color, item.size ? `Size ${item.size}` : null].filter(Boolean).join(' · ')}
+                      </div>
+                    )}
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                       <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #e8ede9', borderRadius: 6, overflow: 'hidden' }}>
                         <button onClick={() => CartContext.updateQty(item.key, item.quantity - 1)} style={{ width: 28, height: 28, background: 'none', border: 'none', cursor: 'pointer', fontSize: 14 }}>−</button>
@@ -243,6 +265,70 @@ export default function Cart({ isOpen, onClose }) {
                   style={{ background: c.sageD, color: '#fff', border: 'none', borderRadius: 6, padding: '7px 12px', fontSize: 11, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}
                 >
                   Make it a set
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* CROSS-SELL — vast anker: tick removal kit */}
+          {showAnchor && (
+            <div style={{ background: '#F0F5F2', border: '1px solid #d4e6da', borderRadius: 12, padding: 14, marginTop: 8 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: c.sageD, marginBottom: 8 }}>
+                🪝 {anchorBuyable ? "Don't forget your tick removal kit" : 'The essential companion — Tick Removal Kit'}
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ width: 52, height: 52, borderRadius: 6, overflow: 'hidden', background: '#e8f0eb', flexShrink: 0 }}>
+                  <img src={anchorProduct.images[0]} alt={anchorProduct.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => e.target.style.display = 'none'} />
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 2 }}>{anchorProduct.name}</div>
+                  <div style={{ fontSize: 11, color: '#888' }}>
+                    {anchorBuyable ? (
+                      <>
+                        {compareOf(anchorProduct) && (
+                          <span style={{ textDecoration: 'line-through', marginRight: 6 }}>{formatPrice(compareOf(anchorProduct), symbol)}</span>
+                        )}
+                        <span style={{ color: c.sageD, fontWeight: 700 }}>{formatPrice(getPrice(anchorProduct, isUS), symbol)}</span>
+                      </>
+                    ) : (
+                      <span style={{ color: '#999' }}>Coming soon</span>
+                    )}
+                  </div>
+                </div>
+                {anchorBuyable ? (
+                  <button onClick={() => CartContext.add(anchorProduct, null, null, 1)}
+                    style={{ background: c.sageD, color: '#fff', border: 'none', borderRadius: 6, padding: '7px 14px', fontSize: 11, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                    Add
+                  </button>
+                ) : (
+                  <Link to={`/product/${anchorProduct.id}`} onClick={onClose}
+                    style={{ background: '#fff', color: c.sageD, border: `1px solid ${c.sageD}`, borderRadius: 6, padding: '6px 12px', fontSize: 11, fontWeight: 600, textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                    View →
+                  </Link>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* CROSS-SELL — contextueel: repellent spray bij kleding in de mand */}
+          {showContextual && (
+            <div style={{ background: '#F0F5F2', border: '1px solid #d4e6da', borderRadius: 12, padding: 14, marginTop: 8 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: c.sageD, marginBottom: 8 }}>
+                🌿 For the skin the mesh can't cover
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ width: 52, height: 52, borderRadius: 6, overflow: 'hidden', background: '#e8f0eb', flexShrink: 0 }}>
+                  <img src={contextualProduct.images[0]} alt={contextualProduct.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => e.target.style.display = 'none'} />
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 2 }}>{contextualProduct.name}</div>
+                  <div style={{ fontSize: 11, color: '#888' }}>
+                    <span style={{ color: c.sageD, fontWeight: 700 }}>{formatPrice(getPrice(contextualProduct, isUS), symbol)}</span>
+                  </div>
+                </div>
+                <button onClick={() => CartContext.add(contextualProduct, null, null, 1)}
+                  style={{ background: c.sageD, color: '#fff', border: 'none', borderRadius: 6, padding: '7px 14px', fontSize: 11, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                  Add
                 </button>
               </div>
             </div>
