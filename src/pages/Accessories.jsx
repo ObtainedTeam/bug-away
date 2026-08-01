@@ -55,7 +55,7 @@ export default function Accessories() {
                 >
                   <div style={{ aspectRatio: "4 / 5", background: "#f3f4f2", overflow: "hidden", position: "relative" }}>
                     <img src={product.images[0]} alt={product.name}
-                      style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block" }}
+                      style={{ width: "100%", height: "100%", objectFit: "contain", objectPosition: "center", display: "block" }}
                       onError={(e) => (e.target.style.display = "none")}
                     />
                     {product.badge && (

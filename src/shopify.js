@@ -95,10 +95,10 @@ const KIDS = {
 // URL, of vraag mij). Daarmee worden de bestelknop op de productpagina, de
 // accessoirekaart én het cross-sell-blok in de winkelmand automatisch actief.
 export const SIMPLE_VARIANTS = {
-  'ba-tick-kit':        null,  // TODO: Shopify-variant-ID invullen
-  'ba-mosquito-lamp':   null,  // TODO: Shopify-variant-ID invullen
-  'ba-repellent-spray': null,  // TODO: Shopify-variant-ID invullen
-  'ba-storage-pouch':   null,  // TODO: Shopify-variant-ID invullen
+  'ba-tick-kit':        '57236750565756',
+  'ba-mosquito-lamp':   '57236750926204',
+  'ba-repellent-spray': '57236752007548',
+  'ba-storage-pouch':   '57236748829052',
 };
 
 // Winkelmand-aanbeveling: het vaste anker onderin de mand.

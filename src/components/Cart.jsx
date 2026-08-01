@@ -198,7 +198,7 @@ export default function Cart({ isOpen, onClose }) {
               return (
                 <div key={item.key} style={{ display: 'flex', gap: 12, marginBottom: 16, paddingBottom: 16, borderBottom: '1px solid #e8ede9' }}>
                   <div style={{ width: 72, height: 72, borderRadius: 8, overflow: 'hidden', background: '#f3f4f2', flexShrink: 0 }}>
-                    <img src={item.product.images[0]} alt={item.product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => e.target.style.display = 'none'} />
+                    <img src={item.product.images[0]} alt={item.product.name} style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center' }} onError={e => e.target.style.display = 'none'} />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: 13, fontWeight: 700, color: '#1a1a1a', marginBottom: 3, lineHeight: 1.3 }}>{item.product.name}</div>
@@ -253,7 +253,7 @@ export default function Cart({ isOpen, onClose }) {
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <div style={{ width: 52, height: 52, borderRadius: 6, overflow: 'hidden', background: '#e8f0eb', flexShrink: 0 }}>
-                  <img src={upsell.comboProduct.images[0]} alt={upsell.comboProduct.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => e.target.style.display = 'none'} />
+                  <img src={upsell.comboProduct.images[0]} alt={upsell.comboProduct.name} style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center' }} onError={e => e.target.style.display = 'none'} />
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 2 }}>{upsell.comboProduct.name}</div>
@@ -280,7 +280,7 @@ export default function Cart({ isOpen, onClose }) {
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <div style={{ width: 52, height: 52, borderRadius: 6, overflow: 'hidden', background: '#e8f0eb', flexShrink: 0 }}>
-                  <img src={anchorProduct.images[0]} alt={anchorProduct.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => e.target.style.display = 'none'} />
+                  <img src={anchorProduct.images[0]} alt={anchorProduct.name} style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center' }} onError={e => e.target.style.display = 'none'} />
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 2 }}>{anchorProduct.name}</div>
@@ -320,7 +320,7 @@ export default function Cart({ isOpen, onClose }) {
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <div style={{ width: 52, height: 52, borderRadius: 6, overflow: 'hidden', background: '#e8f0eb', flexShrink: 0 }}>
-                  <img src={contextualProduct.images[0]} alt={contextualProduct.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => e.target.style.display = 'none'} />
+                  <img src={contextualProduct.images[0]} alt={contextualProduct.name} style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center' }} onError={e => e.target.style.display = 'none'} />
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 2 }}>{contextualProduct.name}</div>

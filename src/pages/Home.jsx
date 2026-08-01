@@ -17,7 +17,7 @@ function ProductCard({ product }) {
         onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.07)"; }}
       >
         <div style={{ position: "relative", aspectRatio: "4 / 5", background: "#f3f4f2", overflow: "hidden" }}>
-          <img src={product.images[0]} alt={product.name} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top" }} />
+          <img src={product.images[0]} alt={product.name} style={{ width: "100%", height: "100%", objectFit: "contain", objectPosition: "center" }} />
           {product.badge && (
             <span style={{ position: "absolute", top: 12, left: 12, background: c.sage, color: "#fff", borderRadius: 20, padding: "4px 12px", fontSize: 11, fontWeight: 700 }}>{product.badge}</span>
           )}
@@ -209,7 +209,7 @@ export default function Home() {
               ].map(({ label, img, link, sub }) => (
                 <Link key={label} to={link} style={{ textDecoration: "none" }}>
                   <div style={{ position: "relative", borderRadius: 16, overflow: "hidden", height: 220, cursor: "pointer" }}>
-                    <img src={img} alt={label} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top" }} />
+                    <img src={img} alt={label} style={{ width: "100%", height: "100%", objectFit: "contain", objectPosition: "center" }} />
                     <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.05) 55%)" }} />
                     <div style={{ position: "absolute", bottom: 16, left: 14, color: "#fff" }}>
                       <div style={{ fontFamily: "Archivo, sans-serif", fontWeight: 900, fontSize: 20 }}>{label}</div>
@@ -308,6 +308,24 @@ export default function Home() {
             gap: isMobile ? 8 : 20
           }}>
             {bestsellers.slice(0, isMobile ? 4 : 3).map(p => <ProductCard key={p.id} product={p} />)}
+          </div>
+        </div>
+      </section>
+
+      {/* GEAR UP — uitgelichte accessoires */}
+      <section style={{ background: "#F7F9F8", padding: isMobile ? "48px 0" : "72px 40px" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", paddingLeft: isMobile ? 16 : 0, paddingRight: isMobile ? 16 : 0 }}>
+          <div style={{ ...LBL, marginBottom: 8 }}>COMPLETE YOUR KIT</div>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 32 }}>
+            <h2 style={{ ...H2, margin: 0 }}>Gear that goes with you</h2>
+            <Link to="/accessories" style={{ fontSize: 13, color: c.sage, textDecoration: "none", fontWeight: 600 }}>View all →</Link>
+          </div>
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(4, 1fr)",
+            gap: isMobile ? 8 : 20
+          }}>
+            {products.filter((p) => p.category === "ACCESSORIES").slice(0, 4).map(p => <ProductCard key={p.id} product={p} />)}
           </div>
         </div>
       </section>
