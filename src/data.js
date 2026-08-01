@@ -15,6 +15,8 @@ const PRICE_SET    = { usd: 79.99, eur: 68.99 };
 // Accessoires (losse producten zonder maat/kleur). COMPARE = doorstreepprijs.
 const PRICE_TICK_KIT   = { usd: 14.99, eur: 12.99 };
 const COMPARE_TICK_KIT = { usd: 24.99, eur: 21.99 };
+const PRICE_POUCH      = { usd: 9.50,  eur: 7.99 };
+const COMPARE_POUCH    = { usd: 12.99, eur: 10.99 };
 const PRICE_LAMP       = { usd: 59.99, eur: 51.99 };
 const COMPARE_LAMP     = { usd: 99.00, eur: 85.99 };
 const PRICE_SPRAY      = { usd: 14.99, eur: 12.99 };
@@ -366,6 +368,49 @@ Keep one where the dog gets checked after every walk, and one wherever you head 
       "/images/tick-kit-hero.jpg",
       "/images/tick-kit-contents.jpg",
       "/images/tick-kit-uses.jpg",
+    ],
+  },
+  {
+    id: "ba-storage-pouch",
+    name: "Bug Away Storage Pouch",
+    category: "ACCESSORIES",
+    simple: true,
+    price: PRICE_POUCH.eur,
+    prices: PRICE_POUCH,
+    comparePrices: COMPARE_POUCH,
+    badge: "New",
+    desc: "A sturdy drawstring pouch made to hold your complete Bug Away set. Pack it small, clip it to your bag, and your protection is always within reach — at the trailhead, the campsite or the bottom of your daypack.",
+    longDesc: `Your Bug Away set only protects you when it's actually with you. That's the whole idea behind this pouch: the full set — jacket and pants — packs down into one compact bundle that lives wherever you might need it. The glovebox, your daypack, the camper, the boat.
+
+The pouch is cut from a sturdy woven fabric with a double drawstring closure, so nothing works its way out on a bumpy trail. A loop at the top takes a carabiner or clips straight onto your backpack strap, keeping the set at hand instead of buried under your gear. And because the mesh stays packed away until you need it, it stays clean and snag-free between trips.
+
+Reach the tall grass, pull the set out, suit up in under a minute, and stuff it back in when you're done. No folding ritual required — mesh doesn't crease.
+
+One pouch per set is the golden rule: one in every pack, and nobody in the family walks into tick country unprotected.`,
+    features: [
+      "Fits a complete Bug Away set — jacket + pants",
+      "Sturdy woven fabric with double drawstring closure",
+      "Hanging loop — clips to a backpack or belt with a carabiner",
+      "Packs small: daypack, glovebox, boat or camper",
+      "Keeps the mesh clean and snag-free between trips",
+      "Quick access: suit up in under a minute at the trailhead",
+    ],
+    whatsIncluded: [
+      "1 × Bug Away storage pouch with double drawstring closure",
+    ],
+    highlights: [
+      { icon: "🎒", label: "Always with you", sub: "Clips to any pack" },
+      { icon: "🧺", label: "Fits the full set", sub: "Jacket + pants" },
+      { icon: "💨", label: "Ready in seconds", sub: "No folding needed" },
+    ],
+    useCases: ["Hiking daypacks", "Glovebox essential", "Camping & fishing trips", "Family outings", "Boats & campers", "Travel"],
+    images: [
+      "/images/storage-pouch-hero.jpg",
+      "/images/storage-pouch-open.jpg",
+      "/images/storage-pouch-clip.jpg",
+      "/images/storage-pouch-trail.jpg",
+      "/images/storage-pouch-camp.jpg",
+      "/images/storage-pouch-dock.jpg",
     ],
   },
   {

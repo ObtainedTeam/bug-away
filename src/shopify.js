@@ -98,12 +98,15 @@ export const SIMPLE_VARIANTS = {
   'ba-tick-kit':        null,  // TODO: Shopify-variant-ID invullen
   'ba-mosquito-lamp':   null,  // TODO: Shopify-variant-ID invullen
   'ba-repellent-spray': null,  // TODO: Shopify-variant-ID invullen
+  'ba-storage-pouch':   null,  // TODO: Shopify-variant-ID invullen
 };
 
 // Winkelmand-aanbeveling: het vaste anker onderin de mand.
 export const CART_CROSSSELL_ANCHOR = 'ba-tick-kit';
-// Eén contextuele tweede aanbeveling, getoond bij kledingproducten in de mand.
-export const CART_CROSSSELL_CONTEXTUAL = 'ba-repellent-spray';
+// Contextuele tweede aanbeveling bij kledingproducten in de mand: de eerste
+// uit deze lijst die bestelbaar is en nog niet in de mand zit, wordt getoond.
+// Pouch eerst (hoort bij elke set), repellent als terugval.
+export const CART_CROSSSELL_CONTEXTUAL = ['ba-storage-pouch', 'ba-repellent-spray'];
 
 const VARIANT_MAPS = {
   'ba-jacket-men':   { map: JACKET_MEN,   order: 'size|color' },

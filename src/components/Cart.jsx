@@ -112,11 +112,13 @@ export default function Cart({ isOpen, onClose }) {
   const anchorBuyable = anchorProduct ? isPurchasable(anchorProduct.id) : false;
   const showAnchor = anchorProduct && !anchorInCart && items.length > 0;
 
-  const contextualProduct = products.find((p) => p.id === CART_CROSSSELL_CONTEXTUAL);
+  const contextualIds = Array.isArray(CART_CROSSSELL_CONTEXTUAL) ? CART_CROSSSELL_CONTEXTUAL : [CART_CROSSSELL_CONTEXTUAL];
+  const contextualProduct = contextualIds
+    .map((id) => products.find((p) => p.id === id))
+    .find((p) => p && p.id !== CART_CROSSSELL_ANCHOR && isPurchasable(p.id)
+      && !items.some((i) => i.product.id === p.id)) || null;
   const hasApparel = items.some((i) => ['MEN', 'WOMEN', 'KIDS', 'BUNDLES'].includes(i.product.category));
-  const contextualInCart = items.some((i) => i.product.id === CART_CROSSSELL_CONTEXTUAL);
-  const showContextual = contextualProduct && hasApparel && !contextualInCart
-    && contextualProduct.id !== CART_CROSSSELL_ANCHOR && isPurchasable(contextualProduct.id);
+  const showContextual = !!contextualProduct && hasApparel;
 
   const compareOf = (p) => (p.comparePrices ? (isUS ? p.comparePrices.usd : p.comparePrices.eur) : null);
 
