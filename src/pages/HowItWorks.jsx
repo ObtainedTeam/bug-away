@@ -1,56 +1,132 @@
-import { c, BTN, useIsMobile, FONT_DISPLAY, FONT_SUB, EYEBROW } from '../theme';
-import { IMG } from '../data';
-import { CloudDivider, EmailCapture } from '../components/Blocks';
-import Reveal from '../components/Reveal';
+import { Link } from "react-router-dom";
+import { c, useIsMobile, BTN, H2, LBL } from "../theme";
 
-import { Link } from 'react-router-dom';
+const STEPS = [
+  { num: "01", title: "Wear it as a base layer", desc: "Simply put on the Bug Away mesh suit underneath your regular clothes. It weighs less than 80g for the full set — you'll barely notice it's there." },
+  { num: "02", title: "Ultra-fine physical barrier", desc: "The noseeum-grade mesh has openings smaller than 0.6mm — fine enough to block ticks, mosquitoes, harvest mites and other insects while remaining fully breathable." },
+  { num: "03", title: "Sealed at every entry point", desc: "The pant leg and foot cover are one single continuous piece of mesh. No gap at the ankle, no elastic cuff — ticks have no entry point." },
+  { num: "04", title: "Move freely all day", desc: "Bug Away is lightweight, breathable and moisture-wicking. Wear it hiking, gardening or camping — no heat buildup, no restrictions, no sprays needed." },
+];
+
+const PROOF = [
+  { img: "/images/proof-mosquito.jpg", label: "Mosquito blocked by mesh" },
+  { img: "/images/proof-ticks.jpg", label: "Tick unable to penetrate" },
+  { img: "/images/proof-spider.jpg", label: "Spider stopped at surface" },
+];
+
+const FEATURES = [
+  { icon: "🕷️", title: "Noseeum-grade mesh", desc: "Openings < 0.6mm — blocks ticks, harvest mites, mosquitoes and gnats." },
+  { icon: "🌬️", title: "Fully breathable", desc: "Air circulates freely through the mesh. No sweating, no overheating." },
+  { icon: "⚗️", title: "Zero chemicals", desc: "No permethrin, no DEET, no insecticide of any kind. Safe for kids, pets and the planet." },
+  { icon: "🦶", title: "Integrated foot cover", desc: "The pant leg flows directly into the foot — one continuous piece with no gap." },
+  { icon: "🪶", title: "Ultra-lightweight", desc: "The full set (jacket + pants) weighs under 80g. Packs into its own pocket." },
+  { icon: "♻️", title: "Eco-responsible", desc: "No chemical pollution, reusable for years. Better for you and the environment." },
+];
 
 export default function HowItWorks() {
   const isMobile = useIsMobile();
-
-  const Step = ({ n, title, text, img, reverse }) => (
-    <section style={{ maxWidth: 1080, margin: '0 auto', padding: isMobile ? '18px 20px' : '40px 24px', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 16 : 40, alignItems: 'center' }}>
-      <Reveal style={{ order: isMobile ? 0 : (reverse ? 2 : 0) }}><img src={img} alt="" style={{ borderRadius: 22 }} /></Reveal>
-      <Reveal delay={120}><div>
-        <b style={{ width: 40, height: 40, borderRadius: '50%', background: c.sky, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: FONT_DISPLAY, fontSize: 16, marginBottom: 10 }}>{n}</b>
-        <h2 style={{ fontFamily: FONT_DISPLAY, fontSize: isMobile ? 24 : 30, color: c.navy, marginBottom: 10 }}>{title}</h2>
-        <p style={{ fontSize: 14, lineHeight: 1.75, color: c.grayD }}>{text}</p>
-      </div></Reveal>
-    </section>
-  );
-
   return (
     <div>
-      <section style={{ background: `linear-gradient(180deg, ${c.skyDeep}, ${c.sky2})`, textAlign: 'center', padding: isMobile ? '44px 22px 0' : '64px 40px 0' }}>
-        <div style={{ ...EYEBROW, color: c.navy }}>How it works</div>
-        <h1 style={{ fontFamily: FONT_DISPLAY, fontSize: isMobile ? 32 : 54, color: c.navy, margin: '8px 0 10px' }}>One flip to a cooler night</h1>
-        <p style={{ fontSize: 14, lineHeight: 1.65, maxWidth: 460, margin: '0 auto 26px' }}>
-          No fans, no plugs, no gimmicks. The Signature Cold Pillow works with two fabrics, one zipper and physics that never needs charging.
-        </p>
-        <CloudDivider fill={c.cream} />
+      <section style={{
+        position: "relative", minHeight: isMobile ? 280 : 360,
+        backgroundImage: `linear-gradient(to right, rgba(30,50,40,.75) 60%, rgba(30,50,40,.35) 100%), url("/images/Male _ black mesh _ bino's hunting.png")`,
+        backgroundPosition: isMobile ? "center" : "center 25%",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        display: "flex", alignItems: "center",
+      }}>
+        <div style={{ maxWidth: 700, padding: isMobile ? "60px 24px" : "80px 64px", color: "#fff" }}>
+          <div style={{ ...LBL, color: "rgba(255,255,255,0.7)", marginBottom: 12 }}>HOW IT WORKS</div>
+          <h1 style={{ fontFamily: "Archivo, sans-serif", fontSize: isMobile ? 32 : 48, fontWeight: 900, lineHeight: 1.15, margin: 0 }}>
+            Simple physics.<br /><span style={{ color: "#a8d5b5" }}>Total protection.</span>
+          </h1>
+        </div>
       </section>
 
-      <Step n="1" img={IMG.front}
-        title="The cool-touch side"
-        text="The cooling side is woven from cool-touch fabric with a tested Q-max value of 0.26 — that's the instant 'cold pillow feeling' when your skin touches it. Heat is conducted away from your head instead of building up underneath it, which is exactly what you need when a warm flash hits at 3 AM." />
-
-      <Step n="2" img={IMG.filling} reverse
-        title="Adjustable shredded foam"
-        text="Inside sits recycled shredded memory foam (35–40D). Because it's shredded, air keeps moving between the pieces — far less heat retention than a solid foam block. And because there's a zipper, you decide the loft: add filling for side sleeping, remove some for stomach sleeping. One pillow, every sleeping position." />
-
-      <Step n="3" img={IMG.bed}
-        title="The warm bamboo side"
-        text="Cold snap in January? Flip it. The other side is soft bamboo fiber fabric — gentle, breathable and noticeably warmer to the touch. That's why this is a pillow for every season, not just a summer purchase." />
-
-      <section style={{ textAlign: 'center', padding: isMobile ? '26px 22px 46px' : '30px 40px 60px' }}>
-        <h2 style={{ fontFamily: FONT_DISPLAY, fontSize: isMobile ? 24 : 30, color: c.navy, marginBottom: 10 }}>Try it for 100 nights</h2>
-        <p style={{ fontSize: 13.5, lineHeight: 1.7, maxWidth: 400, margin: '0 auto 20px', color: c.grayD }}>
-          Sleep on it. Adjust it. Flip it. If it doesn't earn its place on your bed within 100 nights, send it back for free and get every dollar refunded.
-        </p>
-        <Link to="/product/signature-cold-pillow" style={BTN}>Shop the 1+1 deal</Link>
+      <section style={{ background: "#F7F9F8", padding: isMobile ? "48px 20px" : "72px 40px" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{ ...LBL, marginBottom: 8 }}>THE PROCESS</div>
+          <h2 style={{ ...H2, marginBottom: 48 }}>Four simple steps</h2>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4,1fr)", gap: 24 }}>
+            {STEPS.map(({ num, title, desc }) => (
+              <div key={num} style={{ background: "#fff", borderRadius: 16, padding: 28, boxShadow: "0 2px 10px rgba(0,0,0,0.06)" }}>
+                <div style={{ fontFamily: "Archivo, sans-serif", fontWeight: 900, fontSize: 36, color: c.sageL, marginBottom: 16 }}>{num}</div>
+                <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 10 }}>{title}</div>
+                <p style={{ color: "#666", fontSize: 14, lineHeight: 1.65, margin: 0 }}>{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
-      <EmailCapture />
+      <section style={{ background: "#fff", padding: isMobile ? "48px 20px" : "72px 40px" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{ ...LBL, marginBottom: 8 }}>PROOF IT WORKS</div>
+          <h2 style={{ ...H2, marginBottom: 16 }}>See the barrier in action</h2>
+          <p style={{ color: "#555", fontSize: 15, maxWidth: 600, marginBottom: 40 }}>
+            The mesh openings are smaller than 0.6mm — insects simply cannot pass through. These photos show real insects resting on the outside of the fabric, unable to penetrate.
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3,1fr)", gap: 20, marginBottom: 40 }}>
+            {PROOF.map(({ img, label }) => (
+              <div key={label} style={{ borderRadius: 16, overflow: "hidden", boxShadow: "0 2px 12px rgba(0,0,0,0.08)" }}>
+                <img src={img} alt={label} style={{ width: "100%", height: isMobile ? 200 : 260, objectFit: "cover", display: "block" }} />
+                <div style={{ background: "#F7F9F8", padding: "12px 16px", fontSize: 13, fontWeight: 600, color: c.sageD }}>{label}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{ background: c.sage, borderRadius: 16, padding: isMobile ? "24px 20px" : "32px 40px", display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: "center", gap: 24 }}>
+            <div style={{ fontFamily: "Archivo, sans-serif", fontWeight: 900, fontSize: isMobile ? 36 : 52, color: "#fff", flexShrink: 0 }}>{"< 0.6mm"}</div>
+            <div style={{ color: "rgba(255,255,255,0.9)", fontSize: 15, lineHeight: 1.65 }}>
+              That's the maximum opening size of Bug Away's noseeum mesh. The average tick nymph is 1.5–2mm wide — it physically cannot fit through the fabric, even when it tries to crawl.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section style={{ background: "#F7F9F8", padding: isMobile ? "48px 20px" : "72px 40px" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
+          <div style={{ ...LBL, marginBottom: 8 }}>HOW THE LAYERS WORK</div>
+          <h2 style={{ ...H2, marginBottom: 32 }}>The layering system</h2>
+          <img src="/images/how-it-works-infographic.png" alt="How Bug Away layering works"
+            style={{ width: "100%", borderRadius: 16, boxShadow: "0 4px 20px rgba(0,0,0,0.08)" }} />
+        </div>
+      </section>
+
+      <section style={{ background: "#fff", padding: isMobile ? "48px 20px" : "72px 40px" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{ ...LBL, marginBottom: 8 }}>KEY FEATURES</div>
+          <h2 style={{ ...H2, marginBottom: 40 }}>What makes Bug Away different</h2>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3,1fr)", gap: 24 }}>
+            {FEATURES.map(({ icon, title, desc }) => (
+              <div key={title} style={{ background: "#F7F9F8", borderRadius: 16, padding: 24 }}>
+                <div style={{ fontSize: 32, marginBottom: 12 }}>{icon}</div>
+                <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 8 }}>{title}</div>
+                <p style={{ color: "#666", fontSize: 14, lineHeight: 1.6, margin: 0 }}>{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr 1fr", gap: 0 }}>
+        {[
+          { src: "/images/MAle _ Black Mesh _ Fly fishing.png", alt: "Fly fishing in Bug Away" },
+          { src: "/images/Female _ White mesh _ Forest solo.png", alt: "Solo forest walk" },
+          { src: "/images/Couple _ camping.png", alt: "Couple camping" },
+        ].map(({ src, alt }) => (
+          <div key={alt} style={{ height: isMobile ? 200 : 320, overflow: "hidden" }}>
+            <img src={src} alt={alt} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          </div>
+        ))}
+      </section>
+
+      <section style={{ background: "#1a2e24", padding: isMobile ? "48px 20px" : "72px 40px", textAlign: "center" }}>
+        <div style={{ maxWidth: 600, margin: "0 auto" }}>
+          <h2 style={{ fontFamily: "Archivo, sans-serif", fontWeight: 900, fontSize: isMobile ? 28 : 36, color: "#fff", marginBottom: 16 }}>Ready to protect yourself?</h2>
+          <p style={{ color: "rgba(255,255,255,0.8)", fontSize: 16, marginBottom: 32 }}>Join 500+ outdoor lovers who chose physical protection over sprays.</p>
+          <Link to="/shop" style={{ ...BTN, fontSize: 16, padding: "16px 40px", textDecoration: "none", display: "inline-block" }}>Shop Bug Away</Link>
+        </div>
+      </section>
     </div>
   );
 }
