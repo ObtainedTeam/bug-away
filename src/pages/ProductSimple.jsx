@@ -69,9 +69,9 @@ export default function ProductSimple({ onCartOpen }) {
 
         {/* GALLERY */}
         <div>
-          <div style={{ borderRadius: 16, overflow: 'hidden', background: '#f7f9f8', aspectRatio: '1', marginBottom: 12 }}>
+          <div style={{ borderRadius: 16, overflow: 'hidden', background: product.imageFit === 'contain' ? '#fff' : '#f7f9f8', aspectRatio: '1', marginBottom: 12 }}>
             <img src={product.images[mainImg]} alt={product.name}
-              style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center' }}
+              style={{ width: '100%', height: '100%', objectFit: product.imageFit || 'cover', objectPosition: 'center' }}
               onError={(e) => (e.target.style.display = 'none')} />
           </div>
           {thumbs.length > 1 && (
@@ -81,7 +81,7 @@ export default function ProductSimple({ onCartOpen }) {
                   borderRadius: 8, overflow: 'hidden', aspectRatio: '1', cursor: 'pointer',
                   border: mainImg === i ? `2px solid ${c.sageD}` : '2px solid transparent', background: '#f7f9f8',
                 }}>
-                  <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center' }}
+                  <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: product.imageFit || 'cover', objectPosition: 'center' }}
                     onError={(e) => (e.target.style.display = 'none')} />
                 </div>
               ))}
@@ -259,8 +259,8 @@ export default function ProductSimple({ onCartOpen }) {
                   <div style={{ background: '#F7F9F8', borderRadius: 14, overflow: 'hidden', transition: 'transform .2s' }}
                     onMouseEnter={(e) => (e.currentTarget.style.transform = 'translateY(-4px)')}
                     onMouseLeave={(e) => (e.currentTarget.style.transform = '')}>
-                    <div style={{ aspectRatio: '4 / 5', overflow: 'hidden' }}>
-                      <img src={p.images[0]} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center' }}
+                    <div style={{ aspectRatio: '4 / 5', overflow: 'hidden', background: p.imageFit === 'contain' ? '#fff' : 'transparent' }}>
+                      <img src={p.images[0]} alt={p.name} style={{ width: '100%', height: '100%', objectFit: p.imageFit || 'cover', objectPosition: 'center' }}
                         onError={(e) => (e.target.style.display = 'none')} />
                     </div>
                     <div style={{ padding: '14px 16px' }}>

@@ -16,6 +16,7 @@ import Blog from './pages/Blog';
 import FAQ from './pages/FAQ';
 import Pets from './pages/Pets';
 import Accessories from './pages/Accessories';
+import Reviews from './pages/Reviews';
 import Legal from './pages/Legal';
 import Activity from './pages/Activity';
 import WhyChooseUs from './pages/WhyChooseUs';
@@ -58,6 +59,7 @@ export function AppShell() {
             <Route path="/why-choose-us" element={<WhyChooseUs />} />
             <Route path="/pets" element={<Pets />} />
             <Route path="/accessories" element={<Accessories />} />
+            <Route path="/reviews" element={<Reviews />} />
             <Route path="/privacy" element={<Legal />} />
             <Route path="/returns" element={<Legal />} />
             <Route path="/terms" element={<Legal />} />

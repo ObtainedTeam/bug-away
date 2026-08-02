@@ -326,6 +326,7 @@ Lyme disease is not just an adult concern — children are particularly vulnerab
     name: "Bug Away Tick Removal Kit",
     category: "ACCESSORIES",
     simple: true,
+    imageFit: "contain", // witte productfoto: volledig tonen op witte achtergrond
     price: PRICE_TICK_KIT.eur,
     prices: PRICE_TICK_KIT,
     comparePrices: COMPARE_TICK_KIT,

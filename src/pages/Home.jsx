@@ -16,8 +16,8 @@ function ProductCard({ product }) {
         onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 8px 24px rgba(0,0,0,0.13)"; }}
         onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.07)"; }}
       >
-        <div style={{ position: "relative", aspectRatio: "4 / 5", background: "#f3f4f2", overflow: "hidden" }}>
-          <img src={product.images[0]} alt={product.name} style={{ width: "100%", height: "100%", objectFit: "contain", objectPosition: "center" }} />
+        <div style={{ position: "relative", aspectRatio: "4 / 5", background: product.imageFit === "contain" ? "#fff" : "#f3f4f2", overflow: "hidden" }}>
+          <img src={product.images[0]} alt={product.name} style={{ width: "100%", height: "100%", objectFit: product.imageFit || "cover", objectPosition: product.imageFit ? "center" : "center top" }} />
           {product.badge && (
             <span style={{ position: "absolute", top: 12, left: 12, background: c.sage, color: "#fff", borderRadius: 20, padding: "4px 12px", fontSize: 11, fontWeight: 700 }}>{product.badge}</span>
           )}

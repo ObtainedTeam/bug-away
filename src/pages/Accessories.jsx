@@ -53,9 +53,9 @@ export default function Accessories() {
                   onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 8px 32px rgba(0,0,0,0.10)"; e.currentTarget.style.transform = "translateY(-4px)"; }}
                   onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.transform = "none"; }}
                 >
-                  <div style={{ aspectRatio: "4 / 5", background: "#f3f4f2", overflow: "hidden", position: "relative" }}>
+                  <div style={{ aspectRatio: "4 / 5", background: product.imageFit === "contain" ? "#fff" : "#f3f4f2", overflow: "hidden", position: "relative" }}>
                     <img src={product.images[0]} alt={product.name}
-                      style={{ width: "100%", height: "100%", objectFit: "contain", objectPosition: "center", display: "block" }}
+                      style={{ width: "100%", height: "100%", objectFit: product.imageFit || "cover", objectPosition: "center", display: "block" }}
                       onError={(e) => (e.target.style.display = "none")}
                     />
                     {product.badge && (
