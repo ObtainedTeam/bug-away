@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     if (!r.ok) throw new Error('judge.me ' + r.status);
     const data = await r.json();
     const reviews = (data.reviews || [])
-      .filter((x) => !x.hidden)
+      .filter((x) => !x.hidden && x.curated !== 'spam' && x.published !== false)
       .map((x) => ({
         rating: x.rating,
         title: x.title || '',

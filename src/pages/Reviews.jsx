@@ -20,7 +20,7 @@ export default function Reviews() {
           <div style={{ ...LBL, marginBottom: 8 }}>REVIEWS</div>
           <h1 style={{ ...H2, fontSize: isMobile ? 30 : 42, marginBottom: 14 }}>Real trails, real reviews</h1>
           <p style={{ fontSize: 14.5, color: "#555", lineHeight: 1.7, maxWidth: 520, margin: "0 auto" }}>
-            Every review on this page is collected independently through Judge.me from verified Bug Away buyers. We can't edit them, hide them or make them up — and that's exactly the point.
+            Every review on this page is collected independently through Judge.me and comes from verified Bug Away buyers.
           </p>
         </div>
       </section>
