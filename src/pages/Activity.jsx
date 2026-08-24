@@ -106,7 +106,7 @@ const Check = () => (
 );
 
 function ProductCard({ product, onCartOpen }) {
-  const { symbol, isUS } = useCurrency();
+  const { symbol, isUS, isAU } = useCurrency();
   const [size, setSize] = useState(null);
   const [added, setAdded] = useState(false);
 
@@ -125,7 +125,7 @@ function ProductCard({ product, onCartOpen }) {
       </Link>
       <div className="act-card-b">
         <div className="act-card-n">{product.name}</div>
-        <div className="act-card-p">{formatPrice(getPrice(product, isUS), symbol)}</div>
+        <div className="act-card-p">{formatPrice(getPrice(product, isUS, isAU), symbol)}</div>
 
         <div className="act-sizes">
           {product.sizes.map((s) => (

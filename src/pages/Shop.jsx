@@ -17,7 +17,7 @@ const CATS = [
 export default function Shop() {
   const [activeFilter, setActiveFilter] = useState("all");
   const isMobile = useIsMobile();
-  const { symbol, isUS } = useCurrency();
+  const { symbol, isUS, isAU } = useCurrency();
 
   const PRIORITY_ORDER = ['ba-combo-men', 'ba-combo-women', 'ba-kids-set'];
   const sortedProducts = [...products].sort((a, b) => {
@@ -74,7 +74,7 @@ export default function Shop() {
       <section style={{ padding: isMobile ? "24px 16px" : "40px 40px" }}>
         <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2,1fr)" : "repeat(3,1fr)", gap: isMobile ? 12 : 24 }}>
           {visible.map(product => {
-            const price = getPrice(product, isUS);
+            const price = getPrice(product, isUS, isAU);
             return (
               <Link key={product.id} to={`/product/${product.id}`} style={{ textDecoration: "none" }}>
                 <div style={{ background: "#fff", borderRadius: 12, overflow: "hidden", border: "1px solid #e8ede9", transition: "box-shadow 0.2s, transform 0.2s" }}
@@ -123,7 +123,7 @@ export default function Shop() {
                       {formatPrice(price, symbol)}
                       {product.comparePrices && (
                         <span style={{ fontSize: 12, color: "#aaa", textDecoration: "line-through", marginLeft: 8, fontWeight: 400 }}>
-                          {formatPrice(isUS ? product.comparePrices.usd : product.comparePrices.eur, symbol)}
+                          {formatPrice((isAU && product.comparePrices.aud != null) ? product.comparePrices.aud : (isUS ? product.comparePrices.usd : product.comparePrices.eur), symbol)}
                         </span>
                       )}
                     </div>

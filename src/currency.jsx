@@ -4,21 +4,24 @@ const CurrencyContext = createContext({ symbol: "€", isUS: false, region: "EU"
 
 export function CurrencyProvider({ children }) {
   const [isUS, setIsUS] = useState(false);
+  const [isAU, setIsAU] = useState(false);
 
   useEffect(() => {
     try {
       const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
       setIsUS(tz.startsWith("America/") || tz.startsWith("US/"));
+      setIsAU(tz.startsWith("Australia/"));
     } catch {
       setIsUS(false);
+      setIsAU(false);
     }
   }, []);
 
-  const symbol = isUS ? "$" : "€";
-  const region = isUS ? "US" : "EU";
+  const symbol = (isUS || isAU) ? "$" : "€";
+  const region = isAU ? "AU" : isUS ? "US" : "EU";
 
   return (
-    <CurrencyContext.Provider value={{ symbol, isUS, region }}>
+    <CurrencyContext.Provider value={{ symbol, isUS, isAU, region }}>
       {children}
     </CurrencyContext.Provider>
   );
@@ -35,8 +38,9 @@ export function formatPrice(amount, symbol) {
 // Returns the regional price for a product.
 // Falls back to product.price if no per-region prices are defined,
 // so old code paths keep working during the transition.
-export function getPrice(product, isUS) {
+export function getPrice(product, isUS, isAU) {
   if (product && product.prices) {
+    if (isAU && product.prices.aud != null) return product.prices.aud;
     return isUS ? product.prices.usd : product.prices.eur;
   }
   return product?.price ?? 0;
@@ -46,4 +50,5 @@ export function getPrice(product, isUS) {
 export const FREE_GIFT_THRESHOLD = {
   US: 79.99,
   EU: 68.99,
+  AU: 128,
 };

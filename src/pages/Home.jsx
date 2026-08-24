@@ -7,9 +7,9 @@ import { useCurrency, formatPrice, getPrice } from "../currency";
 const Star = () => <span style={{ color: "#F59E0B" }}>★</span>;
 
 function ProductCard({ product }) {
-  const { symbol, isUS } = useCurrency();
+  const { symbol, isUS, isAU } = useCurrency();
   const isMobile = useIsMobile();
-  const price = getPrice(product, isUS);
+  const price = getPrice(product, isUS, isAU);
   return (
     <Link to={`/product/${product.id}`} style={{ textDecoration: "none", color: "inherit" }}>
       <div style={{ background: "#fff", borderRadius: 16, overflow: "hidden", boxShadow: "0 2px 12px rgba(0,0,0,0.07)", transition: "transform .2s, box-shadow .2s", cursor: "pointer" }}
@@ -57,7 +57,7 @@ const DISEASES = [
 
 export default function Home() {
   const isMobile = useIsMobile();
-  const { symbol, isUS } = useCurrency();
+  const { symbol, isUS, isAU } = useCurrency();
   const bestsellers = products.filter(p => p.badge === "Best Seller");
 
   return (

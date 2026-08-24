@@ -13,7 +13,7 @@ const Star = ({ filled }) => (
 export default function ProductClothing({ onCartOpen }) {
   const { id } = useParams();
   const isMobile = useIsMobile();
-  const { symbol, isUS } = useCurrency();
+  const { symbol, isUS, isAU } = useCurrency();
   const product = products.find(p => p.id === id) || products[0];
 
   const [selectedColor, setSelectedColor] = useState(product.colors[0]);
@@ -51,7 +51,7 @@ export default function ProductClothing({ onCartOpen }) {
     : 4.9;
   const reviewCount = productReviews.length || 48;
 
-  const price = getPrice(product, isUS);
+  const price = getPrice(product, isUS, isAU);
 
   const handleAddToCart = () => {
     if (!selectedSize) { alert('Please select a size'); return; }
@@ -406,7 +406,7 @@ export default function ProductClothing({ onCartOpen }) {
           <h2 style={{ ...H2, marginBottom: 32 }}>Complete your protection</h2>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4,1fr)', gap: 20 }}>
             {relatedProducts.map(p => {
-              const relPrice = getPrice(p, isUS);
+              const relPrice = getPrice(p, isUS, isAU);
               return (
                 <Link key={p.id} to={`/product/${p.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                   <div style={{ background: '#F7F9F8', borderRadius: 14, overflow: 'hidden', transition: 'transform .2s' }}

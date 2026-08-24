@@ -9,17 +9,19 @@ const STD = [
 
 // Region-aware prices for single items and sets.
 // Used together with getPrice(product, isUS) from currency.jsx.
-const PRICE_SINGLE = { usd: 44.99, eur: 38.99 };
-const PRICE_SET    = { usd: 79.99, eur: 68.99 };
+// AUD: fixed FX 1 USD = 1.60 AUD, rounded up to whole dollars to match
+// the Shopify AUD market (manual FX 1.60, round up to nearest $1.00).
+const PRICE_SINGLE = { usd: 44.99, eur: 38.99, aud: 72 };
+const PRICE_SET    = { usd: 79.99, eur: 68.99, aud: 128 };
 
 // Accessoires (losse producten zonder maat/kleur). COMPARE = doorstreepprijs.
-const PRICE_TICK_KIT   = { usd: 14.99, eur: 12.99 };
-const COMPARE_TICK_KIT = { usd: 24.99, eur: 21.99 };
-const PRICE_POUCH      = { usd: 9.50,  eur: 7.99 };
-const COMPARE_POUCH    = { usd: 12.99, eur: 10.99 };
-const PRICE_LAMP       = { usd: 59.99, eur: 51.99 };
-const COMPARE_LAMP     = { usd: 99.00, eur: 85.99 };
-const PRICE_SPRAY      = { usd: 14.99, eur: 12.99 };
+const PRICE_TICK_KIT   = { usd: 14.99, eur: 12.99, aud: 24 };
+const COMPARE_TICK_KIT = { usd: 24.99, eur: 21.99, aud: 40 };
+const PRICE_POUCH      = { usd: 9.50,  eur: 7.99,  aud: 16 };
+const COMPARE_POUCH    = { usd: 12.99, eur: 10.99, aud: 21 };
+const PRICE_LAMP       = { usd: 59.99, eur: 51.99, aud: 96 };
+const COMPARE_LAMP     = { usd: 99.00, eur: 85.99, aud: 159 };
+const PRICE_SPRAY      = { usd: 14.99, eur: 12.99, aud: 24 };
 
 // Product colors: Arctic White and Black.
 // Black maps to 'Zwart' in Shopify via normColor() in shopify.js.

@@ -16,7 +16,7 @@ import { useCurrency, formatPrice, getPrice } from '../currency.jsx';
 export default function ProductSimple({ onCartOpen }) {
   const { id } = useParams();
   const isMobile = useIsMobile();
-  const { symbol, isUS } = useCurrency();
+  const { symbol, isUS, isAU } = useCurrency();
   const product = products.find((p) => p.id === id) || products[0];
 
   const [qty, setQty] = useState(1);
@@ -26,8 +26,8 @@ export default function ProductSimple({ onCartOpen }) {
 
   useEffect(() => { setMainImg(0); setQty(1); }, [id]);
 
-  const price = getPrice(product, isUS);
-  const compare = product.comparePrices ? (isUS ? product.comparePrices.usd : product.comparePrices.eur) : null;
+  const price = getPrice(product, isUS, isAU);
+  const compare = product.comparePrices ? ((isAU && product.comparePrices.aud != null) ? product.comparePrices.aud : (isUS ? product.comparePrices.usd : product.comparePrices.eur)) : null;
   const savings = compare ? compare - price : 0;
   const purchasable = isPurchasable(product.id);
 
@@ -253,7 +253,7 @@ export default function ProductSimple({ onCartOpen }) {
           <p style={{ color: '#555', fontSize: 15, marginBottom: 32 }}>Bug Away accessories work best alongside the mesh you wear.</p>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4,1fr)', gap: 20 }}>
             {relatedSorted.map((p) => {
-              const relPrice = getPrice(p, isUS);
+              const relPrice = getPrice(p, isUS, isAU);
               return (
                 <Link key={p.id} to={`/product/${p.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                   <div style={{ background: '#F7F9F8', borderRadius: 14, overflow: 'hidden', transition: 'transform .2s' }}

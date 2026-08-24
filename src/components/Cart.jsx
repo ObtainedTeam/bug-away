@@ -44,7 +44,7 @@ export const CartContext = {
 
 export default function Cart({ isOpen, onClose }) {
   const isMobile = useIsMobile();
-  const { symbol, isUS, region } = useCurrency();
+  const { symbol, isUS, isAU, region } = useCurrency();
   const [items, setItems] = useState([...CartContext.items]);
   const [discountCode, setDiscountCode] = useState('');
   const [showDiscount, setShowDiscount] = useState(false);
@@ -59,7 +59,7 @@ export default function Cart({ isOpen, onClose }) {
   const threshold = FREE_GIFT_THRESHOLD[region] || FREE_GIFT_THRESHOLD.EU;
 
   // Region-aware totals: use getPrice per item.
-  const total = items.reduce((sum, i) => sum + getPrice(i.product, isUS) * i.quantity, 0);
+  const total = items.reduce((sum, i) => sum + getPrice(i.product, isUS, isAU) * i.quantity, 0);
   const count = items.reduce((sum, i) => sum + i.quantity, 0);
   const remaining = Math.max(0, threshold - total);
   const progress = Math.min(100, (total / threshold) * 100);
@@ -70,7 +70,7 @@ export default function Cart({ isOpen, onClose }) {
   // The cheapest set(s) become free, one per 4 sets in the cart.
   const bundleUnitPrices = items
     .filter(i => FAMILY_BUNDLE_SET_IDS.includes(i.product.id))
-    .flatMap(i => Array(i.quantity).fill(getPrice(i.product, isUS)))
+    .flatMap(i => Array(i.quantity).fill(getPrice(i.product, isUS, isAU)))
     .sort((a, b) => a - b);
   const setCount = bundleUnitPrices.length;
   const freeSets = Math.floor(setCount / 4);
@@ -89,8 +89,8 @@ export default function Cart({ isOpen, onClose }) {
     const comboId = COMBO_FOR_SINGLE[singleCandidate.product.id];
     const comboProduct = products.find(p => p.id === comboId);
     if (comboProduct) {
-      const singlePrice = getPrice(singleCandidate.product, isUS);
-      const comboPrice  = getPrice(comboProduct, isUS);
+      const singlePrice = getPrice(singleCandidate.product, isUS, isAU);
+      const comboPrice  = getPrice(comboProduct, isUS, isAU);
       const savings = (singlePrice * 2) - comboPrice;
       upsell = {
         singleKey: singleCandidate.key,
@@ -120,7 +120,7 @@ export default function Cart({ isOpen, onClose }) {
   const hasApparel = items.some((i) => ['MEN', 'WOMEN', 'KIDS', 'BUNDLES'].includes(i.product.category));
   const showContextual = !!contextualProduct && hasApparel;
 
-  const compareOf = (p) => (p.comparePrices ? (isUS ? p.comparePrices.usd : p.comparePrices.eur) : null);
+  const compareOf = (p) => (p.comparePrices ? ((isAU && p.comparePrices.aud != null) ? p.comparePrices.aud : (isUS ? p.comparePrices.usd : p.comparePrices.eur)) : null);
 
   // Checkout: build Shopify cart URL with all variants
   const handleCheckout = () => {
@@ -194,7 +194,7 @@ export default function Cart({ isOpen, onClose }) {
             </div>
           ) : (
             items.map(item => {
-              const itemPrice = getPrice(item.product, isUS);
+              const itemPrice = getPrice(item.product, isUS, isAU);
               return (
                 <div key={item.key} style={{ display: 'flex', gap: 12, marginBottom: 16, paddingBottom: 16, borderBottom: '1px solid #e8ede9' }}>
                   <div style={{ width: 72, height: 72, borderRadius: 8, overflow: 'hidden', background: item.product.imageFit === 'contain' ? '#fff' : '#f3f4f2', flexShrink: 0 }}>
@@ -290,7 +290,7 @@ export default function Cart({ isOpen, onClose }) {
                         {compareOf(anchorProduct) && (
                           <span style={{ textDecoration: 'line-through', marginRight: 6 }}>{formatPrice(compareOf(anchorProduct), symbol)}</span>
                         )}
-                        <span style={{ color: c.sageD, fontWeight: 700 }}>{formatPrice(getPrice(anchorProduct, isUS), symbol)}</span>
+                        <span style={{ color: c.sageD, fontWeight: 700 }}>{formatPrice(getPrice(anchorProduct, isUS, isAU), symbol)}</span>
                       </>
                     ) : (
                       <span style={{ color: '#999' }}>Coming soon</span>
@@ -325,7 +325,7 @@ export default function Cart({ isOpen, onClose }) {
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 2 }}>{contextualProduct.name}</div>
                   <div style={{ fontSize: 11, color: '#888' }}>
-                    <span style={{ color: c.sageD, fontWeight: 700 }}>{formatPrice(getPrice(contextualProduct, isUS), symbol)}</span>
+                    <span style={{ color: c.sageD, fontWeight: 700 }}>{formatPrice(getPrice(contextualProduct, isUS, isAU), symbol)}</span>
                   </div>
                 </div>
                 <button onClick={() => CartContext.add(contextualProduct, null, null, 1)}

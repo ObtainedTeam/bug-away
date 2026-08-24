@@ -8,7 +8,7 @@ import { subscribe } from "../brevo";
 
 export default function Accessories() {
   const isMobile = useIsMobile();
-  const { symbol, isUS } = useCurrency();
+  const { symbol, isUS, isAU } = useCurrency();
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
@@ -44,8 +44,8 @@ export default function Accessories() {
       <section style={{ padding: isMobile ? "28px 16px" : "48px 40px" }}>
         <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2,1fr)" : "repeat(3,1fr)", gap: isMobile ? 12 : 24 }}>
           {items.map((product) => {
-            const price = getPrice(product, isUS);
-            const compare = product.comparePrices ? (isUS ? product.comparePrices.usd : product.comparePrices.eur) : null;
+            const price = getPrice(product, isUS, isAU);
+            const compare = product.comparePrices ? ((isAU && product.comparePrices.aud != null) ? product.comparePrices.aud : (isUS ? product.comparePrices.usd : product.comparePrices.eur)) : null;
             const comingSoon = product.simple && !isPurchasable(product.id);
             return (
               <Link key={product.id} to={`/product/${product.id}`} style={{ textDecoration: "none" }}>
