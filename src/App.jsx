@@ -14,6 +14,7 @@ import HowItWorks from './pages/HowItWorks';
 import About from './pages/About';
 import Blog from './pages/Blog';
 import FAQ from './pages/FAQ';
+import Contact from './pages/Contact';
 import Pets from './pages/Pets';
 import Accessories from './pages/Accessories';
 import Reviews from './pages/Reviews';
@@ -50,6 +51,7 @@ export function AppShell() {
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<Blog />} />
             <Route path="/faq" element={<FAQ />} />
+            <Route path="/contact" element={<Contact />} />
             {/* Activiteitenpagina's — inhoud staat in src/data/activities.js.
                 Eén component, vier routes. Nieuwe activiteit = blok in dat bestand. */}
             {activities.map(a => (

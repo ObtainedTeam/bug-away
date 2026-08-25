@@ -4,7 +4,7 @@ import { c } from '../theme';
 const cols = [
   { head:"Collection", links:[{l:"Men",to:"/shop/men"},{l:"Women",to:"/shop/women"},{l:"Kids",to:"/shop/kids"},{l:"Bundles",to:"/shop/bundles"},{l:"Extras",to:"/shop/extras"}] },
   { head:"Info", links:[{l:"How It Works",to:"/how-it-works"},{l:"Ticks & Lyme",to:"/blog"},{l:"Size Guide",to:"/faq"},{l:"FAQ",to:"/faq"},{l:"Reviews",to:"/reviews"}] },
-  { head:"Service", links:[{l:"Shipping",to:"/faq"},{l:"Returns",to:"/faq"},{l:"Contact",to:"/about"},{l:"Reviews",to:"/shop"}] },
+  { head:"Service", links:[{l:"Shipping",to:"/faq"},{l:"Returns",to:"/faq"},{l:"Contact",to:"/contact"},{l:"Reviews",to:"/reviews"}] },
 ];
 
 export default function Footer() {
