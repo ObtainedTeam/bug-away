@@ -13,6 +13,8 @@ const STD = [
 // the Shopify AUD market (manual FX 1.60, round up to nearest $1.00).
 const PRICE_SINGLE = { usd: 44.99, eur: 38.99, aud: 72 };
 const PRICE_SET    = { usd: 79.99, eur: 68.99, aud: 128 };
+// Compare-at for sets = two single pieces bought apart (honest reference, not inflated).
+const SET_COMPARE  = { usd: 89.98, eur: 77.98, aud: 144 };
 
 // Accessoires (losse producten zonder maat/kleur). COMPARE = doorstreepprijs.
 const PRICE_TICK_KIT   = { usd: 14.99, eur: 12.99, aud: 24 };
@@ -40,7 +42,7 @@ export const products = [
     colorHex: COLOR_HEX,
     sizes: ["XS", "S", "M", "L", "XL", "XXL", "XXXL"],
     desc: "Full-coverage mesh jacket for men. Drawstring hood, zip closure and side pockets. Pairs perfectly with our Bug Away Pants for complete 360° tick protection. Chemical-free, lightweight and breathable.",
-    longDesc: `The Bug Away Jacket is built around one idea: a physical barrier is the only barrier you can truly trust. Made from noseeum-grade nylon mesh with openings smaller than 0.6mm, it stops ticks, mosquitoes, harvest mites and gnats before they ever reach your skin — without a single drop of insecticide.
+    longDesc: `The Bug Away Jacket is built around one idea: a physical barrier is the only barrier you can truly trust. Made from No-See-Um-grade nylon mesh with openings smaller than 0.6mm, it stops ticks, mosquitoes and gnats before they ever reach your skin — without a single drop of insecticide.
 
 Pull it on over your regular clothes in seconds. You'll barely notice it's there — the full set weighs under 80g — but the bugs certainly will. The drawstring hood seals around your face, the zip closure keeps the front protected, and the side pockets keep your hands bite-free while you hike, garden or camp.
 
@@ -48,7 +50,7 @@ This jacket is designed for the outdoors, not the lab. No DEET, no permethrin, n
 
 Wear it as a base layer under your regular jacket, or on its own on warm days. It breathes freely, doesn't trap heat and packs small enough to throw in a daypack.`,
     features: [
-      "Noseeum-grade mesh — openings < 0.6mm block ticks, mosquitoes and gnats",
+      "No-See-Um-grade mesh — openings < 0.6mm block ticks, mosquitoes and gnats",
       "Drawstring hood with full face coverage",
       "Full-length zip closure",
       "Two deep side pockets",
@@ -89,7 +91,7 @@ Wear it as a base layer under your regular jacket, or on its own on warm days. I
     desc: "Tick-protection pants for men with integrated foot cover. The pant leg and foot are one continuous piece of mesh — no gap at the ankle, no entry point for ticks. Lightweight, breathable and chemical-free.",
     longDesc: `Ticks don't announce themselves. They wait in tall grass, brush their way onto your ankle and crawl upward before you ever notice. The Bug Away Pants close that gap — literally.
 
-The pant leg and foot cover are one single, continuous piece of noseeum-grade mesh. There is no elastic band at the ankle, no separate sock to tuck in, no gap for insects to exploit. From waistband to toe, the mesh flows uninterrupted — the way proper tick protection should work.
+The pant leg and foot cover are one single, continuous piece of No-See-Um-grade mesh. There is no elastic band at the ankle, no separate sock to tuck in, no gap for insects to exploit. From waistband to toe, the mesh flows uninterrupted — the way proper tick protection should work.
 
 Worn as a base layer under your regular trousers or directly as lightweight outdoor pants, they're virtually weightless and fully breathable. The elastic waistband sits comfortably, and the mesh allows air to circulate freely even on warm days.
 
@@ -98,7 +100,7 @@ No chemicals. No permethrin runoff into the environment. No DEET on your skin. J
 Pair with the Bug Away Jacket for complete head-to-toe protection.`,
     features: [
       "Integrated foot cover — one continuous piece of mesh, no gap at the ankle",
-      "Noseeum-grade mesh — openings < 0.6mm",
+      "No-See-Um-grade mesh — openings < 0.6mm",
       "Elastic waistband — comfortable all-day wear",
       "Weight: < 35g per pair",
       "Machine washable, cold gentle cycle",
@@ -130,16 +132,16 @@ Pair with the Bug Away Jacket for complete head-to-toe protection.`,
     colorHex: COLOR_HEX,
     sizes: ["XS", "S", "M", "L", "XL", "XXL", "XXXL"],
     desc: "Full-coverage mesh jacket for women. Slim tailored fit, drawstring hood and zip closure. Perfect as a base layer for hiking, gardening and outdoor adventures. Chemical-free and breathable.",
-    longDesc: `The Bug Away Women's Jacket gives you the same noseeum-grade mesh protection as our men's version, in a slimmer, more tailored silhouette. It's designed to be worn comfortably under your regular outdoor layers — or on its own when it's warm.
+    longDesc: `The Bug Away Women's Jacket gives you the same No-See-Um-grade mesh protection as our men's version, in a slimmer, more tailored silhouette. It's designed to be worn comfortably under your regular outdoor layers — or on its own when it's warm.
 
 The drawstring hood seals around your face to keep mosquitoes and gnats away from your neck and hairline — the most frequently bitten areas. The full zip closure keeps the front protected, and the slim fit means no excess fabric catching on branches or gear.
 
-Made from nylon mesh finer than 0.6mm openings, the jacket physically blocks ticks, mosquitoes, harvest mites and black flies. No chemicals, no sprays, no residue. Just a layer of protection you put on and forget about.
+Made from nylon mesh finer than 0.6mm openings, the jacket physically blocks ticks, mosquitoes and black flies. No chemicals, no sprays, no residue. Just a layer of protection you put on and forget about.
 
 Breathable enough for summer hikes, light enough to pack into a jacket pocket. Pair with the Bug Away Pants for complete coverage from collar to toe.`,
     features: [
       "Slim tailored fit — designed for women's proportions",
-      "Noseeum-grade mesh — openings < 0.6mm",
+      "No-See-Um-grade mesh — openings < 0.6mm",
       "Drawstring hood for face and neck coverage",
       "Full-length zip closure",
       "Weight: < 45g",
@@ -177,7 +179,7 @@ Breathable enough for summer hikes, light enough to pack into a jacket pocket. P
     colorHex: COLOR_HEX,
     sizes: ["XS", "S", "M", "L", "XL", "XXL", "XXXL"],
     desc: "Tick-protection pants for women with integrated foot cover. One continuous piece of mesh from waist to toe — no gap, no entry point. Tailored fit, lightweight and breathable.",
-    longDesc: `The Bug Away Women's Pants solve the single biggest weakness in tick protection: the ankle gap. Where most solutions stop — at a sock, a cuff, an elastic band — Bug Away continues. The pant leg flows directly into the foot cover, one uninterrupted piece of noseeum-grade mesh from waist to toe.
+    longDesc: `The Bug Away Women's Pants solve the single biggest weakness in tick protection: the ankle gap. Where most solutions stop — at a sock, a cuff, an elastic band — Bug Away continues. The pant leg flows directly into the foot cover, one uninterrupted piece of No-See-Um-grade mesh from waist to toe.
 
 No tucking your trousers into your socks. No separate foot covers to keep track of. No weak point for ticks to exploit.
 
@@ -187,7 +189,7 @@ The tailored fit is designed specifically for women's proportions: a clean silho
     features: [
       "Integrated foot cover — one continuous mesh piece, no ankle gap",
       "Tailored fit for women's proportions",
-      "Noseeum-grade mesh — openings < 0.6mm",
+      "No-See-Um-grade mesh — openings < 0.6mm",
       "Comfortable elastic waistband",
       "Weight: < 35g",
       "Machine washable",
@@ -206,6 +208,8 @@ The tailored fit is designed specifically for women's proportions: a clean silho
   },
   {
     id: "ba-combo-men",
+    benefit: "A physical barrier ticks can't bite through. Sealed from the sewn-on hood to the ankle, so there's no gap to get through — no DEET, no permethrin, nothing on your skin.",
+    setCompare: SET_COMPARE,
     name: "Bug Away Combo Set — Men",
     category: "BUNDLES",
     price: PRICE_SET.eur,
@@ -214,20 +218,12 @@ The tailored fit is designed specifically for women's proportions: a clean silho
     colors: COLORS,
     colorHex: COLOR_HEX,
     sizes: ["XS", "S", "M", "L", "XL", "XXL", "XXXL"],
-    desc: "Complete tick protection in one set. Bug Away Jacket + Bug Away Pants bundled together — save versus buying separately. Chemical-free, lightweight noseeum-grade mesh with integrated foot cover.",
-    longDesc: `The Bug Away Combo Set is the complete solution. Jacket and pants together, matched in color, covering every inch from hood to toe — including the integrated foot cover that closes the ankle gap ticks rely on.
-
-The full set weighs under 80g and packs into its own jacket pocket. You'll barely feel it on. Bugs definitely will.
-
-Both pieces are made from the same noseeum-grade nylon mesh with openings smaller than 0.6mm — a physical barrier that ticks, mosquitoes, harvest mites and black flies simply cannot penetrate. No chemicals, no permethrin, no DEET. Just mesh.
-
-Wear the jacket and pants together for complete 360° coverage, or mix and match with your existing outdoor clothing. Machine washable, breathable, reusable for years.
-
-Buying the set saves you compared to purchasing the items separately.`,
+    desc: "Jacket and pants together for men, sealed from hood to ankle with no gap to bite through. Lightweight No-See-Um-grade mesh, no DEET, no permethrin. Buying the set costs less than the two pieces apart.",
+    longDesc: `The Bug Away Combo Set for Men is full-body cover in one kit. Jacket and pants together, cut to move with you, closing every inch from the sewn-on hood to the built-in foot cover that seals the ankle gap ticks slip through.\n\nThe whole set weighs under 80g and packs into its own jacket pocket. You'll barely feel it on. Bugs definitely will.\n\nBoth pieces are cut from the same No-See-Um-grade mesh, with openings smaller than 0.6mm. It is a physical barrier that ticks, mosquitoes and black flies cannot bite through. No permethrin, no DEET, nothing sprayed onto your skin. Just mesh.\n\nWear the jacket and pants together for full 360\u00b0 coverage, or layer either piece over the clothes you already own. Machine washable, breathable, and made to last for years of seasons.\n\nBought on their own, the two pieces cost more than the set. Buy them together and you save, then add three more sets and the fourth is free.`,
     features: [
       "Complete jacket + pants set — 360° coverage",
       "Integrated foot cover on pants — no ankle gap",
-      "Noseeum-grade mesh — < 0.6mm openings throughout",
+      "No-See-Um-grade mesh — < 0.6mm openings throughout",
       "Full set weighs under 80g",
       "Packs into jacket pocket",
       "Save vs buying separately",
@@ -249,6 +245,8 @@ Buying the set saves you compared to purchasing the items separately.`,
   },
   {
     id: "ba-combo-women",
+    benefit: "A physical barrier ticks can't bite through. Sealed from the sewn-on hood to the ankle, so there's no gap to get through — no DEET, no permethrin, nothing on your skin.",
+    setCompare: SET_COMPARE,
     name: "Bug Away Combo Set — Women",
     category: "BUNDLES",
     price: PRICE_SET.eur,
@@ -257,13 +255,13 @@ Buying the set saves you compared to purchasing the items separately.`,
     colors: COLORS,
     colorHex: COLOR_HEX,
     sizes: ["XS", "S", "M", "L", "XL", "XXL", "XXXL"],
-    desc: "Complete tick protection in one set. Bug Away Jacket + Bug Away Pants for women, bundled together — save versus buying separately. Chemical-free, lightweight noseeum-grade mesh with integrated foot cover.",
-    longDesc: `The Bug Away Combo Set for Women is the complete solution. Jacket and pants together, designed with a tailored fit, covering every inch from hood to toe — including the integrated foot cover that closes the ankle gap ticks rely on.\n\nThe full set weighs under 80g and packs into its own jacket pocket. You'll barely feel it on. Bugs definitely will.\n\nBoth pieces are made from the same noseeum-grade nylon mesh with openings smaller than 0.6mm — a physical barrier that ticks, mosquitoes, harvest mites and black flies simply cannot penetrate. No chemicals, no permethrin, no DEET. Just mesh.\n\nWear the jacket and pants together for complete 360° coverage, or mix and match with your existing outdoor clothing. Machine washable, breathable, reusable for years.\n\nBuying the set saves you compared to purchasing the items separately.`,
+    desc: "Jacket and pants together for women, sealed from hood to ankle with no gap to bite through. Lightweight No-See-Um-grade mesh, no DEET, no permethrin. Buying the set costs less than the two pieces apart.",
+    longDesc: `The Bug Away Combo Set for Women is full-body cover in one kit. Jacket and pants together, tailored to move with you, closing every inch from the sewn-on hood to the built-in foot cover that seals the ankle gap ticks slip through.\n\nThe whole set weighs under 80g and packs into its own jacket pocket. You'll barely feel it on. Bugs definitely will.\n\nBoth pieces are cut from the same No-See-Um-grade mesh, with openings smaller than 0.6mm. It is a physical barrier that ticks, mosquitoes and black flies cannot bite through. No permethrin, no DEET, nothing sprayed onto your skin. Just mesh.\n\nWear the jacket and pants together for full 360\u00b0 coverage, or layer either piece over the clothes you already own. Machine washable, breathable, and made to last for years of seasons.\n\nBought on their own, the two pieces cost more than the set. Buy them together and you save, then add three more sets and the fourth is free.`,
     features: [
       "Complete jacket + pants set — 360° coverage",
       "Tailored fit for women",
       "Integrated foot cover on pants — no ankle gap",
-      "Noseeum-grade mesh — < 0.6mm openings throughout",
+      "No-See-Um-grade mesh — < 0.6mm openings throughout",
       "Full set weighs under 80g",
       "Packs into jacket pocket",
       "Save vs buying separately",
@@ -283,6 +281,8 @@ Buying the set saves you compared to purchasing the items separately.`,
   },
   {
     id: "ba-kids-set",
+    benefit: "A physical barrier bugs can't bite through, made for kids. Sealed from the sewn-on hood to the ankle, so there's no gap to reach their skin — no DEET, no permethrin, nothing sprayed on your child.",
+    setCompare: SET_COMPARE,
     name: "Bug Away Kids Set",
     category: "KIDS",
     price: PRICE_SET.eur,
@@ -291,21 +291,13 @@ Buying the set saves you compared to purchasing the items separately.`,
     colors: COLORS,
     colorHex: COLOR_HEX,
     sizes: ["4-6Y", "6-8Y", "8-10Y", "10-12Y"],
-    desc: "Complete tick protection for kids. Jacket + pants set designed for safe outdoor play. Safe elastic at the hood (no drawstrings), integrated foot cover and extra pockets for nature treasures.",
-    longDesc: `Kids run through tall grass, tumble in leaves, and sit in the dirt — exactly where ticks wait. The Bug Away Kids Set keeps them protected without restricting a single moment of play.
-
-The jacket and pants are made from the same noseeum-grade mesh as our adult range — openings smaller than 0.6mm that physically block ticks, mosquitoes and harvest mites. The hood uses a safe elastic trim instead of drawstrings, designed specifically for children's safety standards.
-
-The pants include the same integrated foot cover as our adult version — one continuous piece of mesh from waistband to toe, no ankle gap, no separate parts to lose. The pockets are deep enough for the frogs, rocks and flowers that always end up in kids' hands on outdoor adventures.
-
-Chemical-free. Machine washable. Gentle on sensitive skin. Safe for kids of all ages.
-
-Lyme disease is not just an adult concern — children are particularly vulnerable due to time spent at ground level where ticks are most active. Bug Away gives parents one less thing to worry about.`,
+    desc: "Jacket and pants together for kids, sealed from hood to ankle with no gap to reach through. Lightweight No-See-Um-grade mesh, no DEET, no permethrin, nothing on your child's skin. The set costs less than the two pieces apart.",
+    longDesc: `Kids run through tall grass, tumble in leaves, and sit in the dirt, exactly where ticks wait. The Bug Away Kids Set keeps them covered from the sewn-on hood to the built-in foot cover that seals the ankle gap, without a single moment of play lost.\n\nThe whole set weighs next to nothing and packs into its own jacket pocket. Light enough that they'll forget they're wearing it, while it keeps bugs off their skin.\n\nBoth pieces are cut from the same No-See-Um-grade mesh as our adult range, with openings smaller than 0.6mm. It is a physical barrier that ticks, mosquitoes and black flies cannot bite through, and it works without any permethrin, DEET or spray touching your child's skin. Just mesh.\n\nThe hood uses a safe elastic trim instead of drawstrings, made for children's safety standards, and the pockets are deep enough for the frogs, rocks and flowers that always end up in kids' hands.\n\nBought on their own, the two pieces cost more than the set. Buy them together and you save, then add three more sets and the fourth is free.`,
     features: [
       "Complete jacket + pants set for kids",
       "Safe elastic hood trim — no drawstrings",
       "Integrated foot cover on pants — no ankle gap",
-      "Noseeum-grade mesh — openings < 0.6mm",
+      "No-See-Um-grade mesh — openings < 0.6mm",
       "Extra deep pockets for outdoor discoveries",
       "Gentle on sensitive skin",
       "Machine washable",
