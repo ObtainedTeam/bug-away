@@ -101,8 +101,8 @@ async function apiGet(pathname, attempt = 1) {
   });
 
   if (res.status === 429 || res.status >= 500) {
-    if (attempt >= 6) throw new Error(`${pathname} gaf ${res.status} na ${attempt} pogingen`);
-    const wait = Math.min(2 ** attempt * 400, 10000);
+    if (attempt >= 8) throw new Error(`${pathname} gaf ${res.status} na ${attempt} pogingen`);
+    const wait = Math.min(2 ** attempt * 400, 20000);
     log(`${res.status} op ${pathname}, retry over ${wait}ms`);
     await sleep(wait);
     return apiGet(pathname, attempt + 1);
@@ -325,7 +325,27 @@ async function main() {
   const articleTpl = await readFile(path.join(TEMPLATE_DIR, 'article.html'), 'utf8');
 
   log('artikellijst ophalen...');
-  const summaries = await fetchArticleList();
+  let summaries;
+  try {
+    summaries = await fetchArticleList();
+  } catch (err) {
+    // De blog-API (BLG) tijdelijk onbereikbaar (bijv. 429 na herhaalde deploys)
+    // mag de hele build niet breken. We hergebruiken de vorige blogdata als die
+    // bestaat, zodat de site en alle productpagina's gewoon live gaan.
+    log(`LET OP artikellijst ophalen mislukt: ${err.message}`);
+    const prevPath = path.join(OUT_DIR, 'blog-articles.json');
+    if (existsSync(prevPath)) {
+      log('Vorige blog-articles.json hergebruikt; blog blijft op laatste bekende data.');
+      // sitemap/llms opnieuw schrijven op basis van bestaande data zou een tweede
+      // fetch vergen; we laten de bestaande bestanden staan en stoppen hier netjes.
+      return;
+    }
+    log('Geen eerdere blogdata gevonden; door met lege blog.');
+    await writeFile(prevPath, '[]', 'utf8');
+    await writeSitemap([]);
+    await writeLlmsTxt([]);
+    return;
+  }
   log(`${summaries.length} artikelen gevonden`);
   if (summaries.length === 0) {
     await writeFile(path.join(OUT_DIR, 'blog-articles.json'), '[]', 'utf8');
