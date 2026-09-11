@@ -52,6 +52,10 @@ export default function ProductClothing({ onCartOpen }) {
   const reviewCount = productReviews.length || 48;
 
   const price = getPrice(product, isUS, isAU);
+  // Compare-at for sets = the two separate pieces bought apart (honest, = 2x single).
+  const comparePrice = product.setCompare
+    ? (isUS ? product.setCompare.usd : isAU ? product.setCompare.aud : product.setCompare.eur)
+    : (product.comparePrices ? getPrice({ ...product, prices: product.comparePrices }, isUS, isAU) : null);
 
   const handleAddToCart = () => {
     if (!selectedSize) { alert('Please select a size'); return; }
@@ -68,7 +72,18 @@ export default function ProductClothing({ onCartOpen }) {
     setLoading(false);
   };
 
-  const relatedProducts = products.filter(p => p.id !== product.id).slice(0, 4);
+  // Cross-sell: on a set page, lead with the OTHER sets (builds toward the family bundle),
+  // then fill up with remaining products. On non-set pages, keep the original behaviour.
+  const SET_IDS = ['ba-combo-women', 'ba-combo-men', 'ba-kids-set'];
+  const relatedProducts = (() => {
+    const others = products.filter(p => p.id !== product.id);
+    if (SET_IDS.includes(product.id)) {
+      const otherSets = others.filter(p => SET_IDS.includes(p.id));
+      const rest = others.filter(p => !SET_IDS.includes(p.id));
+      return [...otherSets, ...rest].slice(0, 4);
+    }
+    return others.slice(0, 4);
+  })();
 
   return (
     <div style={{ fontFamily: "'Archivo', sans-serif", color: '#1a1a1a' }}>
@@ -107,7 +122,12 @@ export default function ProductClothing({ onCartOpen }) {
         {/* PRODUCT INFO */}
         <div>
           <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: 1.5, color: c.sage, textTransform: 'uppercase', marginBottom: 8 }}>{product.category}</div>
-          <h1 style={{ fontFamily: 'Archivo, sans-serif', fontSize: isMobile ? 26 : 32, fontWeight: 900, lineHeight: 1.15, margin: '0 0 12px' }}>{product.name}</h1>
+          <h1 style={{ fontFamily: 'Archivo, sans-serif', fontSize: isMobile ? 26 : 32, fontWeight: 900, lineHeight: 1.15, margin: '0 0 10px' }}>{product.name}</h1>
+
+          {/* BENEFIT LINE */}
+          {product.benefit && (
+            <p style={{ fontSize: 15, color: '#2d3b33', lineHeight: 1.5, fontWeight: 600, margin: '0 0 14px' }}>{product.benefit}</p>
+          )}
 
           {/* RATING */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
@@ -116,20 +136,30 @@ export default function ProductClothing({ onCartOpen }) {
             <span style={{ fontSize: 13, color: '#999' }}>({reviewCount} reviews)</span>
           </div>
 
-          {/* PRICE — region-aware */}
-          <div style={{ fontSize: 32, fontWeight: 900, color: c.sageD, marginBottom: 20 }}>
-            {formatPrice(price, symbol)}
-            <span style={{ fontSize: 13, color: '#999', fontWeight: 400, marginLeft: 8 }}>Incl. VAT</span>
+          {/* PRICE — region-aware, with compare-at + saving on sets */}
+          <div style={{ marginBottom: 20 }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
+              {comparePrice && (
+                <span style={{ fontSize: 20, color: '#999', fontWeight: 600, textDecoration: 'line-through' }}>{formatPrice(comparePrice, symbol)}</span>
+              )}
+              <span style={{ fontSize: 32, fontWeight: 900, color: c.sageD }}>{formatPrice(price, symbol)}</span>
+              {comparePrice && (
+                <span style={{ fontSize: 14, fontWeight: 800, color: c.sage }}>You save {formatPrice(comparePrice - price, symbol)}</span>
+              )}
+              {!isUS && !isAU && (
+                <span style={{ fontSize: 13, color: '#999', fontWeight: 400 }}>Incl. VAT</span>
+              )}
+            </div>
           </div>
 
           {/* FAMILY BUNDLE DEAL — only on set products */}
           {FAMILY_BUNDLE_SET_IDS.includes(product.id) && (
             <div style={{ background: '#F0F5F2', border: '1px solid #d4e6da', borderRadius: 12, padding: '12px 16px', marginBottom: 20 }}>
               <div style={{ fontSize: 12, fontWeight: 800, color: c.sageD, letterSpacing: 0.5, marginBottom: 4 }}>
-                👨‍👩‍👧‍👦 FAMILY BUNDLE — BUY 4 SETS, GET 1 FREE
+                FAMILY BUNDLE — BUY 3 SETS, GET THE 4TH FREE
               </div>
               <div style={{ fontSize: 12, color: '#555', lineHeight: 1.5 }}>
-                Mix &amp; match men's, women's and kids' sets. The 4th set is free — applied automatically at checkout.
+                Mix &amp; match men's, women's and kids' sets. Add four and you only pay for three — the 4th is free, applied automatically at checkout.
               </div>
             </div>
           )}
@@ -346,8 +376,8 @@ export default function ProductClothing({ onCartOpen }) {
             { q: "Does it actually stop ticks?", a: "Yes. The mesh openings are smaller than 0.6mm. An adult deer tick is approximately 1-3mm and physically cannot pass through or bite through the weave. It's the same principle as a window screen, engineered into wearable clothing." },
             { q: "How do I wash it?", a: "Machine wash on cold, gentle cycle. Hang dry or tumble dry on low. No special detergent needed. The mesh maintains its integrity wash after wash with zero loss of protection, unlike permethrin-treated clothing that degrades after 5-6 washes." },
             { q: "How does it fit over my regular clothes?", a: "Bug Away is designed as an over-garment. You wear it right over your hiking clothes, fishing outfit, or gardening gear. The fit is slightly oversized by design so it floats over your base layer without restricting movement." },
-            { q: "How long does it last?", a: "Years. The noseeum-grade nylon mesh is durable and doesn't degrade with use or washing. There's no chemical treatment that wears off. As long as the mesh isn't torn, the protection is the same on day one as it is on day one thousand." },
-            { q: "What about mosquitoes and other insects?", a: "The mesh blocks any biting insect larger than 0.6mm. That includes mosquitoes, black flies, no-see-ums, harvest mites, gnats, and horse flies. If it bites, the mesh stops it." },
+            { q: "How long does it last?", a: "Years. The No-See-Um-grade nylon mesh is durable and doesn't degrade with use or washing. There's no chemical treatment that wears off. As long as the mesh isn't torn, the protection is the same on day one as it is on day one thousand." },
+            { q: "What about mosquitoes and other insects?", a: "The mesh blocks any biting insect larger than 0.6mm. That includes mosquitoes, black flies, no-see-ums, gnats, and horse flies. If it bites, the mesh stops it." },
             { q: "What if it doesn't work for me?", a: "We offer a 30-day money-back guarantee. If you get bitten through the mesh, we'll refund you in full. No questions asked." },
           ].map(({ q, a }, i) => (
             <details key={i} style={{ borderBottom: '1px solid #e8ede9', cursor: 'pointer' }}>
@@ -369,7 +399,7 @@ export default function ProductClothing({ onCartOpen }) {
             Watch Bug Away work in the wild
           </h2>
           <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 15, marginBottom: 32, maxWidth: 560, margin: '0 auto 32px' }}>
-            See how the noseeum-grade mesh physically blocks insects — ticks, mosquitoes and harvest mites — while remaining fully breathable.
+            See how the No-See-Um-grade mesh physically blocks insects — ticks and mosquitoes — while remaining fully breathable.
           </p>
           <video autoPlay muted loop playsInline style={{ width: '100%', borderRadius: 16, maxHeight: 480, objectFit: 'cover' }}>
             <source src="/videos/see-in-action.mp4" type="video/mp4" />
@@ -383,13 +413,13 @@ export default function ProductClothing({ onCartOpen }) {
           <div style={{ ...LBL, marginBottom: 8 }}>PROOF IT WORKS</div>
           <h2 style={{ ...H2, marginBottom: 16 }}>The mesh stops insects in their tracks</h2>
           <p style={{ color: '#555', fontSize: 15, maxWidth: 600, marginBottom: 40 }}>
-            Openings smaller than 0.6mm. These photos show real insects unable to pass through the fabric.
+            Openings smaller than 0.6mm. Real ticks and mosquitoes, stopped at the surface of the actual Bug Away mesh.
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 20 }}>
             {[
-              { img: '/images/proof-mosquito.jpg', label: 'Mosquito blocked by mesh' },
-              { img: '/images/proof-ticks.jpg', label: 'Tick unable to penetrate' },
-              { img: '/images/proof-spider.jpg', label: 'Spider stopped at surface' },
+              { img: '/images/proof-ticks.jpg', label: 'Tick stopped at the mesh surface' },
+              { img: '/images/proof-mosquito.jpg', label: 'Mosquito unable to bite through' },
+              { img: '/images/proof-ticks.jpg', label: 'No gap fine enough to pass' },
             ].map(({ img, label }) => (
               <div key={label} style={{ borderRadius: 14, overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.08)' }}>
                 <img src={img} alt={label} style={{ width: '100%', height: isMobile ? 180 : 240, objectFit: 'cover', display: 'block' }} />

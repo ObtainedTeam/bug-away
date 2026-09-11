@@ -3,7 +3,7 @@ import { c, useIsMobile, BTN, H2, LBL } from "../theme";
 
 const STEPS = [
   { num: "01", title: "Wear it as a base layer", desc: "Simply put on the Bug Away mesh suit underneath your regular clothes. It weighs less than 80g for the full set — you'll barely notice it's there." },
-  { num: "02", title: "Ultra-fine physical barrier", desc: "The noseeum-grade mesh has openings smaller than 0.6mm — fine enough to block ticks, mosquitoes, harvest mites and other insects while remaining fully breathable." },
+  { num: "02", title: "Ultra-fine physical barrier", desc: "The No-See-Um-grade mesh has openings smaller than 0.6mm — fine enough to block ticks, mosquitoes and other insects while remaining fully breathable." },
   { num: "03", title: "Sealed at every entry point", desc: "The pant leg and foot cover are one single continuous piece of mesh. No gap at the ankle, no elastic cuff — ticks have no entry point." },
   { num: "04", title: "Move freely all day", desc: "Bug Away is lightweight, breathable and moisture-wicking. Wear it hiking, gardening or camping — no heat buildup, no restrictions, no sprays needed." },
 ];
@@ -15,7 +15,7 @@ const PROOF = [
 ];
 
 const FEATURES = [
-  { icon: "🕷️", title: "Noseeum-grade mesh", desc: "Openings < 0.6mm — blocks ticks, harvest mites, mosquitoes and gnats." },
+  { icon: "🕷️", title: "No-See-Um-grade mesh", desc: "Openings < 0.6mm — blocks ticks, mosquitoes and gnats." },
   { icon: "🌬️", title: "Fully breathable", desc: "Air circulates freely through the mesh. No sweating, no overheating." },
   { icon: "⚗️", title: "Zero chemicals", desc: "No permethrin, no DEET, no insecticide of any kind. Safe for kids, pets and the planet." },
   { icon: "🦶", title: "Integrated foot cover", desc: "The pant leg flows directly into the foot — one continuous piece with no gap." },
@@ -77,7 +77,7 @@ export default function HowItWorks() {
           <div style={{ background: c.sage, borderRadius: 16, padding: isMobile ? "24px 20px" : "32px 40px", display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: "center", gap: 24 }}>
             <div style={{ fontFamily: "Archivo, sans-serif", fontWeight: 900, fontSize: isMobile ? 36 : 52, color: "#fff", flexShrink: 0 }}>{"< 0.6mm"}</div>
             <div style={{ color: "rgba(255,255,255,0.9)", fontSize: 15, lineHeight: 1.65 }}>
-              That's the maximum opening size of Bug Away's noseeum mesh. The average tick nymph is 1.5–2mm wide — it physically cannot fit through the fabric, even when it tries to crawl.
+              That's the maximum opening size of Bug Away's No-See-Um mesh. The average tick nymph is 1.5–2mm wide — it physically cannot fit through the fabric, even when it tries to crawl.
             </div>
           </div>
         </div>

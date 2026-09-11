@@ -5,7 +5,7 @@ import { c, useIsMobile, H2, LBL, BTN } from "../theme";
 const FAQS = [
   {
     q: "How does Bug Away actually block ticks?",
-    a: "Bug Away uses noseeum-grade nylon mesh with openings smaller than 0.6mm. Ticks and other insects physically cannot fit through the fabric — it creates a complete barrier between your skin and the environment. No chemicals needed."
+    a: "Bug Away uses No-See-Um-grade nylon mesh with openings smaller than 0.6mm. Ticks and other insects physically cannot fit through the fabric — it creates a complete barrier between your skin and the environment. No chemicals needed."
   },
   {
     q: "Is it comfortable to wear underneath regular clothes?",
@@ -25,7 +25,7 @@ const FAQS = [
   },
   {
     q: "Does it work against mosquitoes as well?",
-    a: "Yes. The mesh blocks mosquitoes, harvest mites (chiggers), gnats and other small insects in addition to ticks. It was originally developed as anti-mosquito netting, so mosquito protection is excellent."
+    a: "Yes. The mesh blocks mosquitoes, gnats and other small insects in addition to ticks. It was originally developed as anti-mosquito netting, so mosquito protection is excellent."
   },
   {
     q: "Is there a return policy?",

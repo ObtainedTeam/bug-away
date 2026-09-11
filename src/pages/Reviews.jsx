@@ -59,7 +59,7 @@ export default function Reviews() {
 
           <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 14, marginTop: 24 }}>
             {[
-              ["🕸️", "Physical protection", "Ultra-fine noseeum mesh — a barrier ticks and insects simply can't get through. No sprays, no chemicals."],
+              ["🕸️", "Physical protection", "Ultra-fine No-See-Um mesh — a barrier ticks and insects simply can't get through. No sprays, no chemicals."],
               ["👨‍👩‍👧‍👦", "For the whole family", "Men's, women's and kids' sets — buy 4, and the 4th is free, applied automatically at checkout."],
               ["🚚", "Easy from day one", "Fast shipping from our US warehouse and free shipping on orders over $150."],
             ].map(([icon, t, d], i) => (

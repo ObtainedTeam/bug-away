@@ -338,7 +338,7 @@ export default function Home() {
           <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4,1fr)", gap: 28 }}>
             {[
               { step: "01", title: "Put it on", desc: "Slip on the lightweight mesh suit as a base layer under your regular clothes." },
-              { step: "02", title: "Physical barrier", desc: "The ultra-fine noseeum mesh creates a physical barrier — ticks and insects simply can't get through." },
+              { step: "02", title: "Physical barrier", desc: "The ultra-fine No-See-Um mesh creates a physical barrier — ticks and insects simply can't get through." },
               { step: "03", title: "Sealed at the foot", desc: "The pant leg and foot cover are one continuous piece — no gap, no entry point at the ankle." },
               { step: "04", title: "Enjoy nature freely", desc: "Hike, garden, camp — no sprays, no worry, just comfort and protection all day." },
             ].map(({ step, title, desc }) => (

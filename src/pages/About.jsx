@@ -10,7 +10,7 @@ const VALUES = [
   {
     icon: "🔬",
     title: "Science-backed",
-    desc: "Noseeum mesh technology used in medical and outdoor applications worldwide.",
+    desc: "No-See-Um mesh technology used in medical and outdoor applications worldwide.",
   },
   {
     icon: "♻️",
@@ -131,7 +131,7 @@ export default function About() {
                 margin: 0,
               }}
             >
-              We found noseeum mesh — the same ultra-fine fabric used in
+              We found No-See-Um mesh — the same ultra-fine fabric used in
               medical-grade insect barriers — and designed a lightweight base
               layer around it. Bug Away was born.
             </p>
@@ -311,7 +311,7 @@ export default function About() {
                 marginBottom: 16,
               }}
             >
-              Every Bug Away garment is made from certified noseeum-grade mesh
+              Every Bug Away garment is made from certified No-See-Um-grade mesh
               with durable construction designed to last through hundreds of
               washes and outdoor seasons.
             </p>
