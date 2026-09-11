@@ -273,8 +273,8 @@ The tailored fit is designed specifically for women's proportions: a clean silho
     images: [
       "/images/Female _ White mesh _ mountain solo.png",
       "/images/Female _ White Mesh _ Front 1_1.jpg",
-      "/images/combo-lifestyle-couple-forest-white.jpg",
-      "/images/jacket-women-lifestyle-gardening.jpg",
+      "/images/Female _ black mesh _ walking 1_1.jpg",
+      "/images/Female _ black mesh _ hoodie on front 1_1.jpg",
       "/images/detail-collage-white.jpg",
       ...STD,
     ],
