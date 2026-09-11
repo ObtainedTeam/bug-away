@@ -291,7 +291,7 @@ export default function ProductClothing({ onCartOpen }) {
 
           {/* PAYMENT METHODS */}
           <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 12, flexWrap: 'wrap' }}>
-            {['VISA', 'Mastercard', 'PayPal', 'Klarna', 'iDEAL'].map(method => (
+            {['VISA', 'Mastercard', 'PayPal', 'Klarna', 'Wero'].map(method => (
               <span key={method} style={{ fontSize: 11, color: '#999', background: '#f5f5f5', borderRadius: 4, padding: '3px 8px', fontWeight: 600, letterSpacing: 0.3 }}>{method}</span>
             ))}
           </div>
