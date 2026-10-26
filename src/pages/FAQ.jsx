@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { pic } from '../img';
 import { Link } from "react-router-dom";
 import { c, useIsMobile, H2, LBL, BTN } from "../theme";
 
@@ -13,7 +14,7 @@ const FAQS = [
   },
   {
     q: "What about the foot? Does the pants leg stay closed?",
-    a: "The pants leg and foot cover are one continuous piece of mesh — sewn together permanently. There is no gap, no elastic band, no separate sock. The mesh flows uninterrupted from the waistband down to the toe."
+    a: "The foot cover is sewn onto the pant leg at the ankle, permanently. There is no gap, no elastic band, no separate sock. The mesh flows uninterrupted from the waistband down to the toe."
   },
   {
     q: "Can children wear Bug Away?",
@@ -50,12 +51,12 @@ export default function FAQ() {
       {/* ── HERO ── */}
       <section style={{
         position: "relative", minHeight: isMobile ? 240 : 300,
-        background: `linear-gradient(to right, rgba(30,50,40,.75) 60%, rgba(30,50,40,.35) 100%), url('/images/combo-lifestyle-couple-forest-white.jpg') center/cover no-repeat`,
+        background: `linear-gradient(to right, rgba(30,50,40,.75) 60%, rgba(30,50,40,.35) 100%), url('/img/combo-lifestyle-couple-forest-white.webp') center/cover no-repeat`,
         display: "flex", alignItems: "center",
       }}>
         <div style={{ maxWidth: 700, padding: isMobile ? "60px 24px" : "80px 64px", color: "#fff" }}>
           <div style={{ ...LBL, color: "rgba(255,255,255,0.7)", marginBottom: 12 }}>SUPPORT</div>
-          <h1 style={{ fontFamily: "Archivo, sans-serif", fontSize: isMobile ? 32 : 48, fontWeight: 900, lineHeight: 1.15, margin: 0 }}>
+          <h1 style={{ fontFamily: "'Archivo Variable', sans-serif", fontSize: isMobile ? 32 : 48, fontWeight: 900, lineHeight: 1.15, margin: 0 }}>
             Frequently asked<br /><span style={{ color: "#a8d5b5" }}>questions</span>
           </h1>
         </div>
@@ -99,7 +100,7 @@ export default function FAQ() {
               { src: "/images/size-guide-kids.png", alt: "Kids size chart", label: "Kids size chart" },
             ].map(({ src, alt, label }) => (
               <div key={label} style={{ background: "#fff", borderRadius: 14, overflow: "hidden", boxShadow: "0 2px 10px rgba(0,0,0,0.06)" }}>
-                <img src={src} alt={alt} style={{ width: "100%", display: "block" }}
+                <img {...pic(src, "(max-width: 767px) 50vw, 300px")} alt={alt} style={{ width: "100%", display: "block" }}
                   onError={e => e.target.style.display = "none"}
                 />
                 <div style={{ padding: "12px 16px", fontSize: 13, fontWeight: 600, color: c.sageD }}>{label}</div>
@@ -115,7 +116,7 @@ export default function FAQ() {
       {/* ── CONTACT CTA ── */}
       <section style={{ background: "#1a2e24", padding: isMobile ? "48px 20px" : "64px 40px", textAlign: "center" }}>
         <div style={{ maxWidth: 520, margin: "0 auto" }}>
-          <h2 style={{ fontFamily: "Archivo, sans-serif", fontWeight: 900, fontSize: isMobile ? 26 : 32, color: "#fff", marginBottom: 12 }}>
+          <h2 style={{ fontFamily: "'Archivo Variable', sans-serif", fontWeight: 900, fontSize: isMobile ? 26 : 32, color: "#fff", marginBottom: 12 }}>
             Still have questions?
           </h2>
           <p style={{ color: "rgba(255,255,255,0.8)", fontSize: 15, marginBottom: 28 }}>

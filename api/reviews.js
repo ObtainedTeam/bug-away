@@ -13,7 +13,7 @@ export default async function handler(req, res) {
   if (!token) return res.status(200).json({ reviews: [], count: 0, avg: 0 });
 
   try {
-    const r = await fetch(`https://judge.me/api/v1/reviews?api_token=${token}&shop_domain=${SHOP_DOMAIN}&per_page=24`);
+    const r = await fetch(`https://judge.me/api/v1/reviews?api_token=${token}&shop_domain=${SHOP_DOMAIN}&per_page=100`);
     if (!r.ok) throw new Error('judge.me ' + r.status);
     const data = await r.json();
     const reviews = (data.reviews || [])
@@ -25,6 +25,8 @@ export default async function handler(req, res) {
         name: (x.reviewer && x.reviewer.name) || 'Anonymous',
         date: (x.created_at || '').slice(0, 10),
         verified: !!x.verified && x.verified !== 'nothing',
+        product: x.product_handle || '',
+        productTitle: x.product_title || '',
       }));
     const count = reviews.length;
     const avg = count ? Math.round((reviews.reduce((s, x) => s + x.rating, 0) / count) * 10) / 10 : 0;

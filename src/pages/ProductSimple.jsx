@@ -4,7 +4,8 @@ import { c, useIsMobile, BTN, BTNO, H2, LBL } from '../theme';
 import { products } from '../data';
 import { buyNow, isPurchasable } from '../shopify';
 import { CartContext } from '../components/Cart';
-import { useCurrency, formatPrice, getPrice } from '../currency.jsx';
+import { pic } from '../img';
+import { useCurrency, formatPrice, getPrice, getCompare } from '../currency.jsx';
 
 /**
  * Productpagina voor losse accessoires (simple: true, geen maat/kleur).
@@ -16,7 +17,7 @@ import { useCurrency, formatPrice, getPrice } from '../currency.jsx';
 export default function ProductSimple({ onCartOpen }) {
   const { id } = useParams();
   const isMobile = useIsMobile();
-  const { symbol, isUS, isAU } = useCurrency();
+  const { symbol, region } = useCurrency();
   const product = products.find((p) => p.id === id) || products[0];
 
   const [qty, setQty] = useState(1);
@@ -26,8 +27,8 @@ export default function ProductSimple({ onCartOpen }) {
 
   useEffect(() => { setMainImg(0); setQty(1); }, [id]);
 
-  const price = getPrice(product, isUS, isAU);
-  const compare = product.comparePrices ? ((isAU && product.comparePrices.aud != null) ? product.comparePrices.aud : (isUS ? product.comparePrices.usd : product.comparePrices.eur)) : null;
+  const price = getPrice(product, region);
+  const compare = getCompare(product, region);
   const savings = compare ? compare - price : 0;
   const purchasable = isPurchasable(product.id);
 
@@ -54,7 +55,7 @@ export default function ProductSimple({ onCartOpen }) {
   const thumbs = product.images.slice(0, 6);
 
   return (
-    <div style={{ fontFamily: "'Archivo', sans-serif", color: '#1a1a1a' }}>
+    <div style={{ fontFamily: "'Archivo Variable', sans-serif", color: '#1a1a1a' }}>
       {/* BREADCRUMB */}
       <div style={{ padding: isMobile ? '12px 16px' : '12px 40px', fontSize: 12, color: '#999', borderBottom: '1px solid #e8ede9' }}>
         <Link to="/" style={{ color: '#999', textDecoration: 'none' }}>Home</Link>
@@ -65,12 +66,12 @@ export default function ProductSimple({ onCartOpen }) {
       </div>
 
       {/* MAIN */}
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '24px 16px' : '40px 40px', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 24 : 48 }}>
+      <div className="pd-top" style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '24px 16px' : '40px 40px', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 24 : 48 }}>
 
-        {/* GALLERY */}
-        <div>
+        {/* GALLERY (sticky op desktop) */}
+        <div className="pd-sticky">
           <div style={{ borderRadius: 16, overflow: 'hidden', background: product.imageFit === 'contain' ? '#fff' : '#f7f9f8', aspectRatio: '1', marginBottom: 12 }}>
-            <img src={product.images[mainImg]} alt={product.name}
+            <img {...pic(product.images[mainImg], '(max-width: 767px) 100vw, 560px')} alt={product.name}
               style={{ width: '100%', height: '100%', objectFit: product.imageFit || 'cover', objectPosition: 'center' }}
               onError={(e) => (e.target.style.display = 'none')} />
           </div>
@@ -81,7 +82,7 @@ export default function ProductSimple({ onCartOpen }) {
                   borderRadius: 8, overflow: 'hidden', aspectRatio: '1', cursor: 'pointer',
                   border: mainImg === i ? `2px solid ${c.sageD}` : '2px solid transparent', background: '#f7f9f8',
                 }}>
-                  <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: product.imageFit || 'cover', objectPosition: 'center' }}
+                  <img {...pic(img, '110px')} alt="" loading="lazy" style={{ width: '100%', height: '100%', objectFit: product.imageFit || 'cover', objectPosition: 'center' }}
                     onError={(e) => (e.target.style.display = 'none')} />
                 </div>
               ))}
@@ -92,7 +93,7 @@ export default function ProductSimple({ onCartOpen }) {
         {/* INFO */}
         <div>
           <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: 1.5, color: c.sage, textTransform: 'uppercase', marginBottom: 8 }}>{product.category}</div>
-          <h1 style={{ fontFamily: 'Archivo, sans-serif', fontSize: isMobile ? 26 : 32, fontWeight: 900, lineHeight: 1.15, margin: '0 0 14px' }}>{product.name}</h1>
+          <h1 style={{ fontFamily: "'Archivo Variable', sans-serif", fontSize: isMobile ? 26 : 32, fontWeight: 900, lineHeight: 1.15, margin: '0 0 14px' }}>{product.name}</h1>
 
           {/* PRICE */}
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, flexWrap: 'wrap', marginBottom: 8 }}>
@@ -106,7 +107,7 @@ export default function ProductSimple({ onCartOpen }) {
               </span>
             )}
           </div>
-          <div style={{ fontSize: 13, color: '#999', marginBottom: 20 }}>Incl. VAT</div>
+          <div style={{ fontSize: 13, color: '#999', marginBottom: 20 }}>Taxes and shipping calculated at checkout</div>
 
           {/* SHORT DESC */}
           <p style={{ fontSize: 14, color: '#555', lineHeight: 1.7, marginBottom: 24 }}>{product.desc}</p>
@@ -159,7 +160,7 @@ export default function ProductSimple({ onCartOpen }) {
 
           {/* PAYMENT METHODS */}
           <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 12, flexWrap: 'wrap' }}>
-            {['VISA', 'Mastercard', 'PayPal', 'Klarna', 'iDEAL'].map((m) => (
+            {['Visa', 'Mastercard', 'PayPal', 'Shop Pay', 'Google Pay', 'Klarna'].map((m) => (
               <span key={m} style={{ fontSize: 11, color: '#999', background: '#f5f5f5', borderRadius: 4, padding: '3px 8px', fontWeight: 600, letterSpacing: 0.3 }}>{m}</span>
             ))}
           </div>
@@ -253,14 +254,14 @@ export default function ProductSimple({ onCartOpen }) {
           <p style={{ color: '#555', fontSize: 15, marginBottom: 32 }}>Bug Away accessories work best alongside the mesh you wear.</p>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4,1fr)', gap: 20 }}>
             {relatedSorted.map((p) => {
-              const relPrice = getPrice(p, isUS, isAU);
+              const relPrice = getPrice(p, region);
               return (
                 <Link key={p.id} to={`/product/${p.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                   <div style={{ background: '#F7F9F8', borderRadius: 14, overflow: 'hidden', transition: 'transform .2s' }}
                     onMouseEnter={(e) => (e.currentTarget.style.transform = 'translateY(-4px)')}
                     onMouseLeave={(e) => (e.currentTarget.style.transform = '')}>
                     <div style={{ aspectRatio: '4 / 5', overflow: 'hidden', background: p.imageFit === 'contain' ? '#fff' : 'transparent' }}>
-                      <img src={p.images[0]} alt={p.name} style={{ width: '100%', height: '100%', objectFit: p.imageFit || 'cover', objectPosition: 'center' }}
+                      <img {...pic(p.images[0], "(max-width: 767px) 50vw, 300px")} alt={p.name} style={{ width: '100%', height: '100%', objectFit: p.imageFit || 'cover', objectPosition: 'center' }}
                         onError={(e) => (e.target.style.display = 'none')} />
                     </div>
                     <div style={{ padding: '14px 16px' }}>

@@ -28,6 +28,7 @@ import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { products } from '../src/data.js';
 import { activities } from '../src/data/activities.js';
+import { IMAGES } from '../src/data/images.js';
 
 const OUT_DIR = path.resolve('dist');
 const SSR_ENTRY = path.resolve('dist-ssr/entry-server.js');
@@ -63,10 +64,10 @@ const META = {
     desc: 'An honest comparison of chemical-free mesh against permethrin clothing, DEET sprays and regular clothing, including what Bug Away does not do.',
   },
   '/about': { title: 'About Bug Away | Insecticide-Free Insect Protection', desc: 'Who Bug Away is and why the brand blocks biting insects with a weave instead of a chemical.' },
-  '/reviews': { title: 'Reviews | Verified Customer Reviews | Bug Away', desc: 'Verified Bug Away customer reviews, collected independently through Trustpilot. Real trails, real reviews — unfiltered.' },
+  '/reviews': { title: 'Reviews | Verified Customer Reviews | Bug Away', desc: 'Verified Bug Away customer reviews, collected through Judge.me from real orders.' },
   '/faq': { title: 'FAQ | Sizing, Care, Shipping & Returns | Bug Away', desc: 'Answers on sizing, washing, shipping to the US and Canada, returns and how the mesh works.' },
   '/pets': { title: 'Tick Protection for Dogs — Coming Soon | Bug Away', desc: 'Dogs carry ticks straight back into the house. Sign up to hear when Bug Away pet protection launches.' },
-  '/accessories': { title: 'Accessories — Coming Soon | Bug Away', desc: 'Head, neck, hand and ankle coverage for the gaps. Sign up to hear when Bug Away accessories launch.' },
+  '/accessories': { title: 'Accessories | Tick Removal Kit, Pouch & Repellent | Bug Away', desc: 'A tick removal kit for people and pets, a storage pouch for your set and a DEET-free repellent for exposed skin.' },
   '/blog': {
     title: 'Blog | Tick Awareness & Insect Protection | Bug Away',
     desc: 'Field-tested articles on ticks, Lyme disease, insect protection and outdoor gear for the US and Canada. New pieces every week.',
@@ -76,14 +77,31 @@ const META = {
   '/terms': { title: 'Terms of Service | Bug Away', desc: 'The terms that apply to orders placed with Bug Away.' },
 };
 
+const webpOf = (src) => (IMAGES[src] ? `/img/${IMAGES[src][0]}.webp` : src);
 for (const a of activities) {
-  META[`/${a.slug}`] = { title: a.metaTitle, desc: a.metaDescription };
+  META[`/${a.slug}`] = { title: a.metaTitle, desc: a.metaDescription, img: webpOf(a.hero) };
 }
+// Gestructureerde data: organisatie op de homepage, Product + Offer per product.
+META['/'].ld = {
+  '@context': 'https://schema.org', '@type': 'Organization', name: 'Bug Away',
+  url: SITE, email: 'info@bugawaygear.com', logo: `${SITE}/favicon.svg`,
+};
 for (const p of products) {
   META[`/product/${p.id}`] = {
     // Productnamen beginnen al met "Bug Away", dus geen merksuffix erachter.
     title: `${p.name} | Chemical-Free Tick Protection`,
     desc: String(p.desc || '').replace(/\s+/g, ' ').trim().slice(0, 158),
+    img: webpOf(p.images[0]),
+    ld: {
+      '@context': 'https://schema.org', '@type': 'Product', name: p.name,
+      description: String(p.desc || '').replace(/\s+/g, ' ').trim(),
+      image: p.images.slice(0, 4).map((i) => `${SITE}${webpOf(i)}`),
+      brand: { '@type': 'Brand', name: 'Bug Away' },
+      offers: {
+        '@type': 'Offer', priceCurrency: 'USD', price: (p.prices && p.prices.usd) || p.price,
+        availability: 'https://schema.org/InStock', url: `${SITE}/product/${p.id}`,
+      },
+    },
   };
 }
 
@@ -112,6 +130,12 @@ function applyMeta(html, route) {
     `<meta property="og:url" content="${esc(url)}">`,
     `<meta property="og:site_name" content="Bug Away">`,
     `<meta name="twitter:card" content="summary_large_image">`,
+    `<meta property="og:image" content="${esc(SITE + (m.img || '/img/hero-poster.webp'))}">`,
+    ...(route === '/' ? [
+      '<link rel="preload" as="image" href="/img/hero-poster-portrait.webp" media="(max-width: 759px)" fetchpriority="high">',
+      '<link rel="preload" as="image" href="/img/hero-poster.webp" media="(min-width: 760px)" fetchpriority="high">',
+    ] : []),
+    ...(m.ld ? [`<script type="application/ld+json">${JSON.stringify(m.ld).replace(/</g, '\\u003c')}</script>`] : []),
   ].join('\n    ');
 
   return out.replace('</head>', `    ${tags}\n  </head>`);
@@ -149,9 +173,11 @@ function applyMeta(html, route) {
  *
  * Crawlers krijgen wel de goede titel, en dat was het hele punt.
  */
-const HEAD_ONLY = ['/', '/shop', '/blog'];
+const HEAD_ONLY = ['/blog'];
 
 const ROUTES = [
+  '/',
+  '/shop',
   '/how-it-works',
   '/why-choose-us',
   '/about',

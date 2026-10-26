@@ -1,6 +1,24 @@
 {
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/$1" },
-    { "source": "/(.*)", "destination": "/app.html" }
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/app.html"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/product/ba-mosquito-lamp",
+      "destination": "/accessories",
+      "permanent": true
+    },
+    {
+      "source": "/shop/:cat",
+      "destination": "/shop?cat=:cat",
+      "permanent": false
+    }
   ]
 }

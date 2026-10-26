@@ -76,7 +76,7 @@ export default function ExitPopup() {
             cursor: 'pointer', fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>✕</button>
           <div style={{ fontSize: 28, marginBottom: 8 }}>🦟</div>
-          <div style={{ fontFamily: 'Archivo, sans-serif', fontSize: 22, fontWeight: 900, lineHeight: 1.2, marginBottom: 8 }}>
+          <div style={{ fontFamily: "'Archivo Variable', sans-serif", fontSize: 22, fontWeight: 900, lineHeight: 1.2, marginBottom: 8 }}>
             Wait — before you go
           </div>
           <p style={{ fontSize: 14, opacity: 0.85, lineHeight: 1.5, margin: 0 }}>

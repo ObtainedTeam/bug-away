@@ -19,10 +19,7 @@ const SET_COMPARE  = { usd: 89.98, eur: 77.98, aud: 144 };
 // Accessoires (losse producten zonder maat/kleur). COMPARE = doorstreepprijs.
 const PRICE_TICK_KIT   = { usd: 14.99, eur: 12.99, aud: 24 };
 const COMPARE_TICK_KIT = { usd: 24.99, eur: 21.99, aud: 40 };
-const PRICE_POUCH      = { usd: 9.50,  eur: 7.99,  aud: 16 };
-const COMPARE_POUCH    = { usd: 12.99, eur: 10.99, aud: 21 };
-const PRICE_LAMP       = { usd: 59.99, eur: 51.99, aud: 96 };
-const COMPARE_LAMP     = { usd: 99.00, eur: 85.99, aud: 159 };
+const PRICE_POUCH      = { usd: 9.99,  eur: 8.49,  aud: 16 };
 const PRICE_SPRAY      = { usd: 14.99, eur: 12.99, aud: 24 };
 
 // Product colors: Arctic White and Black.
@@ -88,10 +85,10 @@ Wear it as a base layer under your regular jacket, or on its own on warm days. I
     colors: COLORS,
     colorHex: COLOR_HEX,
     sizes: ["XS", "S", "M", "L", "XL", "XXL", "XXXL"],
-    desc: "Tick-protection pants for men with integrated foot cover. The pant leg and foot are one continuous piece of mesh — no gap at the ankle, no entry point for ticks. Lightweight, breathable and chemical-free.",
+    desc: "Tick-protection pants for men with integrated foot cover. The foot cover is sewn on at the ankle, so there is no opening for ticks and nothing to tuck in. Lightweight, breathable and chemical-free.",
     longDesc: `Ticks don't announce themselves. They wait in tall grass, brush their way onto your ankle and crawl upward before you ever notice. The Bug Away Pants close that gap — literally.
 
-The pant leg and foot cover are one single, continuous piece of No-See-Um-grade mesh. There is no elastic band at the ankle, no separate sock to tuck in, no gap for insects to exploit. From waistband to toe, the mesh flows uninterrupted — the way proper tick protection should work.
+The foot cover is sewn onto the pant leg at the ankle, so the mesh closes all the way around your foot. There is no opening at the ankle, no separate sock to tuck in and no gap for insects to exploit. From waistband to toe you are covered.
 
 Worn as a base layer under your regular trousers or directly as lightweight outdoor pants, they're virtually weightless and fully breathable. The elastic waistband sits comfortably, and the mesh allows air to circulate freely even on warm days.
 
@@ -99,7 +96,7 @@ No chemicals. No permethrin runoff into the environment. No DEET on your skin. J
 
 Pair with the Bug Away Jacket for complete head-to-toe protection.`,
     features: [
-      "Integrated foot cover — one continuous piece of mesh, no gap at the ankle",
+      "Sewn-in foot cover — no opening at the ankle, nothing to tuck",
       "No-See-Um-grade mesh — openings < 0.6mm",
       "Elastic waistband — comfortable all-day wear",
       "Weight: < 35g per pair",
@@ -178,8 +175,8 @@ Breathable enough for summer hikes, light enough to pack into a jacket pocket. P
     colors: COLORS,
     colorHex: COLOR_HEX,
     sizes: ["XS", "S", "M", "L", "XL", "XXL", "XXXL"],
-    desc: "Tick-protection pants for women with integrated foot cover. One continuous piece of mesh from waist to toe — no gap, no entry point. Tailored fit, lightweight and breathable.",
-    longDesc: `The Bug Away Women's Pants solve the single biggest weakness in tick protection: the ankle gap. Where most solutions stop — at a sock, a cuff, an elastic band — Bug Away continues. The pant leg flows directly into the foot cover, one uninterrupted piece of No-See-Um-grade mesh from waist to toe.
+    desc: "Tick-protection pants for women with integrated foot cover. The foot cover is sewn on at the ankle, so there is no opening and nothing to tuck. Tailored fit, lightweight and breathable.",
+    longDesc: `The Bug Away Women's Pants solve the single biggest weakness in tick protection: the ankle gap. Where most solutions stop — at a sock, a cuff, an elastic band — Bug Away continues. The foot cover is sewn onto the pant leg at the ankle, so the No-See-Um-grade mesh closes all the way from waist to toe.
 
 No tucking your trousers into your socks. No separate foot covers to keep track of. No weak point for ticks to exploit.
 
@@ -187,7 +184,7 @@ The tailored fit is designed specifically for women's proportions: a clean silho
 
 0.6mm mesh openings. 100% chemical-free. Under 35g per pair. Machine washable.`,
     features: [
-      "Integrated foot cover — one continuous mesh piece, no ankle gap",
+      "Sewn-in foot cover — no opening at the ankle, nothing to tuck",
       "Tailored fit for women's proportions",
       "No-See-Um-grade mesh — openings < 0.6mm",
       "Comfortable elastic waistband",
@@ -222,7 +219,7 @@ The tailored fit is designed specifically for women's proportions: a clean silho
     longDesc: `The Bug Away Combo Set for Men is full-body cover in one kit. Jacket and pants together, cut to move with you, closing every inch from the sewn-on hood to the built-in foot cover that seals the ankle gap ticks slip through.\n\nThe whole set weighs under 80g and packs into its own jacket pocket. You'll barely feel it on. Bugs definitely will.\n\nBoth pieces are cut from the same No-See-Um-grade mesh, with openings smaller than 0.6mm. It is a physical barrier that ticks, mosquitoes and black flies cannot bite through. No permethrin, no DEET, nothing sprayed onto your skin. Just mesh.\n\nWear the jacket and pants together for full 360\u00b0 coverage, or layer either piece over the clothes you already own. Machine washable, breathable, and made to last for years of seasons.\n\nBought on their own, the two pieces cost more than the set. Buy them together and you save, then add three more sets and the fourth is free.`,
     features: [
       "Complete jacket + pants set — 360° coverage",
-      "Integrated foot cover on pants — no ankle gap",
+      "Sewn-in foot cover on the pants — no opening at the ankle",
       "No-See-Um-grade mesh — < 0.6mm openings throughout",
       "Full set weighs under 80g",
       "Packs into jacket pocket",
@@ -260,7 +257,7 @@ The tailored fit is designed specifically for women's proportions: a clean silho
     features: [
       "Complete jacket + pants set — 360° coverage",
       "Tailored fit for women",
-      "Integrated foot cover on pants — no ankle gap",
+      "Sewn-in foot cover on the pants — no opening at the ankle",
       "No-See-Um-grade mesh — < 0.6mm openings throughout",
       "Full set weighs under 80g",
       "Packs into jacket pocket",
@@ -296,7 +293,7 @@ The tailored fit is designed specifically for women's proportions: a clean silho
     features: [
       "Complete jacket + pants set for kids",
       "Safe elastic hood trim — no drawstrings",
-      "Integrated foot cover on pants — no ankle gap",
+      "Sewn-in foot cover on the pants — no opening at the ankle",
       "No-See-Um-grade mesh — openings < 0.6mm",
       "Extra deep pockets for outdoor discoveries",
       "Gentle on sensitive skin",
@@ -372,7 +369,6 @@ Keep one where the dog gets checked after every walk, and one wherever you head 
     simple: true,
     price: PRICE_POUCH.eur,
     prices: PRICE_POUCH,
-    comparePrices: COMPARE_POUCH,
     badge: "New",
     desc: "A sturdy drawstring pouch made to hold your complete Bug Away set. Pack it small, clip it to your bag, and your protection is always within reach — at the trailhead, the campsite or the bottom of your daypack.",
     longDesc: `Your Bug Away set only protects you when it's actually with you. That's the whole idea behind this pouch: the full set — jacket and pants — packs down into one compact bundle that lives wherever you might need it. The glovebox, your daypack, the camper, the boat.
@@ -406,54 +402,6 @@ One pouch per set is the golden rule: one in every pack, and nobody in the famil
       "/images/storage-pouch-trail.jpg",
       "/images/storage-pouch-camp.jpg",
       "/images/storage-pouch-dock.jpg",
-    ],
-  },
-  {
-    id: "ba-mosquito-lamp",
-    name: "Bug Away Indoor Insect Zapper",
-    category: "ACCESSORIES",
-    simple: true,
-    price: PRICE_LAMP.eur,
-    prices: PRICE_LAMP,
-    comparePrices: COMPARE_LAMP,
-    badge: null,
-    desc: "A quiet, chemical-free insect zapper for indoors. UV light draws in mosquitoes, flies, moths and gnats, and an electric grid handles them on contact. Covers up to 1,600 sq ft. Wall-mount or hang it and forget it — no sprays, no smell, no fumes.",
-    longDesc: `Bug Away clothing keeps insects off you outdoors. This handles the ones that make it inside.
-
-A UV-A tube glows at the wavelength flying insects are drawn to. Mosquitoes, house flies, moths, gnats and fruit flies fly toward the light, meet the electrified metal grid and are dealt with on contact. There is no spray drifting through your kitchen, no plug-in chemical, no citronella smell. Just light and a grid.
-
-At 40 watts it covers a large room — up to roughly 1,600 square feet — so one unit handles a living room, a kitchen or an open-plan space. The tough ABS housing mounts flat to a wall or hangs from the built-in hook, and the grid pulls out for a quick clean.
-
-Run it in the evening in the room you are sitting in, or overnight in the bedroom. Chemical-free, odorless, and a natural companion to the mesh you wear outside.`,
-    features: [
-      "UV-A light attracts flying insects — mosquitoes, flies, moths, gnats and fruit flies",
-      "Electric grid handles them on contact — no spray, no chemicals, no smell",
-      "Covers up to ~1,600 sq ft (150 m²) — one unit for a large room",
-      "40 W, runs on standard AC power",
-      "Tough ABS housing — wall-mount or hang from the built-in hook",
-      "Pull-out grid for easy cleaning",
-      "Odorless and fume-free — safe to run in living spaces",
-      "Chemical-free companion to Bug Away mesh",
-    ],
-    specs: [
-      { label: "Coverage", value: "Up to 1,600 sq ft (150 m²)" },
-      { label: "Power", value: "40 W" },
-      { label: "Voltage", value: "AC 110 V" },
-      { label: "Grid voltage", value: "~2,000 V" },
-      { label: "Housing", value: "ABS" },
-      { label: "Dimensions", value: "9.8 × 3.0 × 10.0 in (25 × 7.5 × 25.5 cm)" },
-      { label: "Mounting", value: "Wall-mount or hang" },
-      { label: "Use", value: "Indoor" },
-    ],
-    highlights: [
-      { icon: "🔇", label: "Quiet & odorless", sub: "No spray, no smell" },
-      { icon: "📐", label: "Up to 1,600 sq ft", sub: "One large room" },
-      { icon: "🌿", label: "Chemical-free", sub: "Just light + grid" },
-    ],
-    useCases: ["Living rooms & kitchens", "Bedrooms", "Home office", "Garages & basements", "Cabins", "Screened porches"],
-    images: [
-      "/images/mosquito-lamp-hero.jpg",
-      "/images/mosquito-lamp-product.jpg",
     ],
   },
   {
@@ -503,11 +451,5 @@ External use only. Avoid eyes and mouth. Not recommended for children under 3, o
   },
 ];
 
-export const reviews = [
-  { id: 1, name: "Maaike V.", rating: 5, text: "Finally something that actually keeps ticks away. Wore it hiking all weekend — not a single bite.", product: "ba-jacket-men" },
-  { id: 2, name: "James R.", rating: 5, text: "My whole family wears these now. Kids can play in the forest without us constantly checking.", product: "ba-kids-set" },
-  { id: 3, name: "Sophie L.", rating: 5, text: "The integrated foot cover is genius. No more tucking trousers into socks.", product: "ba-pants-women" },
-  { id: 4, name: "Bart M.", rating: 4, text: "Lightweight, breathable, does exactly what it says. Great for gardening too.", product: "ba-jacket-women" },
-  { id: 5, name: "Karen T.", rating: 5, text: "I got Lyme disease two years ago. I won't go outside without this now. Worth every penny.", product: "ba-combo-adults" },
-  { id: 6, name: "David H.", rating: 5, text: "Bought the combo set for a hiking trip in the Veluwe. Zero tick checks needed. Incredible.", product: "ba-combo-adults" },
-];
+// Reviews komen uitsluitend uit Judge.me (zie src/reviews.js en api/reviews.js).
+export const reviews = [];

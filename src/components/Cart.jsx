@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
+import { pic } from '../img';
 import { Link } from 'react-router-dom';
 import { c, useIsMobile } from '../theme';
 import { SHOPIFY_HANDLES, getVariantId, isPurchasable, COMBO_FOR_SINGLE, FAMILY_BUNDLE_SET_IDS, CART_CROSSSELL_ANCHOR, CART_CROSSSELL_CONTEXTUAL } from '../shopify';
-import { useCurrency, formatPrice, getPrice, FREE_GIFT_THRESHOLD } from '../currency.jsx';
+import { useCurrency, formatPrice, getPrice, getCompare, FREE_GIFT_THRESHOLD } from '../currency.jsx';
 import { products } from '../data';
 
 const DOMAIN = 'checkout.bugawaygear.com';
@@ -44,7 +45,7 @@ export const CartContext = {
 
 export default function Cart({ isOpen, onClose }) {
   const isMobile = useIsMobile();
-  const { symbol, isUS, isAU, region } = useCurrency();
+  const { symbol, region } = useCurrency();
   const [items, setItems] = useState([...CartContext.items]);
   const [discountCode, setDiscountCode] = useState('');
   const [showDiscount, setShowDiscount] = useState(false);
@@ -56,10 +57,13 @@ export default function Cart({ isOpen, onClose }) {
     return () => CartContext.unsubscribe(setItems);
   }, []);
 
-  const threshold = FREE_GIFT_THRESHOLD[region] || FREE_GIFT_THRESHOLD.EU;
+  const threshold = FREE_GIFT_THRESHOLD[region] || FREE_GIFT_THRESHOLD.US;
+  // Gratis verzending vanaf $150 USD; in CAD/AUD omgerekend met dezelfde koers als de prijzen.
+  const fx = getPrice({ id: 'ba-combo-men', prices: { usd: 79.99, aud: 128 } }, region) / 79.99;
+  const SHIP_FREE = Math.round(150 * fx * 100) / 100;
 
   // Region-aware totals: use getPrice per item.
-  const total = items.reduce((sum, i) => sum + getPrice(i.product, isUS, isAU) * i.quantity, 0);
+  const total = items.reduce((sum, i) => sum + getPrice(i.product, region) * i.quantity, 0);
   const count = items.reduce((sum, i) => sum + i.quantity, 0);
   const remaining = Math.max(0, threshold - total);
   const progress = Math.min(100, (total / threshold) * 100);
@@ -70,7 +74,7 @@ export default function Cart({ isOpen, onClose }) {
   // The cheapest set(s) become free, one per 4 sets in the cart.
   const bundleUnitPrices = items
     .filter(i => FAMILY_BUNDLE_SET_IDS.includes(i.product.id))
-    .flatMap(i => Array(i.quantity).fill(getPrice(i.product, isUS, isAU)))
+    .flatMap(i => Array(i.quantity).fill(getPrice(i.product, region)))
     .sort((a, b) => a - b);
   const setCount = bundleUnitPrices.length;
   const freeSets = Math.floor(setCount / 4);
@@ -89,8 +93,8 @@ export default function Cart({ isOpen, onClose }) {
     const comboId = COMBO_FOR_SINGLE[singleCandidate.product.id];
     const comboProduct = products.find(p => p.id === comboId);
     if (comboProduct) {
-      const singlePrice = getPrice(singleCandidate.product, isUS, isAU);
-      const comboPrice  = getPrice(comboProduct, isUS, isAU);
+      const singlePrice = getPrice(singleCandidate.product, region);
+      const comboPrice  = getPrice(comboProduct, region);
       const savings = (singlePrice * 2) - comboPrice;
       upsell = {
         singleKey: singleCandidate.key,
@@ -120,7 +124,7 @@ export default function Cart({ isOpen, onClose }) {
   const hasApparel = items.some((i) => ['MEN', 'WOMEN', 'KIDS', 'BUNDLES'].includes(i.product.category));
   const showContextual = !!contextualProduct && hasApparel;
 
-  const compareOf = (p) => (p.comparePrices ? ((isAU && p.comparePrices.aud != null) ? p.comparePrices.aud : (isUS ? p.comparePrices.usd : p.comparePrices.eur)) : null);
+  const compareOf = (p) => (getCompare(p, region));
 
   // Checkout: build Shopify cart URL with all variants
   const handleCheckout = () => {
@@ -154,7 +158,7 @@ export default function Cart({ isOpen, onClose }) {
         {/* Header */}
         <div style={{ padding: '18px 20px', borderBottom: '1px solid #e8ede9', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ fontSize: 14, fontWeight: 700, color: '#1a1a1a', fontFamily: "Archivo, sans-serif" }}>Your Cart</span>
+            <span style={{ fontSize: 14, fontWeight: 700, color: '#1a1a1a', fontFamily: "'Archivo Variable', sans-serif" }}>Your Cart</span>
             {count > 0 && (
               <span style={{ background: c.sageD, color: '#fff', borderRadius: 20, padding: '1px 8px', fontSize: 11, fontWeight: 600 }}>{count}</span>
             )}
@@ -164,9 +168,9 @@ export default function Cart({ isOpen, onClose }) {
 
         {/* Free shipping bar */}
         <div style={{ padding: '14px 20px', background: '#F7F9F8', borderBottom: '1px solid #e8ede9', flexShrink: 0 }}>
-          {netTotal < 150 ? (
+          {netTotal < SHIP_FREE ? (
             <p style={{ fontSize: 12, color: '#555', marginBottom: 8 }}>
-              🚚 Only <strong style={{ color: c.sageD }}>{formatPrice(150 - netTotal, '$')}</strong> away from free shipping!
+              🚚 Only <strong style={{ color: c.sageD }}>{formatPrice(SHIP_FREE - netTotal, '$')}</strong> away from free shipping!
             </p>
           ) : (
             <p style={{ fontSize: 12, color: c.sageD, marginBottom: 8, fontWeight: 600 }}>
@@ -174,11 +178,11 @@ export default function Cart({ isOpen, onClose }) {
             </p>
           )}
           <div style={{ height: 4, background: '#e0e8e3', borderRadius: 2, overflow: 'hidden' }}>
-            <div style={{ height: '100%', width: `${Math.min(100, (netTotal / 150) * 100)}%`, background: c.sageD, borderRadius: 2, transition: 'width 0.4s ease' }} />
+            <div style={{ height: '100%', width: `${Math.min(100, (netTotal / SHIP_FREE) * 100)}%`, background: c.sageD, borderRadius: 2, transition: 'width 0.4s ease' }} />
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 5 }}>
             <span style={{ fontSize: 10, color: '#aaa' }}>$0</span>
-            <span style={{ fontSize: 10, color: '#aaa' }}>Free shipping at $150</span>
+            <span style={{ fontSize: 10, color: '#aaa' }}>Free shipping at {formatPrice(SHIP_FREE, '$')}</span>
           </div>
         </div>
 
@@ -194,11 +198,11 @@ export default function Cart({ isOpen, onClose }) {
             </div>
           ) : (
             items.map(item => {
-              const itemPrice = getPrice(item.product, isUS, isAU);
+              const itemPrice = getPrice(item.product, region);
               return (
                 <div key={item.key} style={{ display: 'flex', gap: 12, marginBottom: 16, paddingBottom: 16, borderBottom: '1px solid #e8ede9' }}>
                   <div style={{ width: 72, height: 72, borderRadius: 8, overflow: 'hidden', background: item.product.imageFit === 'contain' ? '#fff' : '#f3f4f2', flexShrink: 0 }}>
-                    <img src={item.product.images[0]} alt={item.product.name} style={{ width: '100%', height: '100%', objectFit: item.product.imageFit || 'cover', objectPosition: 'center' }} onError={e => e.target.style.display = 'none'} />
+                    <img {...pic(item.product.images[0], "(max-width: 767px) 50vw, 300px")} alt={item.product.name} style={{ width: '100%', height: '100%', objectFit: item.product.imageFit || 'cover', objectPosition: 'center' }} onError={e => e.target.style.display = 'none'} />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: 13, fontWeight: 700, color: '#1a1a1a', marginBottom: 3, lineHeight: 1.3 }}>{item.product.name}</div>
@@ -253,7 +257,7 @@ export default function Cart({ isOpen, onClose }) {
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <div style={{ width: 52, height: 52, borderRadius: 6, overflow: 'hidden', background: '#e8f0eb', flexShrink: 0 }}>
-                  <img src={upsell.comboProduct.images[0]} alt={upsell.comboProduct.name} style={{ width: '100%', height: '100%', objectFit: upsell.comboProduct.imageFit || 'cover', objectPosition: 'center' }} onError={e => e.target.style.display = 'none'} />
+                  <img {...pic(upsell.comboProduct.images[0], "(max-width: 767px) 50vw, 300px")} alt={upsell.comboProduct.name} style={{ width: '100%', height: '100%', objectFit: upsell.comboProduct.imageFit || 'cover', objectPosition: 'center' }} onError={e => e.target.style.display = 'none'} />
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 2 }}>{upsell.comboProduct.name}</div>
@@ -280,7 +284,7 @@ export default function Cart({ isOpen, onClose }) {
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <div style={{ width: 52, height: 52, borderRadius: 6, overflow: 'hidden', background: '#e8f0eb', flexShrink: 0 }}>
-                  <img src={anchorProduct.images[0]} alt={anchorProduct.name} style={{ width: '100%', height: '100%', objectFit: anchorProduct.imageFit || 'cover', objectPosition: 'center' }} onError={e => e.target.style.display = 'none'} />
+                  <img {...pic(anchorProduct.images[0], "(max-width: 767px) 50vw, 300px")} alt={anchorProduct.name} style={{ width: '100%', height: '100%', objectFit: anchorProduct.imageFit || 'cover', objectPosition: 'center' }} onError={e => e.target.style.display = 'none'} />
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 2 }}>{anchorProduct.name}</div>
@@ -290,7 +294,7 @@ export default function Cart({ isOpen, onClose }) {
                         {compareOf(anchorProduct) && (
                           <span style={{ textDecoration: 'line-through', marginRight: 6 }}>{formatPrice(compareOf(anchorProduct), symbol)}</span>
                         )}
-                        <span style={{ color: c.sageD, fontWeight: 700 }}>{formatPrice(getPrice(anchorProduct, isUS, isAU), symbol)}</span>
+                        <span style={{ color: c.sageD, fontWeight: 700 }}>{formatPrice(getPrice(anchorProduct, region), symbol)}</span>
                       </>
                     ) : (
                       <span style={{ color: '#999' }}>Coming soon</span>
@@ -320,12 +324,12 @@ export default function Cart({ isOpen, onClose }) {
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <div style={{ width: 52, height: 52, borderRadius: 6, overflow: 'hidden', background: '#e8f0eb', flexShrink: 0 }}>
-                  <img src={contextualProduct.images[0]} alt={contextualProduct.name} style={{ width: '100%', height: '100%', objectFit: contextualProduct.imageFit || 'cover', objectPosition: 'center' }} onError={e => e.target.style.display = 'none'} />
+                  <img {...pic(contextualProduct.images[0], "(max-width: 767px) 50vw, 300px")} alt={contextualProduct.name} style={{ width: '100%', height: '100%', objectFit: contextualProduct.imageFit || 'cover', objectPosition: 'center' }} onError={e => e.target.style.display = 'none'} />
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 2 }}>{contextualProduct.name}</div>
                   <div style={{ fontSize: 11, color: '#888' }}>
-                    <span style={{ color: c.sageD, fontWeight: 700 }}>{formatPrice(getPrice(contextualProduct, isUS, isAU), symbol)}</span>
+                    <span style={{ color: c.sageD, fontWeight: 700 }}>{formatPrice(getPrice(contextualProduct, region), symbol)}</span>
                   </div>
                 </div>
                 <button onClick={() => CartContext.add(contextualProduct, null, null, 1)}

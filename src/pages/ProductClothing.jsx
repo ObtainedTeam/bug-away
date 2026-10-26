@@ -1,481 +1,358 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { c, useIsMobile, BTN, BTNO, H2, LBL } from '../theme';
-import { products, reviews } from '../data';
-import { SHOPIFY_IDS, SHOPIFY_HANDLES, fetchProduct, buyNow, FAMILY_BUNDLE_SET_IDS } from '../shopify';
+import { c, rv, FW, R, SH, T, LH, SP, W, BTN, BTNO, CHIP, CARD, EYEBROW } from '../theme';
+import { pic } from '../img';
+import { products } from '../data';
+import { buyNow, FAMILY_BUNDLE_SET_IDS, isPurchasable } from '../shopify';
 import { CartContext } from '../components/Cart';
-import { useCurrency, formatPrice, getPrice } from '../currency.jsx';
+import { useCurrency } from '../currency.jsx';
+import { useReviews, forProduct } from '../reviews';
+import { Section, SectionHead, ProductCard, Stars, Price, Icon, TrustBand, VideoModal } from '../components/ui';
+import { PayBadges } from '../components/Footer';
+import { PDP_FAQ, PROOF, SPECS, related } from '../data/pdp';
+import Reveal from '../components/Reveal';
 
-const Star = ({ filled }) => (
-  <span style={{ color: filled ? "#F59E0B" : "#ddd", fontSize: 16 }}>★</span>
-);
+// Productpagina kleding: de hele funnel op één pagina. Fotokolom links blijft
+// staan (pd-sticky) terwijl de koopkolom meescrollt; op mobiel onder elkaar
+// met een vaste koopbalk onderin. Alle claims komen uit data.js en data/pdp.js.
+
+function Gallery({ product, color }) {
+  // Foto's van de gekozen kleur eerst (bestandsnamen bevatten White/Black).
+  const key = color === 'Black' ? /black/i : /white/i;
+  const imgs = [...product.images.filter((s) => key.test(s)), ...product.images.filter((s) => !key.test(s))];
+  const [i, setI] = useState(0);
+  useEffect(() => { setI(0); }, [product.id, color]);
+  const go = (d) => setI((x) => (x + d + imgs.length) % imgs.length);
+  const src = imgs[i];
+  const contain = /size-guide|infographic/.test(src);
+  return (
+    <div>
+      <div style={{ position: 'relative', aspectRatio: '4 / 5', borderRadius: R.lg, overflow: 'hidden', background: c.off }}>
+        <img key={src} {...pic(src, '(max-width: 767px) 100vw, 620px')} alt={product.name} fetchpriority={i === 0 ? 'high' : undefined}
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: contain ? 'contain' : 'cover', background: c.white }} />
+        {imgs.length > 1 && ['prev', 'next'].map((d) => (
+          <button key={d} type="button" onClick={() => go(d === 'prev' ? -1 : 1)} aria-label={d === 'prev' ? 'Previous photo' : 'Next photo'}
+            style={{ position: 'absolute', top: '50%', [d === 'prev' ? 'left' : 'right']: 12, transform: 'translateY(-50%)', width: 44, height: 44, borderRadius: R.pill, border: 'none', background: 'rgba(255,255,255,.92)', boxShadow: SH.card, cursor: 'pointer', fontSize: 18, color: c.dark }}>{d === 'prev' ? '←' : '→'}</button>
+        ))}
+        <span style={{ ...CHIP, position: 'absolute', bottom: 12, right: 12, background: 'rgba(255,255,255,.92)', color: c.dark }}>{i + 1} / {imgs.length}</span>
+      </div>
+      <div className="thumbs">
+        {imgs.map((s, k) => (
+          <button key={s} type="button" onClick={() => setI(k)} aria-label={`Photo ${k + 1}`}
+            style={{ border: `2px solid ${k === i ? c.sageD : 'transparent'}`, borderRadius: R.sm, padding: 0, cursor: 'pointer', background: c.off, overflow: 'hidden' }}>
+            <img {...pic(s, '72px')} alt="" loading="lazy" decoding="async" style={{ width: 68, height: 68, objectFit: 'cover', display: 'block' }} />
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function SizeGuide({ product, onClose }) {
+  const charts = product.id.includes('kids') ? ['/images/size-guide-kids.png']
+    : product.id.includes('pants') ? ['/images/size-guide-pants.png']
+      : product.id.includes('jacket') ? ['/images/size-guide-chart.png']
+        : ['/images/size-guide-chart.png', '/images/size-guide-pants.png'];
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', onKey);
+    const ov = document.body.style.overflow; document.body.style.overflow = 'hidden';
+    return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = ov; };
+  }, [onClose]);
+  return (
+    <div role="dialog" aria-modal="true" aria-label="Size guide" onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 300, background: 'rgba(26,46,36,.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
+      <div onClick={(e) => e.stopPropagation()} style={{ ...CARD, width: 'min(720px, 100%)', maxHeight: '90vh', overflowY: 'auto', padding: 24, position: 'relative' }}>
+        <button type="button" onClick={onClose} aria-label="Close size guide" style={{ position: 'absolute', top: 10, right: 10, width: 44, height: 44, border: 'none', background: 'none', fontSize: 26, cursor: 'pointer', color: c.dark }}>×</button>
+        <h2 style={{ fontSize: 22, fontWeight: FW.head, marginBottom: 6 }}>Size guide</h2>
+        <p style={{ fontSize: 14, color: c.grayD, marginBottom: 16 }}>Bug Away goes over your own clothes. Between two sizes? Size up: a looser fit breathes better and gives a mosquito nothing to press against.</p>
+        {charts.map((s) => <img key={s} {...pic(s, '680px')} alt="Size chart" style={{ width: '100%', borderRadius: R.sm, marginBottom: 10 }} />)}
+        <div className="grid-2m1" style={{ gap: 10 }}>
+          <img {...pic('/images/size-guide-jacket.png', '340px')} alt="How to measure" style={{ width: '100%', borderRadius: R.sm }} />
+          <img {...pic('/images/size-guide-fittype.png', '340px')} alt="Fit type" style={{ width: '100%', borderRadius: R.sm }} />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function ProductClothing({ onCartOpen }) {
   const { id } = useParams();
-  const isMobile = useIsMobile();
-  const { symbol, isUS, isAU } = useCurrency();
-  const product = products.find(p => p.id === id) || products[0];
+  const product = products.find((p) => p.id === id) || products[0];
+  const { price, compare, fmt, code, region } = useCurrency();
+  const all = useReviews();
+  const own = forProduct(all, product.id);
+  const rating = own.count ? own : (all && all.count ? { ...all, store: true } : null);
 
-  const [selectedColor, setSelectedColor] = useState(product.colors[0]);
-  const [selectedSize, setSelectedSize] = useState(null);
+  const [color, setColor] = useState(product.colors[0]);
+  const [size, setSize] = useState(null);
   const [qty, setQty] = useState(1);
-  const [mainImg, setMainImg] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [need, setNeed] = useState(false);
   const [added, setAdded] = useState(false);
-  const [activeTab, setActiveTab] = useState('description');
-  const [showSizeGuide, setShowSizeGuide] = useState(false);
-  const [showSticky, setShowSticky] = useState(false);
-  const buyBtnRef = useRef(null);
+  const [busy, setBusy] = useState(false);
+  const [guide, setGuide] = useState(false);
+  const [video, setVideo] = useState(null);
+  const [sticky, setSticky] = useState(false);
+  const buyRef = useRef(null);
 
+  useEffect(() => { setColor(product.colors[0]); setSize(null); setQty(1); setNeed(false); }, [product.id]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Vaste koopbalk op mobiel zodra de koopknoppen uit beeld zijn
   useEffect(() => {
-    if (!isMobile) return;
-    const onScroll = () => {
-      if (buyBtnRef.current) {
-        const rect = buyBtnRef.current.getBoundingClientRect();
-        setShowSticky(rect.bottom < 0);
-      }
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, [isMobile]);
+    const el = buyRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return undefined;
+    const io = new IntersectionObserver(([e]) => setSticky(!e.isIntersecting && e.boundingClientRect.top < 0));
+    io.observe(el);
+    document.body.classList.add('has-sticky-buy');
+    return () => { io.disconnect(); document.body.classList.remove('has-sticky-buy'); };
+  }, [product.id]);
 
-  useEffect(() => {
-    setSelectedColor(product.colors[0]);
-    setSelectedSize(null);
-    setMainImg(0);
-  }, [id]);
+  const p = price(product);
+  const cmp = compare(product);
+  const isSet = FAMILY_BUNDLE_SET_IDS.includes(product.id);
 
-  const productReviews = reviews.filter(r => r.product === product.id);
-  const avgRating = productReviews.length
-    ? (productReviews.reduce((s, r) => s + r.rating, 0) / productReviews.length).toFixed(1)
-    : 4.9;
-  const reviewCount = productReviews.length || 48;
-
-  const price = getPrice(product, isUS, isAU);
-  // Compare-at for sets = the two separate pieces bought apart (honest, = 2x single).
-  const comparePrice = product.setCompare
-    ? (isUS ? product.setCompare.usd : isAU ? product.setCompare.aud : product.setCompare.eur)
-    : (product.comparePrices ? getPrice({ ...product, prices: product.comparePrices }, isUS, isAU) : null);
-
-  const handleAddToCart = () => {
-    if (!selectedSize) { alert('Please select a size'); return; }
-    CartContext.add(product, selectedSize, selectedColor, qty);
-    setAdded(true);
-    if (onCartOpen) onCartOpen();
+  const requireSize = () => {
+    if (size) return true;
+    setNeed(true);
+    const el = document.getElementById('size-picker');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return false;
+  };
+  const add = () => {
+    if (!requireSize()) return;
+    CartContext.add(product, size, color, qty);
+    setAdded(true); onCartOpen && onCartOpen();
     setTimeout(() => setAdded(false), 2000);
   };
-
-  const handleBuyNow = async () => {
-    if (!selectedSize) { alert('Please select a size'); return; }
-    setLoading(true);
-    await buyNow(product.id, selectedSize, selectedColor);
-    setLoading(false);
+  const buy = async () => {
+    if (!requireSize()) return;
+    setBusy(true);
+    await buyNow(product.id, size, color);
+    setBusy(false);
   };
 
-  // Cross-sell: on a set page, lead with the OTHER sets (builds toward the family bundle),
-  // then fill up with remaining products. On non-set pages, keep the original behaviour.
-  const SET_IDS = ['ba-combo-women', 'ba-combo-men', 'ba-kids-set'];
-  const relatedProducts = (() => {
-    const others = products.filter(p => p.id !== product.id);
-    if (SET_IDS.includes(product.id)) {
-      const otherSets = others.filter(p => SET_IDS.includes(p.id));
-      const rest = others.filter(p => !SET_IDS.includes(p.id));
-      return [...otherSets, ...rest].slice(0, 4);
-    }
-    return others.slice(0, 4);
-  })();
+  const label = { fontSize: 14, fontWeight: FW.head, color: c.dark };
 
   return (
-    <div style={{ fontFamily: "'Archivo', sans-serif", color: '#1a1a1a' }}>
-      {/* BREADCRUMB */}
-      <div style={{ padding: isMobile ? "12px 16px" : "12px 40px", fontSize: 12, color: '#999', borderBottom: '1px solid #e8ede9' }}>
-        <Link to="/" style={{ color: '#999', textDecoration: 'none' }}>Home</Link>
-        {' › '}
-        <Link to="/shop" style={{ color: '#999', textDecoration: 'none' }}>Shop</Link>
-        {' › '}
-        <span style={{ color: '#333' }}>{product.name}</span>
-      </div>
+    <div>
+      <nav aria-label="Breadcrumb" style={{ maxWidth: W.page + 80, margin: '0 auto', padding: '14px 20px 0', fontSize: 13, color: c.grayD }}>
+        <Link to="/" style={{ color: c.grayD }}>Home</Link> <span aria-hidden="true">›</span> <Link to="/shop" style={{ color: c.grayD }}>Shop</Link> <span aria-hidden="true">›</span> <span style={{ color: c.dark }}>{product.name}</span>
+      </nav>
 
-      {/* MAIN PRODUCT SECTION */}
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '24px 16px' : '40px 40px', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 24 : 48 }}>
+      {/* 1. Boven de vouw: sticky galerij + koopkolom */}
+      <section className="pd-top r-pad r-gap" style={{ maxWidth: W.page + 80, margin: '0 auto', ...rv('pad', '20px 40px 64px', '12px 16px 40px'), ...rv('gap', 56, 22) }}>
+        <div className="pd-sticky"><Gallery product={product} color={color} /></div>
 
-        {/* IMAGE GALLERY */}
         <div>
-          <div style={{ borderRadius: 16, overflow: 'hidden', background: '#f7f9f8', aspectRatio: '1', marginBottom: 12 }}>
-            <img src={product.images[mainImg]} alt={product.name}
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8 }}>
-            {product.images.slice(0, 10).map((img, i) => (
-              <div key={i} onClick={() => setMainImg(i)} style={{
-                borderRadius: 8, overflow: 'hidden', aspectRatio: '1', cursor: 'pointer',
-                border: mainImg === i ? `2px solid ${c.sageD}` : '2px solid transparent',
-                background: '#f7f9f8',
-              }}>
-                <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  onError={e => e.target.style.display = 'none'} />
-              </div>
-            ))}
-          </div>
-        </div>
+          <span style={{ ...EYEBROW, marginBottom: 8 }}>{isSet ? 'Full set · jacket + pants' : product.category === 'KIDS' ? 'Kids' : product.category === 'WOMEN' ? 'Women' : 'Men'}</span>
+          <h1 className="r-fs" style={{ ...rv('fs', 38, 28), fontWeight: FW.head, lineHeight: LH.tight }}>{product.name}</h1>
 
-        {/* PRODUCT INFO */}
-        <div>
-          <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: 1.5, color: c.sage, textTransform: 'uppercase', marginBottom: 8 }}>{product.category}</div>
-          <h1 style={{ fontFamily: 'Archivo, sans-serif', fontSize: isMobile ? 26 : 32, fontWeight: 900, lineHeight: 1.15, margin: '0 0 10px' }}>{product.name}</h1>
-
-          {/* BENEFIT LINE */}
-          {product.benefit && (
-            <p style={{ fontSize: 15, color: '#2d3b33', lineHeight: 1.5, fontWeight: 600, margin: '0 0 14px' }}>{product.benefit}</p>
+          {rating && (
+            <a href="#reviews" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: 10, textDecoration: 'none', color: c.grayD, fontSize: 14 }}>
+              <Stars value={rating.avg} size={16} />
+              <span><b style={{ color: c.dark }}>{rating.avg}</b> · {rating.count} review{rating.count === 1 ? '' : 's'}{rating.store ? ' across Bug Away' : ''}</span>
+            </a>
           )}
 
-          {/* RATING */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-            <div>{[1,2,3,4,5].map(i => <Star key={i} filled={i <= Math.round(avgRating)} />)}</div>
-            <span style={{ fontSize: 13, fontWeight: 700, color: '#333' }}>{avgRating}</span>
-            <span style={{ fontSize: 13, color: '#999' }}>({reviewCount} reviews)</span>
-          </div>
+          <p style={{ fontSize: 16, lineHeight: LH.body, color: c.dark, fontWeight: FW.mid, marginTop: 14 }}>
+            {product.benefit || 'A physical barrier ticks and mosquitoes can\'t get through. No DEET, no permethrin, nothing on your skin.'}
+          </p>
 
-          {/* PRICE — region-aware, with compare-at + saving on sets */}
-          <div style={{ marginBottom: 20 }}>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
-              {comparePrice && (
-                <span style={{ fontSize: 20, color: '#999', fontWeight: 600, textDecoration: 'line-through' }}>{formatPrice(comparePrice, symbol)}</span>
-              )}
-              <span style={{ fontSize: 32, fontWeight: 900, color: c.sageD }}>{formatPrice(price, symbol)}</span>
-              {comparePrice && (
-                <span style={{ fontSize: 14, fontWeight: 800, color: c.sage }}>You save {formatPrice(comparePrice - price, symbol)}</span>
-              )}
-              {!isUS && !isAU && (
-                <span style={{ fontSize: 13, color: '#999', fontWeight: 400 }}>Incl. VAT</span>
-              )}
-            </div>
-          </div>
+          {product.useCases && (
+            <ul aria-label="Made for" style={{ listStyle: 'none', display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 14 }}>
+              {product.useCases.slice(0, 5).map((u) => <li key={u} style={{ ...CHIP, background: c.mint, color: c.sageD, fontWeight: FW.mid }}>{u}</li>)}
+            </ul>
+          )}
 
-          {/* FAMILY BUNDLE DEAL — only on set products */}
-          {FAMILY_BUNDLE_SET_IDS.includes(product.id) && (
-            <div style={{ background: '#F0F5F2', border: '1px solid #d4e6da', borderRadius: 12, padding: '12px 16px', marginBottom: 20 }}>
-              <div style={{ fontSize: 12, fontWeight: 800, color: c.sageD, letterSpacing: 0.5, marginBottom: 4 }}>
-                FAMILY BUNDLE — BUY 3 SETS, GET THE 4TH FREE
-              </div>
-              <div style={{ fontSize: 12, color: '#555', lineHeight: 1.5 }}>
-                Mix &amp; match men's, women's and kids' sets. Add four and you only pay for three — the 4th is free, applied automatically at checkout.
-              </div>
+          {/* Prijs */}
+          <div style={{ display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', gap: '4px 12px', marginTop: 20 }}>
+            <span style={{ fontSize: 32, fontWeight: FW.head, color: c.dark }}>{fmt(p)}<span style={{ fontSize: 13, color: c.grayD, marginLeft: 4 }}>{code}</span></span>
+            {cmp && cmp > p && <s style={{ fontSize: 19, color: c.grayD }}>{fmt(cmp)}</s>}
+            {cmp && cmp > p && <span style={{ ...CHIP, background: c.sageD, color: c.white }}>You save {fmt(cmp - p)}</span>}
+          </div>
+          <p style={{ fontSize: 13, color: c.grayD, marginTop: 4 }}>
+            {cmp && cmp > p ? 'Less than buying the jacket and pants apart. ' : ''}Taxes and shipping calculated at checkout{region === 'CA' ? '. Price in CAD at today\'s rate.' : '.'}
+          </p>
+
+          {isSet && (
+            <div style={{ marginTop: 16, background: c.mint, border: `1px solid ${c.mist}`, borderRadius: R.sm, padding: '12px 14px' }}>
+              <b style={{ fontSize: 14, color: c.sageD }}>Family bundle: buy 3 sets, get the 4th free</b>
+              <p style={{ fontSize: 13.5, color: c.grayD, marginTop: 2, lineHeight: 1.5 }}>Mix men's, women's and kids' sets. Add four and you only pay for three, applied automatically at checkout.</p>
             </div>
           )}
 
-          {/* SHORT DESC */}
-          <p style={{ fontSize: 14, color: '#555', lineHeight: 1.7, marginBottom: 24 }}>{product.desc}</p>
-
-          {/* COLOR */}
-          <div style={{ marginBottom: 20 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 10 }}>
-              Color: <span style={{ color: c.sage }}>{selectedColor}</span>
-            </div>
-            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-              {product.colors.map(col => (
-                <button key={col} onClick={() => setSelectedColor(col)} style={{
-                  width: 36, height: 36, borderRadius: '50%', cursor: 'pointer',
-                  background: product.colorHex[product.colors.indexOf(col)],
-                  border: selectedColor === col ? `3px solid ${c.sageD}` : '3px solid #e8ede9',
-                  outline: selectedColor === col ? `2px solid ${c.sageD}` : 'none',
-                  outlineOffset: 2,
-                }} title={col} />
-              ))}
-            </div>
-          </div>
-
-          {/* SIZE */}
-          <div style={{ marginBottom: 20 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-              <div style={{ fontSize: 13, fontWeight: 700 }}>
-                Size: <span style={{ color: selectedSize ? c.sage : '#dc2626' }}>{selectedSize || 'Select a size'}</span>
-              </div>
-              <button onClick={() => setShowSizeGuide(!showSizeGuide)} style={{ fontSize: 12, color: c.sage, background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>
-                Size guide ›
-              </button>
-            </div>
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              {product.sizes.map(size => (
-                <button key={size} onClick={() => setSelectedSize(size)} style={{
-                  padding: '8px 14px', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600,
-                  border: `2px solid ${selectedSize === size ? c.sageD : '#e8ede9'}`,
-                  background: selectedSize === size ? c.sageD : '#fff',
-                  color: selectedSize === size ? '#fff' : '#333',
-                  transition: 'all .15s',
-                }}>
-                  {size}
+          {/* Kleur */}
+          <div style={{ marginTop: 22 }}>
+            <div style={label}>Color: <span style={{ fontWeight: 400, color: c.grayD }}>{color}</span></div>
+            <div style={{ display: 'flex', gap: 10, marginTop: 10 }}>
+              {product.colors.map((col, k) => (
+                <button key={col} type="button" onClick={() => setColor(col)} aria-pressed={color === col} aria-label={col}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 8, height: 44, padding: '0 16px 0 10px', borderRadius: R.pill, border: `2px solid ${color === col ? c.dark : c.line}`, background: c.white, cursor: 'pointer', fontSize: 14, fontWeight: FW.mid, color: c.dark }}>
+                  <i style={{ width: 22, height: 22, borderRadius: R.pill, background: product.colorHex[k], border: `1px solid ${c.gray}` }} />{col}
                 </button>
               ))}
             </div>
           </div>
 
-          {/* SIZE GUIDE INLINE */}
-          {showSizeGuide && (
-            <div style={{ background: '#F7F9F8', borderRadius: 12, padding: 16, marginBottom: 20 }}>
-              <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 12 }}>Size Guide</div>
-              {product.id.includes('kids') && (
-                <img src="/images/size-guide-kids.png" alt="Kids size chart" style={{ width: '100%', borderRadius: 8 }} />
-              )}
-              {product.id.includes('pants') && (
-                <img src="/images/size-guide-pants.png" alt="Pants size chart" style={{ width: '100%', borderRadius: 8 }} />
-              )}
-              {product.id.includes('jacket') && (
-                <img src="/images/size-guide-chart.png" alt="Jacket size chart" style={{ width: '100%', borderRadius: 8 }} />
-              )}
-              {product.id.includes('combo') && (
-                <>
-                  <img src="/images/size-guide-chart.png" alt="Jacket size chart" style={{ width: '100%', borderRadius: 8, marginBottom: 8 }} />
-                  <img src="/images/size-guide-pants.png" alt="Pants size chart" style={{ width: '100%', borderRadius: 8 }} />
-                </>
-              )}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginTop: 10 }}>
-                <img src="/images/size-guide-jacket.png" alt="How to measure" style={{ width: '100%', borderRadius: 8 }} />
-                <img src="/images/size-guide-fittype.png" alt="Fit type" style={{ width: '100%', borderRadius: 8 }} />
-              </div>
-              <p style={{ fontSize: 12, color: '#888', marginTop: 8 }}>When in doubt between two sizes, size up. A slightly looser fit provides better airflow and protection.</p>
+          {/* Maat */}
+          <div id="size-picker" style={{ marginTop: 20, scrollMarginTop: 120 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={label}>Size: <span style={{ fontWeight: 400, color: need && !size ? '#b42318' : c.grayD }}>{size || (need ? 'Please choose a size' : 'Choose your size')}</span></div>
+              <button type="button" onClick={() => setGuide(true)} className="u-link" style={{ background: 'none', border: 'none', color: c.sageD, fontWeight: FW.mid, fontSize: 14, cursor: 'pointer', padding: '8px 0' }}>Size guide</button>
             </div>
-          )}
-
-          {/* SCARCITY */}
-          <div style={{ background: '#FEF3C7', borderRadius: 8, padding: '8px 12px', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 14 }}>🔥</span>
-            <span style={{ fontSize: 13, color: '#92400E', fontWeight: 600 }}>Only {((product.id.charCodeAt(3) + product.id.charCodeAt(4)) % 12) + 3} left in stock — order soon</span>
-          </div>
-
-          {/* GUARANTEE */}
-          <div style={{ background: '#F0F5F2', borderRadius: 8, padding: '10px 12px', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 14 }}>🛡️</span>
-            <span style={{ fontSize: 13, color: c.sageD, fontWeight: 600 }}>Not a single bite, or your money back. 30-day guarantee.</span>
-          </div>
-
-          {/* QTY + BUY NOW (primary) */}
-          <div ref={buyBtnRef} style={{ display: 'flex', gap: 10, marginBottom: 10, alignItems: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', border: '2px solid #e8ede9', borderRadius: 10, overflow: 'hidden' }}>
-              <button onClick={() => setQty(Math.max(1, qty - 1))} style={{ width: 40, height: 48, background: 'none', border: 'none', cursor: 'pointer', fontSize: 18 }}>−</button>
-              <span style={{ width: 40, textAlign: 'center', fontWeight: 700, fontSize: 15 }}>{qty}</span>
-              <button onClick={() => setQty(qty + 1)} style={{ width: 40, height: 48, background: 'none', border: 'none', cursor: 'pointer', fontSize: 18 }}>+</button>
+            <div className="sizes" style={{ marginTop: 8 }}>
+              {product.sizes.map((s) => {
+                const ok = isPurchasable(product.id, s, color);
+                const on = size === s;
+                return (
+                  <button key={s} type="button" disabled={!ok} onClick={() => { setSize(s); setNeed(false); }} aria-pressed={on}
+                    style={{ height: 46, borderRadius: R.sm, border: `2px solid ${on ? c.sageD : need && !size ? '#f3b4ae' : c.line}`, background: on ? c.sageD : ok ? c.white : c.off, color: on ? c.white : ok ? c.dark : c.gray, fontSize: 14, fontWeight: FW.mid, cursor: ok ? 'pointer' : 'default', textDecoration: ok ? 'none' : 'line-through' }}>{s}</button>
+                );
+              })}
             </div>
-            <button onClick={handleBuyNow} disabled={loading} style={{
-              flex: 1, ...BTN, fontSize: 15, padding: '14px 0', textAlign: 'center',
-              opacity: loading ? 0.7 : 1, cursor: loading ? 'wait' : 'pointer',
-            }}>
-              {loading ? 'Loading...' : 'Buy Now →'}
-            </button>
           </div>
 
-          {/* ADD TO CART (secondary) */}
-          <button onClick={handleAddToCart} style={{
-            width: '100%', ...BTNO, fontSize: 14, padding: '12px 0', textAlign: 'center',
-            marginBottom: 20,
-            background: added ? '#F0F5F2' : 'transparent',
-            transition: 'background .3s',
-          }}>
-            {added ? '✓ Added to Cart' : 'Add to Cart'}
-          </button>
+          {/* Koopknoppen */}
+          <div ref={buyRef} style={{ display: 'flex', gap: 10, marginTop: 22 }}>
+            <div style={{ display: 'flex', alignItems: 'center', border: `2px solid ${c.line}`, borderRadius: R.sm, flexShrink: 0 }}>
+              <button type="button" onClick={() => setQty(Math.max(1, qty - 1))} aria-label="Decrease quantity" style={{ width: 40, height: 48, background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: c.dark }}>−</button>
+              <span aria-live="polite" style={{ width: 28, textAlign: 'center', fontWeight: FW.head }}>{qty}</span>
+              <button type="button" onClick={() => setQty(qty + 1)} aria-label="Increase quantity" style={{ width: 40, height: 48, background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: c.dark }}>+</button>
+            </div>
+            <button type="button" onClick={buy} disabled={busy} style={{ ...BTN, flex: 1, fontSize: 15, opacity: busy ? 0.7 : 1 }}>{busy ? 'One moment…' : 'Buy now'}</button>
+          </div>
+          <button type="button" onClick={add} style={{ ...BTNO, width: '100%', marginTop: 10, background: added ? c.mint : 'transparent' }}>{added ? 'Added to cart ✓' : 'Add to cart'}</button>
 
-          {/* TRUST BADGES */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, padding: '16px 0', borderTop: '1px solid #e8ede9', borderBottom: '1px solid #e8ede9' }}>
+          <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginTop: 16, padding: '12px 14px', borderRadius: R.sm, background: c.off }}>
+            <Icon name="shield" size={22} />
+            <p style={{ fontSize: 14, lineHeight: 1.5, color: c.dark }}><b>Not a single bite, or your money back.</b> <span style={{ color: c.grayD }}>30-day guarantee and 30-day returns.</span></p>
+          </div>
+
+          <div className="grid-3m1" style={{ gap: 8, marginTop: 14 }}>
+            {[['truck', 'Free shipping over $150'], ['leaf', 'No DEET, no permethrin'], ['pin', 'Ships from Houston, TX']].map(([ic, t]) => (
+              <div key={t} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, fontWeight: FW.mid, color: c.dark }}><Icon name={ic} size={18} />{t}</div>
+            ))}
+          </div>
+          <div style={{ marginTop: 14 }}><PayBadges dark={false} /></div>
+
+          {/* Details als accordeon */}
+          <div className="pd-acc" style={{ marginTop: 22 }}>
             {[
-              { icon: '🚚', label: 'Free shipping', sub: 'over $150 US/CA' },
-              { icon: '↩️', label: '30-day returns', sub: 'Hassle-free' },
-              { icon: '🌿', label: 'Chemical-free', sub: 'No DEET, no permethrin' },
-            ].map(({ icon, label, sub }) => (
-              <div key={label} style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: 22, marginBottom: 4 }}>{icon}</div>
-                <div style={{ fontSize: 11, fontWeight: 700, color: '#333' }}>{label}</div>
-                <div style={{ fontSize: 10, color: '#999' }}>{sub}</div>
-              </div>
+              ['Description', product.longDesc.split('\n\n').map((t, k) => <p key={k} style={{ marginBottom: 12 }}>{t}</p>)],
+              ['Features', <ul key="f" style={{ listStyle: 'none', display: 'grid', gap: 8 }}>{product.features.map((f) => <li key={f} style={{ display: 'flex', gap: 10 }}><span style={{ color: c.sageD, fontWeight: FW.head }}>✓</span>{f}</li>)}</ul>],
+              ['Shipping & returns', <p key="s">Orders ship from our warehouse in Houston, Texas, with tracking to the US and Canada. Shipping is free on orders over $150. Not happy? Return it within 30 days. If a tick or mosquito gets through the mesh, you get a full refund. <Link to="/returns" style={{ color: c.sageD, fontWeight: FW.mid }}>Return policy</Link></p>],
+              ['Care', <p key="c">Machine wash cold on a gentle cycle, hang to dry or tumble dry low. There is no treatment to wash out, so the protection stays the same wash after wash.</p>],
+            ].map(([q, a, open]) => (
+              <details key={q} open={open}>
+                <summary style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, padding: '16px 0', minHeight: 52, fontSize: 15, fontWeight: FW.head, color: c.dark }}>
+                  {q}<span className="pd-acc-icon" aria-hidden="true" style={{ fontSize: 22, fontWeight: 400 }}>+</span>
+                </summary>
+                <div style={{ fontSize: 15, lineHeight: LH.body, color: c.grayD, paddingBottom: 18 }}>{a}</div>
+              </details>
             ))}
           </div>
-
-          {/* PAYMENT METHODS */}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 12, flexWrap: 'wrap' }}>
-            {['VISA', 'Mastercard', 'PayPal', 'Klarna', 'Wero'].map(method => (
-              <span key={method} style={{ fontSize: 11, color: '#999', background: '#f5f5f5', borderRadius: 4, padding: '3px 8px', fontWeight: 600, letterSpacing: 0.3 }}>{method}</span>
-            ))}
-          </div>
-
-          {/* USE CASES */}
-          {product.useCases && (
-            <div style={{ marginTop: 20 }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: '#888', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>Perfect for</div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                {product.useCases.map(use => (
-                  <span key={use} style={{ background: '#F0F5F2', color: c.sageD, borderRadius: 20, padding: '4px 12px', fontSize: 12, fontWeight: 600 }}>{use}</span>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
-      </div>
+      </section>
 
-      {/* TABS SECTION */}
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '0 16px 40px' : '0 40px 60px' }}>
-        <div style={{ display: 'flex', gap: 0, borderBottom: '2px solid #e8ede9', marginBottom: 32 }}>
-          {['description', 'features', 'reviews'].map(tab => (
-            <button key={tab} onClick={() => setActiveTab(tab)} style={{
-              padding: '12px 24px', background: 'none', border: 'none', cursor: 'pointer',
-              fontSize: 14, fontWeight: 700, textTransform: 'capitalize',
-              color: activeTab === tab ? c.sageD : '#999',
-              borderBottom: activeTab === tab ? `3px solid ${c.sageD}` : '3px solid transparent',
-              marginBottom: -2,
-              transition: 'all .2s',
-            }}>{tab}</button>
+      {/* 2. Harde specificaties */}
+      <section style={{ background: c.forest, color: c.white }}>
+        <div className="grid-4m2 r-pad" style={{ maxWidth: W.page, margin: '0 auto', ...rv('pad', '40px 40px', '30px 20px'), gap: 20 }}>
+          {SPECS.map(([v, l]) => (
+            <div key={l} style={{ textAlign: 'center' }}>
+              <div className="r-fs" style={{ ...rv('fs', 32, 26), fontWeight: FW.head, lineHeight: 1.1 }}>{v}</div>
+              <div style={{ fontSize: 13.5, color: c.mist, marginTop: 6, lineHeight: 1.4 }}>{l}</div>
+            </div>
           ))}
         </div>
+      </section>
 
-        {activeTab === 'description' && (
-          <div style={{ maxWidth: 720 }}>
-            {product.longDesc?.split('\n\n').map((para, i) => (
-              <p key={i} style={{ fontSize: 15, color: '#444', lineHeight: 1.8, marginBottom: 20 }}>{para}</p>
-            ))}
-          </div>
-        )}
-
-        {activeTab === 'features' && (
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 12, maxWidth: 800 }}>
-            {product.features.map(f => (
-              <div key={f} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', background: '#F7F9F8', borderRadius: 10, padding: '12px 16px' }}>
-                <span style={{ color: c.sage, fontWeight: 900, flexShrink: 0 }}>✓</span>
-                <span style={{ fontSize: 14, color: '#333', lineHeight: 1.5 }}>{f}</span>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {activeTab === 'reviews' && (
-          <div style={{ maxWidth: 720 }}>
-            {reviews.filter(r => r.product === product.id).length > 0 ? (
-              reviews.filter(r => r.product === product.id).map(r => (
-                <div key={r.id} style={{ background: '#F7F9F8', borderRadius: 12, padding: 20, marginBottom: 16 }}>
-                  <div style={{ display: 'flex', gap: 4, marginBottom: 8 }}>
-                    {[1,2,3,4,5].map(i => <Star key={i} filled={i <= r.rating} />)}
-                  </div>
-                  <p style={{ fontSize: 15, color: '#333', lineHeight: 1.6, fontStyle: 'italic', margin: '0 0 10px' }}>"{r.text}"</p>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: c.sageD }}>{r.name}</div>
+      {/* 3. See it in action + bewijsbeelden */}
+      <Section bg={c.off}>
+        <SectionHead eyebrow="See it in action" title="Watch a tick try to get through" intro="Real ticks and mosquitoes on the actual Bug Away mesh. The openings are smaller than 0.6 mm, so they stay on the outside." />
+        <div className="grid-4m2 r-gap" style={rv('gap', 18, 12)}>
+          <Reveal>
+            <button type="button" onClick={() => setVideo({ src: '/videos/see-in-action-720.mp4', poster: '/img/see-in-action-poster.webp', caption: 'See it in action' })} className="card-hover" aria-label="Play video: see it in action"
+              style={{ position: 'relative', display: 'block', width: '100%', aspectRatio: '3 / 4', borderRadius: R.lg, overflow: 'hidden', border: 'none', padding: 0, cursor: 'pointer', background: c.forest, boxShadow: SH.card }}>
+              <img src="/img/see-in-action-poster.webp" alt="" loading="lazy" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+              <span aria-hidden="true" style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(26,46,36,0) 45%, rgba(26,46,36,.8))' }} />
+              <span style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 60, height: 60, borderRadius: R.pill, background: 'rgba(255,255,255,.94)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill={c.forest}><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5Z" /></svg>
+              </span>
+              <span style={{ position: 'absolute', left: 14, right: 14, bottom: 12, color: c.white, fontWeight: FW.head, fontSize: 15, textAlign: 'left', textShadow: SH.text }}>Play the video</span>
+            </button>
+          </Reveal>
+          {PROOF.map((x, k) => (
+            <Reveal key={x.cap} delay={(k + 1) * 80}>
+              <figure style={{ ...CARD, overflow: 'hidden', height: '100%' }}>
+                <div style={{ position: 'relative', aspectRatio: '3 / 4' }}>
+                  <img {...pic(x.img, '(max-width: 767px) 50vw, 290px')} alt={x.cap} loading="lazy" decoding="async" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: x.pos }} />
                 </div>
-              ))
-            ) : (
-              <div style={{ textAlign: 'center', padding: '40px 0', color: '#999' }}>
-                <div style={{ fontSize: 32, marginBottom: 12 }}>⭐</div>
-                <p>Be the first to review this product</p>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
+                <figcaption style={{ padding: '10px 14px 14px', fontSize: 14, fontWeight: FW.mid, color: c.dark, lineHeight: 1.4 }}>{x.cap}</figcaption>
+              </figure>
+            </Reveal>
+          ))}
+        </div>
+      </Section>
+      <VideoModal video={video} onClose={() => setVideo(null)} />
 
-      {/* COMMON QUESTIONS — inline objection handling */}
-      <section style={{ background: '#fff', padding: isMobile ? '48px 20px' : '72px 40px' }}>
-        <div style={{ maxWidth: 800, margin: '0 auto' }}>
-          <div style={{ ...LBL, marginBottom: 8 }}>COMMON QUESTIONS</div>
-          <h2 style={{ ...H2, marginBottom: 32 }}>Everything you need to know</h2>
-          {[
-            { q: "Won't I overheat wearing an extra layer?", a: "No. The mesh is specifically designed for airflow. It weighs under 80g for the full suit and breathes freely in summer heat. Most customers report no noticeable temperature difference. The mesh creates a physical barrier without trapping heat the way solid fabric does." },
-            { q: "Does it actually stop ticks?", a: "Yes. The mesh openings are smaller than 0.6mm. An adult deer tick is approximately 1-3mm and physically cannot pass through or bite through the weave. It's the same principle as a window screen, engineered into wearable clothing." },
-            { q: "How do I wash it?", a: "Machine wash on cold, gentle cycle. Hang dry or tumble dry on low. No special detergent needed. The mesh maintains its integrity wash after wash with zero loss of protection, unlike permethrin-treated clothing that degrades after 5-6 washes." },
-            { q: "How does it fit over my regular clothes?", a: "Bug Away is designed as an over-garment. You wear it right over your hiking clothes, fishing outfit, or gardening gear. The fit is slightly oversized by design so it floats over your base layer without restricting movement." },
-            { q: "How long does it last?", a: "Years. The No-See-Um-grade nylon mesh is durable and doesn't degrade with use or washing. There's no chemical treatment that wears off. As long as the mesh isn't torn, the protection is the same on day one as it is on day one thousand." },
-            { q: "What about mosquitoes and other insects?", a: "The mesh blocks any biting insect larger than 0.6mm. That includes mosquitoes, black flies, no-see-ums, gnats, and horse flies. If it bites, the mesh stops it." },
-            { q: "What if it doesn't work for me?", a: "We offer a 30-day money-back guarantee. If you get bitten through the mesh, we'll refund you in full. No questions asked." },
-          ].map(({ q, a }, i) => (
-            <details key={i} style={{ borderBottom: '1px solid #e8ede9', cursor: 'pointer' }}>
-              <summary style={{ padding: '16px 0', fontSize: 15, fontWeight: 700, color: '#333', listStyle: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                {q}
-                <span style={{ fontSize: 18, color: '#999', flexShrink: 0, marginLeft: 12 }}>+</span>
+      {/* 4. Reviews */}
+      {all && all.count > 0 && (
+        <Section id="reviews" style={{ scrollMarginTop: 80 }}>
+          <SectionHead align="left" eyebrow="Verified reviews" title={own.count ? 'What buyers of this product say' : 'What Bug Away wearers say'} mb={22}
+            action={<Link to="/reviews" className="u-link" style={{ fontWeight: FW.head, color: c.sageD }}>All reviews →</Link>} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 22 }}>
+            <Stars value={(own.count ? own : all).avg} size={20} />
+            <span style={{ fontSize: 15, color: c.grayD }}><b style={{ color: c.dark }}>{(own.count ? own : all).avg} out of 5</b> · {(own.count ? own : all).count} reviews</span>
+          </div>
+          <div className="grid-3m1 r-gap" style={rv('gap', 20, 14)}>
+            {(own.count ? own.reviews : all.reviews).slice(0, 6).map((r, k) => (
+              <article key={k} style={{ ...CARD, padding: 22 }}>
+                <Stars value={r.rating} size={14} />
+                {r.title && <h3 style={{ fontSize: 16, fontWeight: FW.head, marginTop: 8 }}>{r.title}</h3>}
+                <p className="clamp-5" style={{ fontSize: 15, lineHeight: LH.body, color: c.grayD, marginTop: 8 }}>“{r.body.trim()}”</p>
+                <div style={{ marginTop: 12, fontSize: 14, fontWeight: FW.head }}>{(r.name || '').split(' ')[0]} {r.verified && <span style={{ ...CHIP, fontSize: 11, padding: '3px 8px', background: c.mint, color: c.sageD, marginLeft: 6 }}>Verified buyer</span>}</div>
+              </article>
+            ))}
+          </div>
+        </Section>
+      )}
+
+      {/* 5. FAQ */}
+      <Section bg={c.off}>
+        <SectionHead title="Questions, answered" />
+        <div className="pd-acc" style={{ maxWidth: W.text, margin: '0 auto' }}>
+          {PDP_FAQ.map(([q, a]) => (
+            <details key={q}>
+              <summary style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, padding: '18px 0', minHeight: 56, fontSize: 16, fontWeight: FW.head, color: c.dark }}>
+                {q}<span className="pd-acc-icon" aria-hidden="true" style={{ fontSize: 22, fontWeight: 400 }}>+</span>
               </summary>
-              <p style={{ fontSize: 14, color: '#555', lineHeight: 1.7, padding: '0 0 16px', margin: 0 }}>{a}</p>
+              <p style={{ fontSize: 15, lineHeight: LH.body, color: c.grayD, paddingBottom: 18 }}>{a}</p>
             </details>
           ))}
         </div>
-      </section>
+        <p style={{ textAlign: 'center', marginTop: 22, fontSize: 15 }}><Link to="/faq" className="u-link" style={{ color: c.sageD, fontWeight: FW.head }}>More questions in our help center →</Link></p>
+      </Section>
 
-      {/* HOW IT WORKS VIDEO SECTION */}
-      <section style={{ background: '#1a2e24', padding: isMobile ? '48px 20px' : '72px 40px' }}>
-        <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center' }}>
-          <div style={{ ...LBL, color: 'rgba(255,255,255,0.6)', marginBottom: 8 }}>SEE IT IN ACTION</div>
-          <h2 style={{ fontFamily: 'Archivo, sans-serif', fontWeight: 900, fontSize: isMobile ? 26 : 32, color: '#fff', marginBottom: 16 }}>
-            Watch Bug Away work in the wild
-          </h2>
-          <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 15, marginBottom: 32, maxWidth: 560, margin: '0 auto 32px' }}>
-            See how the No-See-Um-grade mesh physically blocks insects — ticks and mosquitoes — while remaining fully breathable.
-          </p>
-          <video autoPlay muted loop playsInline style={{ width: '100%', borderRadius: 16, maxHeight: 480, objectFit: 'cover' }}>
-            <source src="/videos/see-in-action.mp4" type="video/mp4" />
-          </video>
+      {/* 6. Complete your protection */}
+      <Section>
+        <SectionHead align="left" eyebrow="Complete your protection" title={isSet ? 'Gear up the whole family' : 'Finish the setup'}
+          intro={isSet ? 'Every set counts toward the family bundle: buy 3, get the 4th free.' : undefined} mb={24} />
+        <div className="pgrid r-gap" style={rv('gap', 20, 12)}>
+          {related(product.id).map((rid) => <ProductCard key={rid} id={rid} />)}
         </div>
-      </section>
+      </Section>
 
-      {/* PROOF PHOTOS */}
-      <section style={{ background: '#F7F9F8', padding: isMobile ? '48px 20px' : '72px 40px' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <div style={{ ...LBL, marginBottom: 8 }}>PROOF IT WORKS</div>
-          <h2 style={{ ...H2, marginBottom: 16 }}>The mesh stops insects in their tracks</h2>
-          <p style={{ color: '#555', fontSize: 15, maxWidth: 600, marginBottom: 40 }}>
-            Openings smaller than 0.6mm. Real ticks and mosquitoes, stopped at the surface of the actual Bug Away mesh.
-          </p>
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 20 }}>
-            {[
-              { img: '/images/proof-ticks.jpg', label: 'Tick stopped at the mesh surface' },
-              { img: '/images/proof-mosquito.jpg', label: 'Mosquito unable to bite through' },
-              { img: '/images/proof-ticks.jpg', label: 'No gap fine enough to pass' },
-            ].map(({ img, label }) => (
-              <div key={label} style={{ borderRadius: 14, overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.08)' }}>
-                <img src={img} alt={label} style={{ width: '100%', height: isMobile ? 180 : 240, objectFit: 'cover', display: 'block' }} />
-                <div style={{ background: '#fff', padding: '10px 14px', fontSize: 13, fontWeight: 600, color: c.sageD }}>{label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <TrustBand />
 
-      {/* RELATED PRODUCTS — region-aware prices */}
-      <section style={{ background: '#fff', padding: isMobile ? '48px 20px' : '72px 40px' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <h2 style={{ ...H2, marginBottom: 32 }}>Complete your protection</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4,1fr)', gap: 20 }}>
-            {relatedProducts.map(p => {
-              const relPrice = getPrice(p, isUS, isAU);
-              return (
-                <Link key={p.id} to={`/product/${p.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <div style={{ background: '#F7F9F8', borderRadius: 14, overflow: 'hidden', transition: 'transform .2s' }}
-                    onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-4px)'}
-                    onMouseLeave={e => e.currentTarget.style.transform = ''}
-                  >
-                    <div style={{ aspectRatio: '4 / 5', overflow: 'hidden' }}>
-                      <img src={p.images[0]} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
-                    </div>
-                    <div style={{ padding: '14px 16px' }}>
-                      <div style={{ fontSize: 11, color: c.sage, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>{p.category}</div>
-                      <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 6 }}>{p.name}</div>
-                      <div style={{ fontWeight: 800, color: c.sageD }}>{formatPrice(relPrice, symbol)}</div>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      {guide && <SizeGuide product={product} onClose={() => setGuide(false)} />}
 
-      {/* STICKY MOBILE BAR */}
-      {isMobile && showSticky && (
-        <div style={{
-          position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 200,
-          background: '#fff', borderTop: '1px solid #e8ede9',
-          padding: '10px 16px', display: 'flex', gap: 10, alignItems: 'center',
-          boxShadow: '0 -4px 16px rgba(0,0,0,0.1)',
-        }}>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: '#333', lineHeight: 1.2 }}>{product.name}</div>
-            <div style={{ fontSize: 15, fontWeight: 800, color: c.sageD }}>{formatPrice(price, symbol)}</div>
-          </div>
-          <button onClick={handleBuyNow} style={{ ...BTN, fontSize: 14, padding: '12px 24px', whiteSpace: 'nowrap' }}>
-            Buy Now →
-          </button>
+      {/* Vaste koopbalk (mobiel) */}
+      <div className="m-only" aria-hidden={!sticky} style={{ position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 150, background: c.white, borderTop: `1px solid ${c.line}`, boxShadow: '0 -8px 24px rgba(44,53,48,.12)', padding: '10px 14px calc(10px + env(safe-area-inset-bottom))', display: 'flex', gap: 12, alignItems: 'center', transform: sticky ? 'none' : 'translateY(110%)', transition: 'transform .25s ease' }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 13, fontWeight: FW.head, lineHeight: 1.2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{product.name}</div>
+          <Price product={product} size={15} />
         </div>
-      )}
+        <button type="button" tabIndex={sticky ? 0 : -1} onClick={size ? buy : () => requireSize()} style={{ ...BTN, height: 48, padding: '0 22px' }}>{size ? 'Buy now' : 'Choose size'}</button>
+      </div>
     </div>
   );
 }

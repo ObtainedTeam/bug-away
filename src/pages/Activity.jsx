@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { ProductCard as Card } from '../components/ui';
+import { pic, webp } from '../img';
 import { Link, useLocation } from "react-router-dom";
 import { c, BTN, BTNO, H2, LBL } from "../theme";
 import { getActivity, activities } from "../data/activities";
 import { products } from "../data";
 import { CartContext } from "../components/Cart";
-import { useCurrency, formatPrice, getPrice } from "../currency.jsx";
+import { useCurrency, formatPrice, getPrice, getCompare } from "../currency.jsx";
 
 /**
  * Eén component voor /gardening, /hiking, /fishing en /families.
@@ -32,7 +34,7 @@ const CSS = `
 
 .act-stat { background: ${c.sageD}; color: #fff; padding: 28px 40px; text-align: center; }
 .act-stat-v { font-family: Archivo, sans-serif; font-size: 38px; font-weight: 900; line-height: 1; }
-.act-stat-l { font-family: 'Poppins', sans-serif; font-size: 13px; opacity: .85; margin-top: 6px; }
+.act-stat-l { font-family: 'Archivo Variable', sans-serif; font-size: 13px; opacity: .85; margin-top: 6px; }
 
 .act-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
 .act-grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
@@ -60,21 +62,21 @@ const CSS = `
 .act-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .act-card-b { padding: 18px; display: flex; flex-direction: column; flex: 1; }
 .act-card-n { font-weight: 700; font-size: 14px; line-height: 1.35; margin-bottom: 4px; }
-.act-card-p { font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 600;
+.act-card-p { font-family: 'Archivo Variable', sans-serif; font-size: 15px; font-weight: 600;
   color: ${c.sageD}; margin-bottom: 12px; }
 .act-sizes { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
 .act-size { border: 1.5px solid #e0e8e3; background: #fff; border-radius: 5px;
   padding: 5px 9px; font-size: 11px; font-weight: 700; cursor: pointer; color: #555;
-  font-family: 'Poppins', sans-serif; transition: all .15s; }
+  font-family: 'Archivo Variable', sans-serif; transition: all .15s; }
 .act-size:hover { border-color: ${c.sage}; }
 .act-size[data-on="1"] { background: ${c.sageD}; border-color: ${c.sageD}; color: #fff; }
 .act-add { margin-top: auto; width: 100%; background: ${c.sageD}; color: #fff; border: none;
-  border-radius: 4px; padding: 11px; font-size: 11px; font-family: 'Poppins', sans-serif;
+  border-radius: 4px; padding: 11px; font-size: 11px; font-family: 'Archivo Variable', sans-serif;
   letter-spacing: .1em; text-transform: uppercase; font-weight: 600; cursor: pointer; }
 .act-add:hover { filter: brightness(1.1); }
 .act-add[data-ok="1"] { background: ${c.sage}; }
 .act-card-l { display: block; text-align: center; margin-top: 8px; font-size: 11px;
-  color: ${c.gray}; text-decoration: none; font-family: 'Poppins', sans-serif; }
+  color: ${c.gray}; text-decoration: none; font-family: 'Archivo Variable', sans-serif; }
 .act-card-l:hover { color: ${c.sageD}; }
 
 .act-next a { display: block; background: #fff; border-radius: 14px; padding: 18px;
@@ -106,7 +108,7 @@ const Check = () => (
 );
 
 function ProductCard({ product, onCartOpen }) {
-  const { symbol, isUS, isAU } = useCurrency();
+  const { symbol, region } = useCurrency();
   const [size, setSize] = useState(null);
   const [added, setAdded] = useState(false);
 
@@ -125,7 +127,7 @@ function ProductCard({ product, onCartOpen }) {
       </Link>
       <div className="act-card-b">
         <div className="act-card-n">{product.name}</div>
-        <div className="act-card-p">{formatPrice(getPrice(product, isUS, isAU), symbol)}</div>
+        <div className="act-card-p">{formatPrice(getPrice(product, region), symbol)}</div>
 
         <div className="act-sizes">
           {product.sizes.map((s) => (
@@ -171,7 +173,7 @@ export default function Activity({ onCartOpen }) {
       <section
         className="act-hero"
         style={{
-          backgroundImage: `linear-gradient(to right, rgba(30,50,40,.78) 55%, rgba(30,50,40,.35) 100%), url('${a.hero}')`,
+          backgroundImage: `linear-gradient(to right, rgba(30,50,40,.78) 55%, rgba(30,50,40,.35) 100%), url('${webp(a.hero)}')`,
         }}
       >
         <div className="act-hero-in">
@@ -217,7 +219,7 @@ export default function Activity({ onCartOpen }) {
       <section className="act-sec" style={{ background: c.off, paddingTop: 0, paddingBottom: 0 }}>
         <div className="act-in act-grid3 act-gal" style={{ padding: "48px 0" }}>
           {a.gallery.map((g) => (
-            <img key={g.src} src={g.src} alt={g.alt} loading="lazy" />
+            <img key={g.src} {...pic(g.src, "(max-width: 767px) 100vw, 400px")} alt={g.alt} loading="lazy" />
           ))}
         </div>
       </section>
@@ -228,13 +230,10 @@ export default function Activity({ onCartOpen }) {
           <div style={{ ...LBL }}>WHAT TO WEAR</div>
           <h2 style={{ ...H2, marginBottom: 8 }}>Built for this</h2>
           <p style={{ color: "#666", fontSize: 14, lineHeight: 1.7, marginBottom: 32, maxWidth: 620 }}>
-            Pick a size and add it straight to your cart. Free shipping on US orders over $150, and the
-            combo sets come in under that on their own.
+            Tap quick add, pick your size and it is in your cart. Free shipping on orders over $150.
           </p>
-          <div className="act-grid4">
-            {picks.map((p) => (
-              <ProductCard key={p.id} product={p} onCartOpen={onCartOpen} />
-            ))}
+          <div className="pgrid" style={{ gap: 16 }}>
+            {picks.map((p) => <Card key={p.id} id={p.id} />)}
           </div>
         </div>
       </section>

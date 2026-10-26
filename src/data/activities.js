@@ -48,7 +48,7 @@ export const activities = [
       },
       {
         title: "The ankle is closed",
-        body: "The pants are one continuous piece of mesh from waist to foot. No cuff, no gap, nothing to tuck into your socks. That matters more in a garden than anywhere else, because the ankle is where a tick that has been waiting in the lawn edge finds you.",
+        body: "The foot cover is sewn onto the pants at the ankle. No cuff, no gap, nothing to tuck into your socks. That matters more in a garden than anywhere else, because the ankle is where a tick that has been waiting in the lawn edge finds you.",
       },
       {
         title: "Breathable enough to actually wear",
@@ -112,7 +112,7 @@ export const activities = [
       },
       {
         title: "No gap at the boot",
-        body: "The pant leg and foot cover are one piece. Nothing to tuck, nothing to ride up over the sock during a long descent, no opening at the exact height where questing ticks are waiting.",
+        body: "The foot cover is sewn onto the pant leg at the ankle. Nothing to tuck, nothing to ride up over the sock during a long descent, no opening at the exact height where questing ticks are waiting.",
       },
     ],
 
@@ -248,6 +248,126 @@ export const activities = [
       { src: "/images/kids-lifestyle-forest-playing.jpg", alt: "Children playing in a forest in Bug Away kids sets" },
       { src: "/images/kids-lifestyle-jumping-stream.jpg", alt: "Kids jumping a stream in Bug Away mesh" },
       { src: "/images/combo-lifestyle-group-campfire-green.jpg", alt: "Family around a campfire in Bug Away mesh" },
+    ],
+  },
+
+  /* ------------------------------------------------------------------ */
+  {
+    slug: "camping",
+    nav: "Camping",
+    label: "FOR CAMPERS",
+    h1: "Tick and mosquito protection for camping",
+    lede: "At camp you sit still in the grass, at dusk, next to the water. That is the exact hour and place the mosquitoes and ticks have been waiting for.",
+    metaTitle: "Tick & Mosquito Protection for Camping | Chemical-Free Bug Clothing",
+    metaDescription:
+      "Campsites put you in grass and near water at dusk. Bug Away mesh keeps ticks, mosquitoes and black flies off without spraying insecticide near your food or tent.",
+    hero: "/images/Couple _ camping.png",
+    heroAlt: "Couple at a campsite wearing Bug Away mesh",
+
+    stat: { value: "< 80g", label: "for a full set that packs into its own pocket" },
+
+    problems: [
+      {
+        title: "Dusk is when everything bites",
+        body: "Many mosquito species are most active around dusk and dawn, exactly when you are cooking, sitting by the fire or walking to the washroom. Long sleeves help until they stick to your skin in the heat.",
+      },
+      {
+        title: "You sit where ticks wait",
+        body: "Tent pitches are cleared, but the edges are not. A camp chair in the long grass, a log by the fire pit, a path through the brush to the lake: low vegetation is where ticks quest.",
+      },
+      {
+        title: "Spray and food do not mix",
+        body: "Reapplying repellent every few hours means it ends up on your hands, your cups and your food. And it washes off the moment you swim or sweat.",
+      },
+    ],
+
+    solutions: [
+      {
+        title: "Throw it on over camp clothes",
+        body: "The jacket and pants go over whatever you are wearing, in seconds. Pull them on when the sun drops and take them off when you crawl into the tent.",
+      },
+      {
+        title: "Nothing to reapply",
+        body: "The protection is the weave, with openings under 0.6mm. There is no spray to top up after a swim and nothing on your hands when you cook.",
+      },
+      {
+        title: "Packs small",
+        body: "The full set weighs under 80 grams and packs into the jacket pocket, so it fits in any pack next to the headlamp.",
+      },
+    ],
+
+    tips: [
+      "Pitch away from long grass and leaf litter where you can, and keep chairs on the cleared area.",
+      "Put the mesh on before dusk, not after the first bite.",
+      "Keep the mesh loose over your clothes so nothing presses it against your skin.",
+      "Do a full tick check before you get into your sleeping bag.",
+    ],
+
+    productIds: ["ba-combo-men", "ba-combo-women", "ba-kids-set", "ba-storage-pouch"],
+    gallery: [
+      { src: "/images/Buddies camping together.png", alt: "Friends at a campsite in Bug Away mesh" },
+      { src: "/images/combo-lifestyle-couple-forest-white.jpg", alt: "Couple walking through the forest in white Bug Away sets" },
+      { src: "/images/storage-pouch-camp.jpg", alt: "Bug Away storage pouch at camp" },
+    ],
+  },
+
+  /* ------------------------------------------------------------------ */
+  {
+    slug: "travel",
+    nav: "Travel",
+    label: "FOR TRAVELERS",
+    h1: "Insect protection for travel",
+    lede: "New country, new insects, and no idea what the local ticks or mosquitoes carry. A barrier you can pack is the one thing that works the same everywhere.",
+    metaTitle: "Insect Protection for Travel | Packable Chemical-Free Bug Clothing",
+    metaDescription:
+      "Traveling through tick or mosquito country? Bug Away mesh packs small, needs no chemicals and keeps biting insects off your skin wherever you go.",
+    hero: "/images/Men and female hiking on mountain.png",
+    heroAlt: "Two travelers hiking in Bug Away mesh",
+
+    stat: { value: "0", label: "liquids to declare: no sprays, no DEET" },
+
+    problems: [
+      {
+        title: "You do not know the local risk",
+        body: "Tick and mosquito seasons differ by region, and so does what they carry. Travelers rarely know which trail, lake or campsite is the risky one until after the bite.",
+      },
+      {
+        title: "Sprays are a hassle on the road",
+        body: "Liquids take space in your bag, run out at the wrong moment and have to be reapplied after every swim or shower.",
+      },
+      {
+        title: "Long days, little time to check",
+        body: "Busy travel days make careful tick checks easy to skip, especially on kids.",
+      },
+    ],
+
+    solutions: [
+      {
+        title: "Works the same everywhere",
+        body: "The mesh openings are under 0.6mm. That stops ticks, mosquitoes and black flies whatever region you are in, without relying on a chemical.",
+      },
+      {
+        title: "Fits in a daypack",
+        body: "A full set weighs under 80 grams and packs into its own jacket pocket. No liquids, nothing to declare, nothing to run out of.",
+      },
+      {
+        title: "For the whole family",
+        body: "Sets come in men's, women's and kids' sizes, so everyone is covered on the same trip.",
+      },
+    ],
+
+    tips: [
+      "Check the local tick and mosquito season before you go.",
+      "Keep the set in your daypack, not your suitcase, so it is there when you need it.",
+      "Shower within two hours of coming in from grass or woods.",
+      "Bring a tick removal tool. Pharmacies abroad do not always stock one.",
+    ],
+
+    productIds: ["ba-combo-women", "ba-combo-men", "ba-tick-kit", "ba-storage-pouch"],
+    gallery: [
+      { src: "/images/Female _ White mesh _ mountain solo.png", alt: "Traveler in white Bug Away mesh in the mountains" },
+      { src: "/images/storage-pouch-trail.jpg", alt: "Bug Away pouch on a backpack" },
+      { src: "/images/tick-kit-uses.jpg", alt: "Tick removal kit" },
     ],
   },
 ];

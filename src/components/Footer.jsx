@@ -1,98 +1,76 @@
 import { Link } from 'react-router-dom';
-import { c } from '../theme';
+import { c, rv, FW, R, LH, W } from '../theme';
+import { NewsletterForm } from './ui';
+import { CATS, USE_CASES_NAV } from '../data/catalog';
 
-const cols = [
-  { head:"Collection", links:[{l:"Men",to:"/shop/men"},{l:"Women",to:"/shop/women"},{l:"Kids",to:"/shop/kids"},{l:"Bundles",to:"/shop/bundles"},{l:"Extras",to:"/shop/extras"}] },
-  { head:"Info", links:[{l:"How It Works",to:"/how-it-works"},{l:"Ticks & Lyme",to:"/blog"},{l:"Size Guide",to:"/faq"},{l:"FAQ",to:"/faq"},{l:"Reviews",to:"/reviews"}] },
-  { head:"Service", links:[{l:"Shipping",to:"/faq"},{l:"Returns",to:"/faq"},{l:"Contact",to:"/contact"},{l:"Reviews",to:"/reviews"}] },
+export const PAYMENTS = ['Visa', 'Mastercard', 'PayPal', 'Shop Pay', 'Google Pay', 'Klarna'];
+
+function PayBadges({ dark = true }) {
+  return (
+    <ul aria-label="Payment methods" style={{ listStyle: 'none', display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+      {PAYMENTS.map((p) => (
+        <li key={p} style={{ fontSize: 11, fontWeight: FW.head, letterSpacing: '0.02em', padding: '5px 9px', borderRadius: 6, background: dark ? 'rgba(255,255,255,.1)' : c.white, color: dark ? c.white : c.dark, border: dark ? '1px solid rgba(255,255,255,.18)' : `1px solid ${c.line}` }}>{p}</li>
+      ))}
+    </ul>
+  );
+}
+export { PayBadges };
+
+const COLS = [
+  ['Shop', [...CATS.filter((x) => !x.soon).map((x) => [`/shop?cat=${x.key}`, x.label]), ['/shop', 'All products']]],
+  ['Made for', [...USE_CASES_NAV, ['/why-choose-us', 'Mesh vs sprays']]],
+  ['Help', [['/faq', 'FAQ'], ['/contact', 'Contact us'], ['/returns', 'Returns & refunds'], ['/reviews', 'Reviews'], ['/how-it-works', 'How it works'], ['/about', 'Our story'], ['/blog', 'Blog']]],
 ];
 
 export default function Footer() {
+  const year = new Date().getFullYear();
+  const link = { color: c.mist, textDecoration: 'none', fontSize: 14, lineHeight: 1.4, display: 'inline-block', padding: '5px 0' };
   return (
-    <>
-      <style>{`
-        .ft-root { padding: 48px 60px 32px; }
-        .ft-grid { grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; }
-        .ft-brand { grid-column: auto; }
-        .ft-news { flex-direction: row; align-items: center; }
-        .ft-form { width: auto; }
-        .ft-input { min-width: 220px; }
-        .ft-bot { flex-direction: row; align-items: center; gap: 0; }
-        @media (max-width: 767px) {
-          .ft-root { padding: 36px 20px 24px; }
-          .ft-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
-          .ft-brand { grid-column: 1/-1; }
-          .ft-news { flex-direction: column; align-items: flex-start; }
-          .ft-form { width: 100%; }
-          .ft-input { min-width: 0; }
-          .ft-bot { flex-direction: column; align-items: flex-start; gap: 12px; }
-        }
-      `}</style>
-    <footer className="ft-root" style={{ background:c.dark, color:c.mist }}>
-      <div className="ft-grid" style={{ display:"grid", marginBottom:32 }}>
-        {/* Brand */}
-        <div className="ft-brand">
-          <Link to="/" style={{ fontSize:19, fontWeight:800, letterSpacing:"0.1em", color:"#fff", textTransform:"uppercase", textDecoration:"none", display:"block", marginBottom:14 }}>Bug Away</Link>
-          <p style={{ fontSize:13, lineHeight:1.7, color:c.gray, fontFamily:"'Poppins',sans-serif", maxWidth:240, marginBottom:16 }}>
-            Insecticide-free protection against ticks and mosquitoes. For hikers, families and everyone who enjoys the outdoors.
+    <footer style={{ background: c.forest, color: c.white }}>
+      <div className="r-pad" style={{ ...rv('pad', '64px 40px 28px', '48px 20px 28px') }}>
+        <div style={{ maxWidth: W.page, margin: '0 auto' }}>
+          <div id="newsletter" className="grid-2m1 r-gap" style={{ ...rv('gap', 40, 18), alignItems: 'center', paddingBottom: 44, marginBottom: 44, borderBottom: '1px solid rgba(255,255,255,.12)', scrollMarginTop: 120 }}>
+            <div>
+              <h2 style={{ fontSize: 26, fontWeight: FW.head, lineHeight: LH.head }}>Stay ahead of tick season</h2>
+              <p style={{ color: c.mist, marginTop: 8, fontSize: 15, lineHeight: LH.body }}>Get 15% off your first order, plus tick alerts and tips for the trail. No spam.</p>
+            </div>
+            <NewsletterForm />
+          </div>
+
+          <div className="foot-grid">
+            <div className="foot-brand">
+              <Link to="/" style={{ fontWeight: 900, fontSize: 22, color: c.white, textDecoration: 'none', letterSpacing: '-0.02em' }}>BUG AWAY</Link>
+              <p style={{ color: c.mist, fontSize: 14, lineHeight: LH.body, marginTop: 12, maxWidth: 320 }}>Chemical-free mesh clothing that keeps ticks, mosquitoes and black flies off your skin. Nothing to spray, nothing to wash out.</p>
+              <p style={{ color: c.mist, fontSize: 14, lineHeight: LH.body, marginTop: 14 }}>
+                <a href="mailto:info@bugawaygear.com" style={{ color: c.white, fontWeight: FW.mid }}>info@bugawaygear.com</a><br />
+                Ships from Houston, Texas<br />
+                Operated by Obtained VOF, Lelystad, the Netherlands
+              </p>
+            </div>
+            {COLS.map(([title, links]) => (
+              <nav key={title} aria-label={title}>
+                <div style={{ fontWeight: FW.head, fontSize: 14, marginBottom: 10 }}>{title}</div>
+                <ul style={{ listStyle: 'none' }}>
+                  {links.map(([to, label]) => <li key={to}><Link to={to} className="u-link" style={link}>{label}</Link></li>)}
+                </ul>
+              </nav>
+            ))}
+          </div>
+
+          <div className="foot-bottom" style={{ marginTop: 44, paddingTop: 22, borderTop: '1px solid rgba(255,255,255,.12)' }}>
+            <PayBadges />
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px 18px', fontSize: 13, color: c.mist }}>
+              <span>© {year} Bug Away</span>
+              <Link to="/privacy" className="u-link" style={{ color: c.mist }}>Privacy</Link>
+              <Link to="/terms" className="u-link" style={{ color: c.mist }}>Terms</Link>
+              <Link to="/returns" className="u-link" style={{ color: c.mist }}>Returns</Link>
+            </div>
+          </div>
+          <p style={{ fontSize: 12, color: c.gray, marginTop: 18, lineHeight: 1.5, maxWidth: 760 }}>
+            Bug Away is a physical barrier garment designed to prevent insect bites. It is not a medical device and does not prevent or treat tick-borne illness.
           </p>
-          <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
-            {["♻️ Eco","🌿 Chemical-free","🐝 Bee-safe"].map((t,i)=>(
-              <span key={i} style={{ fontSize:11, fontFamily:"'Poppins',sans-serif", color:c.sage, background:"rgba(255,255,255,0.07)", borderRadius:12, padding:"3px 10px" }}>{t}</span>
-            ))}
-          </div>
-          {/* Social */}
-          <div style={{ display:"flex", gap:12, marginTop:20 }}>
-            {[{icon:"📸",label:"Instagram"},{icon:"▶️",label:"TikTok"},{icon:"👥",label:"Facebook"}].map((s,i)=>(
-              <div key={i} style={{ width:34, height:34, borderRadius:"50%", background:"rgba(255,255,255,0.08)", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", fontSize:14 }}>
-                {s.icon}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Nav columns */}
-        {cols.map((col,i)=>(
-          <div key={i}>
-            <div style={{ fontSize:11, letterSpacing:"0.14em", textTransform:"uppercase", color:c.sage, fontFamily:"'Poppins',sans-serif", fontWeight:700, marginBottom:14 }}>{col.head}</div>
-            {col.links.map(l=>(
-              <Link key={l.l} to={l.to} style={{ fontSize:12, color:c.gray, fontFamily:"'Poppins',sans-serif", marginBottom:10, cursor:"pointer", display:"block", textDecoration:"none" }}>{l.l}</Link>
-            ))}
-          </div>
-        ))}
-      </div>
-
-      {/* Newsletter */}
-      <div style={{ borderTop:`1px solid rgba(255,255,255,0.08)`, borderBottom:`1px solid rgba(255,255,255,0.08)`, padding:"24px 0", marginBottom:24 }}>
-        <div className="ft-news" style={{ display:"flex", justifyContent:"space-between", gap:16 }}>
-          <div>
-            <div style={{ fontSize:14, fontWeight:700, color:"#fff", marginBottom:4 }}>Stay protected this season</div>
-            <div style={{ fontSize:12, color:c.gray, fontFamily:"'Poppins',sans-serif" }}>Tick alerts, tips and exclusive offers — no spam.</div>
-          </div>
-          <div className="ft-form" style={{ display:"flex", gap:8 }}>
-            <input
-              type="email"
-              placeholder="Your email address"
-              style={{ flex:1, padding:"10px 16px", borderRadius:4, border:`1px solid rgba(255,255,255,0.15)`, background:"rgba(255,255,255,0.08)", color:"#fff", fontFamily:"'Poppins',sans-serif", fontSize:12, outline:"none", minWidth:0 }} className="ft-input"
-            />
-            <button style={{ background:c.sageD, color:"#fff", border:"none", borderRadius:4, padding:"10px 20px", fontSize:11, fontFamily:"'Poppins',sans-serif", letterSpacing:"0.08em", textTransform:"uppercase", cursor:"pointer", fontWeight:600, whiteSpace:"nowrap" }}>
-              Sign Up
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Bottom bar */}
-      <div className="ft-bot" style={{ display:"flex", justifyContent:"space-between" }}>
-        <span style={{ fontSize:11, color:c.grayD, fontFamily:"'Poppins',sans-serif" }}>© 2025 Bug Away. All rights reserved.</span>
-        <div style={{ display:"flex", gap:16, flexWrap:"wrap", alignItems:"center" }}>
-          <Link to="/privacy" style={{ fontSize:11, color:c.grayD, fontFamily:"'Poppins',sans-serif", textDecoration:"none" }}>Privacy</Link>
-          <Link to="/returns" style={{ fontSize:11, color:c.grayD, fontFamily:"'Poppins',sans-serif", textDecoration:"none" }}>Returns</Link>
-          <Link to="/terms" style={{ fontSize:11, color:c.grayD, fontFamily:"'Poppins',sans-serif", textDecoration:"none" }}>Terms</Link>
-          {["Visa","Mastercard","iDEAL","PayPal"].map(m=><span key={m} style={{ fontSize:11, color:c.grayD, fontFamily:"'Poppins',sans-serif" }}>{m}</span>)}
         </div>
       </div>
     </footer>
-    </>
   );
 }

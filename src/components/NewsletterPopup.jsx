@@ -54,7 +54,7 @@ export default function NewsletterPopup() {
         }}>✕</button>
 
         <div style={{ background: '#F0F5F2', padding: '32px 28px', textAlign: 'center' }}>
-          <div style={{ fontSize: 48, fontFamily: 'Archivo, sans-serif', fontWeight: 900, color: c.sageD, lineHeight: 1 }}>
+          <div style={{ fontSize: 48, fontFamily: "'Archivo Variable', sans-serif", fontWeight: 900, color: c.sageD, lineHeight: 1 }}>
             15% OFF
           </div>
           <p style={{ fontSize: 15, color: '#555', marginTop: 8, marginBottom: 0 }}>

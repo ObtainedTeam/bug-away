@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { pic } from '../img';
 import { c, useIsMobile, BTN, H2, LBL } from "../theme";
 import { subscribe } from "../brevo";
 
@@ -18,12 +19,12 @@ export default function Pets() {
     <div>
       <section style={{
         position: "relative", minHeight: isMobile ? 300 : 400,
-        background: `linear-gradient(to right, rgba(30,50,40,.75) 55%, rgba(30,50,40,.35) 100%), url("/images/pants-detail-feet-grass.jpg") center/cover no-repeat`,
+        background: `linear-gradient(to right, rgba(30,50,40,.75) 55%, rgba(30,50,40,.35) 100%), url("/img/pants-detail-feet-grass.webp") center/cover no-repeat`,
         display: "flex", alignItems: "center", justifyContent: "center",
       }}>
         <div style={{ textAlign: "center", color: "#fff", padding: isMobile ? "40px 24px" : "60px 40px", maxWidth: 600 }}>
           <div style={{ fontSize: 48, marginBottom: 16 }}>🐕</div>
-          <h1 style={{ fontFamily: "Archivo, sans-serif", fontSize: isMobile ? 32 : 44, fontWeight: 900, margin: "0 0 16px" }}>
+          <h1 style={{ fontFamily: "'Archivo Variable', sans-serif", fontSize: isMobile ? 32 : 44, fontWeight: 900, margin: "0 0 16px" }}>
             Pet Protection
           </h1>
           <p style={{ fontSize: 16, opacity: 0.9, lineHeight: 1.6, marginBottom: 8 }}>

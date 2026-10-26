@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { pic } from '../img';
 import { c, useIsMobile, BTN, H2, LBL } from "../theme";
 
 const VALUES = [
@@ -32,7 +33,7 @@ export default function About() {
         style={{
           position: "relative",
           minHeight: isMobile ? 300 : 420,
-          backgroundImage: `linear-gradient(to right, rgba(30,50,40,.72) 55%, rgba(30,50,40,.3) 100%), url("/images/Couple _ camping.png")`,
+          backgroundImage: `linear-gradient(to right, rgba(30,50,40,.72) 55%, rgba(30,50,40,.3) 100%), url("/img/couple-camping.webp")`,
           backgroundPosition: isMobile ? "center" : "center 30%",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
@@ -54,7 +55,7 @@ export default function About() {
           </div>
           <h1
             style={{
-              fontFamily: "Archivo, sans-serif",
+              fontFamily: "'Archivo Variable', sans-serif",
               fontSize: isMobile ? 32 : 48,
               fontWeight: 900,
               lineHeight: 1.15,
@@ -167,7 +168,7 @@ export default function About() {
           </div>
           <h2
             style={{
-              fontFamily: "Archivo, sans-serif",
+              fontFamily: "'Archivo Variable', sans-serif",
               fontWeight: 900,
               fontSize: isMobile ? 28 : 40,
               color: "#fff",

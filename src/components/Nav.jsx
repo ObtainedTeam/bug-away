@@ -1,202 +1,350 @@
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { c } from "../theme";
-import { activities } from "../data/activities";
+import { useState, useEffect, useRef } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { c, FONT, FW, R, SH, T, LH, W, BTN, CHIP, CARD } from '../theme';
+import { pic } from '../img';
+import { CartContext } from './Cart';
+import { useCurrency, REGIONS } from '../currency.jsx';
+import { products } from '../data';
+import { CATS, SECONDARY_LINKS, USE_CASES_NAV, productById, CARD_IMG, SHORT } from '../data/catalog';
+import { Price } from './ui';
 
-const NAV_LINKS = [
-  { label: "How It Works", path: "/how-it-works" },
-  { label: "Why Us", path: "/why-choose-us" },
-  { label: "Blog", path: "/blog" },
-  { label: "Reviews", path: "/reviews" },
-  { label: "FAQ", path: "/faq" },
-  { label: "About", path: "/about" },
-];
+// Navigatie naar het flip'nsleep-model: sluitbare aankondigingsbalk, sticky
+// header, categorieën met dropdownpanelen op desktop en een drawer met
+// accordeon op mobiel/tablet. Alle categorieën komen uit CATS in
+// src/data/catalog.js; een categorie met `soon` krijgt vanzelf een
+// "Soon"-badge. Desktop vs mobiel gaat via CSS (.nav-lg/.nav-sm), zodat de
+// geprerenderde HTML en de browser-HTML identiek zijn.
 
-// Afgeleid uit activities.js zodat de nav niet uit de pas loopt met de routes.
-const ACTIVITY_DROPDOWN = activities.map(a => ({ label: a.nav, path: `/${a.slug}` }));
+const LINE = `1px solid ${c.line}`;
+const SOON = { ...CHIP, fontSize: 10, padding: '3px 7px', background: c.mint, color: c.sageD, letterSpacing: '0.04em' };
 
-const SHOP_DROPDOWN = [
-  { label: "All Products", path: "/shop" },
-  { label: "Men", path: "/shop?cat=MEN" },
-  { label: "Women", path: "/shop?cat=WOMEN" },
-  { label: "Kids", path: "/shop?cat=KIDS" },
-  { label: "Bundles", path: "/shop?cat=BUNDLES" },
-  { label: "Pets — Coming Soon", path: "/pets" },
-  { label: "Accessories", path: "/accessories" },
-];
+function goNewsletter(e) {
+  if (typeof document === 'undefined') return;
+  const el = document.getElementById('newsletter');
+  if (el) { e && e.preventDefault(); el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+}
 
-export default function Nav({ cartCount, onCartOpen }) {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [shopOpen, setShopOpen] = useState(false);
-  const [actOpen, setActOpen] = useState(false);
-  const { pathname } = useLocation();
+const svg = (d, size = 22) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{d}</svg>
+);
+const BagIcon = () => svg(<><path d="M5 8h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8L5 8Z" /><path d="M9 10V6.5a3 3 0 0 1 6 0V10" /></>);
+const SearchIcon = () => svg(<><circle cx="11" cy="11" r="6.5" /><path d="m20 20-4.2-4.2" /></>);
+const UserIcon = () => svg(<><circle cx="12" cy="8" r="3.8" /><path d="M4.5 20c1.2-3.6 4-5.4 7.5-5.4s6.3 1.8 7.5 5.4" /></>);
 
+function Chevron({ open }) {
   return (
-    <>
-      {/* Layout via CSS in plaats van useIsMobile. Reden: deze nav zit op elke
-          geprerenderde pagina, en useIsMobile leest window.innerWidth, wat er
-          tijdens het prerenderen niet is. Dan schrijft de server altijd de
-          desktopnav weg en loopt een telefoon over de rand tot React hem
-          corrigeert. Met media queries klopt de HTML meteen. */}
-      <style>{`
-        .nav-desk { display: flex; }
-        .nav-burger { display: none; }
-        .nav-mob { display: block; }
-        @media (max-width: 767px) {
-          .nav-desk { display: none; }
-          .nav-burger { display: block; }
-        }
-        @media (min-width: 768px) {
-          .nav-mob { display: none; }
-        }
-      `}</style>
+    <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true" style={{ transition: 'transform .2s ease', transform: open ? 'rotate(180deg)' : 'none' }}>
+      <path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
 
-      {/* ANNOUNCEMENT BAR */}
-      <div style={{ background: c.sage, color: "#fff", textAlign: "center", fontSize: 12, fontWeight: 600, padding: "8px 16px", letterSpacing: 0.5 }}>
-        🌿 Free shipping over $150 in the US · Chemical-free · Eco-responsible
+function PanelCard({ id, onPick }) {
+  const p = productById(id);
+  const [name, line] = SHORT[id] || [p.name, ''];
+  return (
+    <Link to={`/product/${id}`} onClick={onPick} className="card-hover" style={{ ...CARD, textDecoration: 'none', overflow: 'hidden', display: 'block', color: c.dark }}>
+      <div style={{ position: 'relative', background: c.off, aspectRatio: '1 / 1' }}>
+        <img {...pic(CARD_IMG[id] || p.images[0], '200px')} loading="lazy" decoding="async" alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: p.imageFit === 'contain' ? 'contain' : 'cover' }} />
       </div>
+      <div style={{ padding: '12px 14px 14px' }}>
+        <div style={{ fontWeight: FW.head, fontSize: 14, lineHeight: LH.head }}>{name}</div>
+        <div style={{ fontSize: 12, color: c.grayD, margin: '2px 0 6px' }}>{line}</div>
+        <Price product={p} size={14} />
+      </div>
+    </Link>
+  );
+}
 
-      {/* NAV */}
-      <nav style={{ background: "#fff", borderBottom: "1px solid #e8ede9", position: "sticky", top: 0, zIndex: 100, boxShadow: "0 1px 8px rgba(0,0,0,0.05)" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", height: 60, gap: 32 }}>
+function RegionSelect({ compact = false }) {
+  const { region, setRegion } = useCurrency();
+  return (
+    <label style={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
+      <span style={{ position: 'absolute', left: -9999 }}>Currency</span>
+      <select value={region} onChange={(e) => setRegion(e.target.value)}
+        style={{ appearance: 'none', WebkitAppearance: 'none', border: LINE, borderRadius: R.sm, background: c.white, color: c.dark, fontSize: 13, fontWeight: FW.mid, padding: compact ? '7px 26px 7px 9px' : '8px 28px 8px 10px', cursor: 'pointer' }}>
+        {Object.entries(REGIONS).map(([k, r]) => <option key={k} value={k}>{r.flag} {r.code}</option>)}
+      </select>
+      <span style={{ position: 'absolute', right: 9, pointerEvents: 'none', color: c.grayD, display: 'flex' }}><Chevron /></span>
+    </label>
+  );
+}
 
-          {/* LOGO */}
-          <Link to="/" style={{ fontFamily: "Archivo, sans-serif", fontWeight: 900, fontSize: 18, color: c.sageD, textDecoration: "none", letterSpacing: "-0.02em", flexShrink: 0 }}>
-            BUG AWAY
-          </Link>
-
-          <div className="nav-desk" style={{ alignItems: "center", gap: 4, flex: 1 }}>
-              {/* SHOP DROPDOWN */}
-              <div
-                style={{ position: "relative" }}
-                onMouseEnter={() => setShopOpen(true)}
-                onMouseLeave={() => setShopOpen(false)}
-              >
-                <Link to="/shop" style={{
-                  textDecoration: "none", fontSize: 13, fontWeight: 700, padding: "8px 12px",
-                  color: pathname === "/shop" ? c.sageD : "#555",
-                  borderBottom: pathname === "/shop" ? `2px solid ${c.sageD}` : "2px solid transparent",
-                  display: "flex", alignItems: "center", gap: 4,
-                }}>
-                  SHOP <span style={{ fontSize: 10, opacity: 0.7 }}>▾</span>
-                </Link>
-                {shopOpen && (
-                  <div style={{
-                    position: "absolute", top: "100%", left: 0, background: "#fff",
-                    borderRadius: 12, boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
-                    border: "1px solid #e8ede9", minWidth: 180, overflow: "hidden", zIndex: 200,
-                  }}>
-                    {SHOP_DROPDOWN.map(({ label, path }) => (
-                      <Link key={label} to={path} onClick={() => setShopOpen(false)} style={{
-                        display: "block", padding: "10px 18px", textDecoration: "none",
-                        fontSize: 13, fontWeight: 600, color: "#333",
-                        borderBottom: "1px solid #f0f0f0",
-                        transition: "background .15s",
-                      }}
-                        onMouseEnter={e => e.currentTarget.style.background = "#F7F9F8"}
-                        onMouseLeave={e => e.currentTarget.style.background = "#fff"}
-                      >
-                        {label}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* ACTIVITIES DROPDOWN */}
-              <div
-                style={{ position: "relative" }}
-                onMouseEnter={() => setActOpen(true)}
-                onMouseLeave={() => setActOpen(false)}
-              >
-                <span style={{
-                  fontSize: 13, fontWeight: 700, padding: "8px 12px", cursor: "pointer",
-                  color: ACTIVITY_DROPDOWN.some(a => a.path === pathname) ? c.sageD : "#555",
-                  borderBottom: ACTIVITY_DROPDOWN.some(a => a.path === pathname) ? `2px solid ${c.sageD}` : "2px solid transparent",
-                  display: "flex", alignItems: "center", gap: 4,
-                }}>
-                  ACTIVITIES <span style={{ fontSize: 10, opacity: 0.7 }}>▾</span>
-                </span>
-                {actOpen && (
-                  <div style={{
-                    position: "absolute", top: "100%", left: 0, background: "#fff",
-                    borderRadius: 12, boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
-                    border: "1px solid #e8ede9", minWidth: 160, overflow: "hidden", zIndex: 200,
-                  }}>
-                    {ACTIVITY_DROPDOWN.map(({ label, path }) => (
-                      <Link key={label} to={path} onClick={() => setActOpen(false)} style={{
-                        display: "block", padding: "10px 18px", textDecoration: "none",
-                        fontSize: 13, fontWeight: 600, color: "#333", borderBottom: "1px solid #f0f0f0",
-                      }}
-                        onMouseEnter={e => e.currentTarget.style.background = "#F7F9F8"}
-                        onMouseLeave={e => e.currentTarget.style.background = "#fff"}
-                      >
-                        {label}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* OTHER NAV LINKS */}
-              {NAV_LINKS.map(({ label, path }) => (
-                <Link key={label} to={path} style={{
-                  textDecoration: "none", fontSize: 13, fontWeight: 700, padding: "8px 12px",
-                  color: pathname === path ? c.sageD : "#555",
-                  borderBottom: pathname === path ? `2px solid ${c.sageD}` : "2px solid transparent",
-                  transition: "color .2s",
-                }}>
-                  {label.toUpperCase()}
-                </Link>
-              ))}
-          </div>
-
-          <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 16 }}>
-            {/* CART */}
-            <button onClick={onCartOpen} style={{ position: "relative", background: "none", border: "none", cursor: "pointer", padding: 4 }}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={c.sageD} strokeWidth="2">
-                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
-              </svg>
-              {cartCount > 0 && (
-                <span style={{ position: "absolute", top: -4, right: -4, background: c.sageD, color: "#fff", borderRadius: "50%", width: 16, height: 16, fontSize: 10, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  {cartCount}
-                </span>
-              )}
-            </button>
-
-            {/* HAMBURGER */}
-              <button className="nav-burger" aria-label="Menu" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)} style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
-                <div style={{ width: 22, height: 2, background: "#333", marginBottom: 5, transition: "all .3s", transform: menuOpen ? "rotate(45deg) translateY(7px)" : "none" }} />
-                <div style={{ width: 22, height: 2, background: "#333", marginBottom: 5, opacity: menuOpen ? 0 : 1 }} />
-                <div style={{ width: 22, height: 2, background: "#333", transition: "all .3s", transform: menuOpen ? "rotate(-45deg) translateY(-7px)" : "none" }} />
-              </button>
-          </div>
-        </div>
-
-        {/* MOBILE MENU */}
-        {menuOpen && (
-          <div className="nav-mob" style={{ background: "#fff", borderTop: "1px solid #e8ede9", padding: "16px 24px" }}>
-            <div style={{ fontSize: 11, fontWeight: 800, color: "#999", textTransform: "uppercase", letterSpacing: 1, marginBottom: 8 }}>Collections</div>
-            {SHOP_DROPDOWN.map(({ label, path }) => (
-              <Link key={label} to={path} onClick={() => setMenuOpen(false)} style={{ display: "block", padding: "10px 0", fontSize: 14, fontWeight: 600, color: "#333", textDecoration: "none", borderBottom: "1px solid #f5f5f5" }}>
-                {label}
-              </Link>
-            ))}
-            <div style={{ fontSize: 11, fontWeight: 800, color: "#999", textTransform: "uppercase", letterSpacing: 1, margin: "16px 0 8px" }}>Activities</div>
-            {ACTIVITY_DROPDOWN.map(({ label, path }) => (
-              <Link key={label} to={path} onClick={() => setMenuOpen(false)} style={{ display: "block", padding: "10px 0", fontSize: 14, fontWeight: 600, color: "#333", textDecoration: "none", borderBottom: "1px solid #f5f5f5" }}>
-                {label}
-              </Link>
-            ))}
-            <div style={{ fontSize: 11, fontWeight: 800, color: "#999", textTransform: "uppercase", letterSpacing: 1, margin: "16px 0 8px" }}>More</div>
-            {NAV_LINKS.map(({ label, path }) => (
-              <Link key={label} to={path} onClick={() => setMenuOpen(false)} style={{ display: "block", padding: "10px 0", fontSize: 14, fontWeight: 600, color: "#333", textDecoration: "none", borderBottom: "1px solid #f5f5f5" }}>
-                {label}
+function SearchPanel({ open, onClose }) {
+  const [q, setQ] = useState('');
+  const inputRef = useRef(null);
+  const nav = useNavigate();
+  useEffect(() => { if (open) { setQ(''); setTimeout(() => inputRef.current && inputRef.current.focus(), 30); } }, [open]);
+  useEffect(() => {
+    if (!open) return undefined;
+    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [open, onClose]);
+  if (!open) return null;
+  const term = q.trim().toLowerCase();
+  const hits = term ? products.filter((p) => `${p.name} ${p.category} ${(p.useCases || []).join(' ')}`.toLowerCase().includes(term)).slice(0, 6) : [];
+  return (
+    <div role="dialog" aria-modal="true" aria-label="Search" onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 250, background: 'rgba(26,46,36,.45)' }}>
+      <div onClick={(e) => e.stopPropagation()} style={{ background: c.white, padding: '18px 16px 22px', boxShadow: SH.float }}>
+        <form onSubmit={(e) => { e.preventDefault(); if (hits[0]) { nav(`/product/${hits[0].id}`); onClose(); } }} style={{ maxWidth: W.text, margin: '0 auto', display: 'flex', gap: 10, alignItems: 'center' }}>
+          <span style={{ color: c.grayD, display: 'flex' }}><SearchIcon /></span>
+          <input ref={inputRef} value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search jackets, pants, kids, tick kit…" aria-label="Search products"
+            style={{ flex: 1, minWidth: 0, border: 'none', outline: 'none', fontSize: 18, padding: '8px 0', color: c.dark }} />
+          <button type="button" onClick={onClose} aria-label="Close search" style={{ border: 'none', background: 'none', fontSize: 26, lineHeight: 1, cursor: 'pointer', color: c.dark, padding: 6 }}>×</button>
+        </form>
+        {term && (
+          <div style={{ maxWidth: W.text, margin: '12px auto 0' }}>
+            {hits.length === 0 && <p style={{ color: c.grayD, fontSize: 14, padding: '8px 0' }}>No products found. Try "jacket", "kids" or "tick".</p>}
+            {hits.map((p) => (
+              <Link key={p.id} to={`/product/${p.id}`} onClick={onClose} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 0', textDecoration: 'none', color: c.dark, borderTop: LINE }}>
+                <img {...pic(CARD_IMG[p.id] || p.images[0], '56px')} alt="" loading="lazy" style={{ width: 56, height: 56, objectFit: 'cover', borderRadius: R.sm, background: c.off }} />
+                <span style={{ flex: 1, minWidth: 0, fontWeight: FW.mid, fontSize: 14 }}>{p.name}</span>
+                <Price product={p} size={14} />
               </Link>
             ))}
           </div>
         )}
-      </nav>
+      </div>
+    </div>
+  );
+}
+
+export default function Nav({ onCartOpen }) {
+  const [drawer, setDrawer] = useState(false);
+  const [acc, setAcc] = useState('sets');
+  const [openCat, setOpenCat] = useState(null);
+  const [search, setSearch] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [bar, setBar] = useState(true);
+  const [count, setCount] = useState(0);
+  const loc = useLocation();
+  const headerRef = useRef(null);
+  const btnRefs = useRef({});
+  const drawerRef = useRef(null);
+
+  useEffect(() => {
+    const update = (items) => setCount((items || CartContext.items).reduce((s, i) => s + i.quantity, 0));
+    update();
+    CartContext.subscribe(update);
+    return () => CartContext.unsubscribe(update);
+  }, []);
+
+  useEffect(() => {
+    try { if (sessionStorage.getItem('ba-bar') === '0') setBar(false); } catch { /* */ }
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Bij routewissel menu's sluiten
+  const [path, setPath] = useState(loc.pathname);
+  if (path !== loc.pathname) { setPath(loc.pathname); setDrawer(false); setOpenCat(null); setSearch(false); }
+
+  useEffect(() => {
+    if (!openCat) return undefined;
+    const onKey = (e) => { if (e.key === 'Escape') { const b = btnRefs.current[openCat]; setOpenCat(null); b && b.focus(); } };
+    const onDown = (e) => { if (headerRef.current && !headerRef.current.contains(e.target)) setOpenCat(null); };
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('mousedown', onDown);
+    return () => { document.removeEventListener('keydown', onKey); document.removeEventListener('mousedown', onDown); };
+  }, [openCat]);
+
+  useEffect(() => {
+    if (!drawer) return undefined;
+    const onKey = (e) => { if (e.key === 'Escape') setDrawer(false); };
+    document.addEventListener('keydown', onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const first = drawerRef.current && drawerRef.current.querySelector('button, a');
+    first && first.focus();
+    return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = prev; };
+  }, [drawer]);
+
+  const close = () => setOpenCat(null);
+  const closeBar = () => { setBar(false); try { sessionStorage.setItem('ba-bar', '0'); } catch { /* */ } };
+  const iconBtn = { background: 'none', border: 'none', cursor: 'pointer', color: c.dark, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 44, height: 44, borderRadius: R.pill, position: 'relative', textDecoration: 'none' };
+
+  return (
+    <>
+      <a href="#main" className="skip">Skip to content</a>
+
+      {/* Aankondigingsbalk: één boodschap, sluitbaar */}
+      {bar && (
+        <div style={{ position: 'relative', background: c.forest, color: c.white, textAlign: 'center', padding: '9px 44px', fontSize: 13, lineHeight: LH.head, fontWeight: FW.mid }}>
+          <Link to="/shop" className="u-link" style={{ color: c.white }}>
+            Free shipping on orders over $150<span className="d-only"> · Tracked delivery to the US &amp; Canada from Houston, TX</span>
+          </Link>
+          <button type="button" onClick={closeBar} aria-label="Close announcement"
+            style={{ position: 'absolute', right: 6, top: '50%', transform: 'translateY(-50%)', width: 36, height: 36, border: 'none', background: 'none', color: c.white, fontSize: 20, lineHeight: 1, cursor: 'pointer', opacity: 0.8 }}>×</button>
+        </div>
+      )}
+
+      <header ref={headerRef} onMouseLeave={close}
+        style={{ position: 'sticky', top: 0, zIndex: 90, background: 'rgba(255,255,255,.94)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', borderBottom: LINE, boxShadow: scrolled ? SH.card : 'none', transition: 'box-shadow .2s ease' }}>
+        <div className="nav-bar" style={{ maxWidth: W.page + 80, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 12 }}>
+          <button className="nav-sm" type="button" aria-label="Open menu" aria-expanded={drawer} aria-controls="nav-drawer" onClick={() => setDrawer(true)} style={{ ...iconBtn, marginLeft: -8, flexDirection: 'column', gap: 5 }}>
+            {[0, 1, 2].map((i) => <i key={i} style={{ width: 20, height: 2, background: c.dark, borderRadius: R.pill, display: 'block' }} />)}
+          </button>
+
+          <Link to="/" onMouseEnter={close} aria-label="Bug Away, home" style={{ textDecoration: 'none', fontWeight: 900, fontSize: 21, letterSpacing: '-0.02em', color: c.sageD, flexShrink: 0, whiteSpace: 'nowrap' }}>
+            BUG AWAY
+          </Link>
+
+          {/* Desktop categorieën */}
+          <nav className="nav-lg" aria-label="Shop by category" style={{ flex: 1, justifyContent: 'center' }}>
+            <ul style={{ listStyle: 'none', display: 'flex', alignItems: 'center' }}>
+              {CATS.map((cat) => {
+                const open = openCat === cat.key;
+                return (
+                  <li key={cat.key}>
+                    <button ref={(el) => { btnRefs.current[cat.key] = el; }} type="button" className="nav-cat"
+                      aria-expanded={open} aria-controls={`nav-panel-${cat.key}`}
+                      onMouseEnter={() => setOpenCat(cat.key)}
+                      onClick={(e) => setOpenCat(open && e.detail === 0 ? null : cat.key)}
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', cursor: 'pointer', padding: '10px 9px', borderRadius: R.pill, color: open ? c.sageD : c.dark, fontSize: 14, fontWeight: FW.mid, whiteSpace: 'nowrap' }}>
+                      {cat.label}
+                      {cat.soon && <span style={SOON}>SOON</span>}
+                      <Chevron open={open} />
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginLeft: 'auto' }} onMouseEnter={close}>
+            <div className="nav-lg" style={{ gap: 14, marginRight: 6 }}>
+              {SECONDARY_LINKS.slice(1, 2).map(([to, label]) => (
+                <Link key={to} to={to} className="u-link" style={{ color: loc.pathname === to ? c.sageD : c.dark, fontSize: 14, fontWeight: FW.mid, whiteSpace: 'nowrap' }}>{label}</Link>
+              ))}
+              <RegionSelect />
+            </div>
+            <button type="button" aria-label="Search" onClick={() => setSearch(true)} style={iconBtn}><SearchIcon /></button>
+            <a href="https://checkout.bugawaygear.com/account" aria-label="Account" className="nav-lg" style={iconBtn}><UserIcon /></a>
+            <button type="button" aria-label={`Cart, ${count} item${count === 1 ? '' : 's'}`} onClick={onCartOpen} style={{ ...iconBtn, marginRight: -8 }}>
+              <BagIcon />
+              {count > 0 && <b style={{ position: 'absolute', top: 4, right: 2, minWidth: 18, height: 18, padding: '0 5px', background: c.sageD, color: c.white, fontSize: 11, lineHeight: 1, borderRadius: R.pill, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{count}</b>}
+            </button>
+          </div>
+        </div>
+
+        {/* Dropdownpanelen (desktop) */}
+        <div className="nav-lg" style={{ position: 'absolute', top: '100%', left: 0, right: 0, justifyContent: 'center', pointerEvents: 'none' }}>
+          {CATS.map((cat) => {
+            const open = openCat === cat.key;
+            const ids = cat.ids || [];
+            const pw = cat.soon ? W.narrow : ids.length > 2 ? W.page : 860;
+            return (
+              <div key={cat.key} id={`nav-panel-${cat.key}`} className={`nav-panel${open ? ' is-open' : ''}`} role="region" aria-label={cat.label}
+                style={{ position: 'absolute', top: 0, width: `min(${pw}px, calc(100% - 48px))`, paddingTop: 10 }}>
+                <div style={{ background: c.white, borderRadius: R.lg, boxShadow: SH.float, padding: 24, borderTop: `3px solid ${c.sage}` }}>
+                  {cat.soon ? (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+                      <img {...pic(cat.soon.img, '120px')} loading="lazy" alt="" style={{ width: 110, height: 110, objectFit: 'cover', borderRadius: R.sm, flexShrink: 0, filter: 'grayscale(.4)' }} />
+                      <div>
+                        <span style={SOON}>COMING SOON</span>
+                        <div style={{ fontWeight: FW.head, fontSize: 19, lineHeight: LH.head, color: c.dark, margin: '8px 0 4px' }}>{cat.label}</div>
+                        <p style={{ fontSize: 14, color: c.grayD, lineHeight: 1.5, marginBottom: 8 }}>{cat.soon.text}</p>
+                        <a href="#newsletter" onClick={(e) => { close(); goNewsletter(e); }} className="u-link" style={{ fontSize: 14, fontWeight: FW.head, color: c.sageD }}>Join the list to hear first →</a>
+                      </div>
+                    </div>
+                  ) : (
+                    <div style={{ display: 'grid', gridTemplateColumns: '220px minmax(0, 1fr)', gap: 28, alignItems: 'start' }}>
+                      <div>
+                        <div style={{ fontWeight: FW.head, fontSize: 20, lineHeight: LH.head, color: c.dark, marginBottom: 8 }}>{cat.label}</div>
+                        <p style={{ fontSize: 14, lineHeight: 1.55, color: c.grayD, marginBottom: 14 }}>{cat.intro}</p>
+                        <Link to={`/shop?cat=${cat.key}`} onClick={close} className="u-link" style={{ fontSize: 14, fontWeight: FW.head, color: c.sageD }}>Shop all {cat.label.toLowerCase()} →</Link>
+                      </div>
+                      <div style={{ display: 'grid', gridTemplateColumns: `repeat(${Math.max(ids.length, 3)}, minmax(0, 1fr))`, gap: 14 }}>
+                        {ids.map((id) => <PanelCard key={id} id={id} onPick={close} />)}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </header>
+
+      <SearchPanel open={search} onClose={() => setSearch(false)} />
+
+      {/* Mobiele drawer */}
+      <div className="nav-sm" style={{ display: 'contents' }}>
+        <div onClick={() => setDrawer(false)} aria-hidden="true" className={`nav-scrim${drawer ? ' is-open' : ''}`} />
+        <aside id="nav-drawer" ref={drawerRef} className={`nav-drawer${drawer ? ' is-open' : ''}`} aria-label="Menu" aria-hidden={!drawer} style={{ background: c.white, boxShadow: SH.float }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px 10px 20px', borderBottom: LINE }}>
+            <span style={{ fontWeight: 900, fontSize: 19, color: c.sageD, letterSpacing: '-0.02em' }}>BUG AWAY</span>
+            <button type="button" aria-label="Close menu" onClick={() => setDrawer(false)} style={iconBtn}>
+              <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M5 5l12 12M17 5 5 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
+            </button>
+          </div>
+
+          <div style={{ flex: 1, overflowY: 'auto', padding: '6px 0' }}>
+            <div style={{ padding: '12px 20px 4px', color: c.grayD, fontSize: 12, fontWeight: FW.head, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Shop by category</div>
+            {CATS.map((cat) => {
+              const open = acc === cat.key;
+              return (
+                <div key={cat.key} style={{ borderBottom: LINE }}>
+                  <button type="button" aria-expanded={open} aria-controls={`nav-acc-${cat.key}`} onClick={() => setAcc(open ? null : cat.key)}
+                    style={{ width: '100%', minHeight: 52, display: 'flex', alignItems: 'center', gap: 8, background: 'none', border: 'none', cursor: 'pointer', padding: '12px 20px', color: c.dark, fontSize: 16, fontWeight: FW.mid, textAlign: 'left' }}>
+                    {cat.label}
+                    {cat.soon && <span style={SOON}>SOON</span>}
+                    <span style={{ marginLeft: 'auto', display: 'flex' }}><Chevron open={open} /></span>
+                  </button>
+                  <div id={`nav-acc-${cat.key}`} hidden={!open} style={{ padding: '0 20px 14px' }}>
+                    {cat.soon ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                        <img {...pic(cat.soon.img, '56px')} loading="lazy" alt="" style={{ width: 56, height: 56, objectFit: 'cover', borderRadius: R.sm, flexShrink: 0, filter: 'grayscale(.4)' }} />
+                        <div style={{ fontSize: 14, lineHeight: 1.5, color: c.grayD }}>
+                          {cat.soon.text} <a href="#newsletter" onClick={(e) => { setDrawer(false); goNewsletter(e); }} style={{ color: c.sageD, fontWeight: FW.head }}>Join the list</a>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        {cat.ids.map((id) => {
+                          const p = productById(id);
+                          return (
+                            <Link key={id} to={`/product/${id}`} onClick={() => setDrawer(false)} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '7px 0', textDecoration: 'none', color: c.dark }}>
+                              <img {...pic(CARD_IMG[id] || p.images[0], '56px')} loading="lazy" alt="" style={{ width: 56, height: 56, objectFit: p.imageFit === 'contain' ? 'contain' : 'cover', background: c.off, borderRadius: R.sm, flexShrink: 0 }} />
+                              <span style={{ minWidth: 0, flex: 1 }}>
+                                <span style={{ display: 'block', fontWeight: FW.mid, fontSize: 14, lineHeight: LH.head }}>{(SHORT[id] || [p.name])[0]}</span>
+                                <Price product={p} size={13} />
+                              </span>
+                            </Link>
+                          );
+                        })}
+                        <Link to={`/shop?cat=${cat.key}`} onClick={() => setDrawer(false)} style={{ display: 'inline-block', marginTop: 6, fontSize: 14, fontWeight: FW.head, color: c.sageD }}>Shop all {cat.label.toLowerCase()} →</Link>
+                      </>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+
+            <div style={{ padding: '18px 20px 4px', color: c.grayD, fontSize: 12, fontWeight: FW.head, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Made for</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, padding: '8px 20px 6px' }}>
+              {USE_CASES_NAV.map(([to, label]) => (
+                <Link key={to} to={to} onClick={() => setDrawer(false)} style={{ ...CHIP, fontSize: 13, padding: '9px 14px', background: c.mint, color: c.dark, textDecoration: 'none' }}>{label}</Link>
+              ))}
+            </div>
+
+            <div style={{ padding: '12px 0' }}>
+              {[...SECONDARY_LINKS, ['/about', 'Our story'], ['/contact', 'Contact']].map(([to, label]) => (
+                <Link key={to} to={to} onClick={() => setDrawer(false)} style={{ display: 'flex', alignItems: 'center', minHeight: 44, padding: '0 20px', color: loc.pathname === to ? c.sageD : c.dark, fontSize: 16, textDecoration: 'none' }}>{label}</Link>
+              ))}
+              <a href="https://checkout.bugawaygear.com/account" style={{ display: 'flex', alignItems: 'center', minHeight: 44, padding: '0 20px', color: c.dark, fontSize: 16, textDecoration: 'none' }}>My account</a>
+            </div>
+          </div>
+
+          <div style={{ padding: '14px 20px calc(14px + env(safe-area-inset-bottom))', borderTop: LINE, display: 'flex', gap: 10, alignItems: 'center' }}>
+            <RegionSelect compact />
+            <Link to="/shop?cat=sets" onClick={() => setDrawer(false)} style={{ ...BTN, flex: 1, height: 46 }}>Shop full sets</Link>
+          </div>
+        </aside>
+      </div>
     </>
   );
 }

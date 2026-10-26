@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Nav from './components/Nav';
 import Footer from './components/Footer';
@@ -25,22 +25,21 @@ import { activities } from './data/activities';
 
 export function AppShell() {
   const [cartOpen, setCartOpen] = useState(false);
+  // Elk onderdeel kan de winkelmand openen met window.dispatchEvent(new Event('ba:cart-open')).
+  useEffect(() => {
+    const open = () => setCartOpen(true);
+    window.addEventListener('ba:cart-open', open);
+    return () => window.removeEventListener('ba:cart-open', open);
+  }, []);
 
   return (
       <CurrencyProvider>
         <ScrollToTop />
-        <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-        <style>{`
-          * { box-sizing: border-box; margin: 0; padding: 0; }
-          body { font-family: 'Archivo', sans-serif; background: #F7F9F8; overflow-x: hidden; }
-          a { color: inherit; }
-          img { max-width: 100%; }
-        `}</style>
         <Nav onCartOpen={() => setCartOpen(true)} />
         <Cart isOpen={cartOpen} onClose={() => setCartOpen(false)} />
         <ExitPopup />
         <NewsletterPopup />
-        <main>
+        <main id="main">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/shop" element={<Shop />} />

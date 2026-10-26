@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { pic } from '../img';
 import { c, BTN, BTNO, H2, LBL } from "../theme";
 
 /**
@@ -34,7 +35,7 @@ const CSS = `
 
 .wcu-tw { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .wcu-table { width: 100%; min-width: 620px; border-collapse: collapse;
-  font-family: 'Poppins', sans-serif; font-size: 13px; background: #fff;
+  font-family: 'Archivo Variable', sans-serif; font-size: 13px; background: #fff;
   border-radius: 14px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,.05); }
 .wcu-table th, .wcu-table td { padding: 14px 16px; text-align: left;
   border-bottom: 1px solid #eef2f0; }
@@ -55,7 +56,7 @@ const CSS = `
   gap: 10px; margin-bottom: 8px; }
 .wcu-dis-n { font-weight: 800; font-size: 14px; color: ${c.dark}; font-family: Archivo, sans-serif; }
 .wcu-dis-s { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 10px;
-  color: #fff; white-space: nowrap; font-family: 'Poppins', sans-serif; }
+  color: #fff; white-space: nowrap; font-family: 'Archivo Variable', sans-serif; }
 .wcu-dis-c p { font-size: 13px; line-height: 1.65; color: #666; margin: 0; }
 
 .wcu-limits { background: #fff; border: 1px solid #e8ede9; border-radius: 16px; padding: 32px; }
@@ -82,7 +83,7 @@ const COMPARE = [
   ["Safe around bees", "Yes", "No", "No", "Yes"],
   ["Needs reapplying", "No", "No", "Yes", "No"],
   ["Breathable in summer", "Yes, it is mesh", "Depends", "N/A", "Depends"],
-  ["Closed at the ankle", "Yes, one piece", "No", "No", "No"],
+  ["Closed at the ankle", "Yes, sewn-in foot cover", "No", "No", "No"],
 ];
 
 const DISEASES = [
@@ -203,7 +204,7 @@ export default function WhyChooseUs() {
               See how it works
             </Link>
           </div>
-          <img src="/images/proof-ticks.jpg" alt="A tick on Bug Away mesh, unable to pass through the weave" loading="lazy" />
+          <img {...pic("/images/proof-ticks.jpg", "(max-width: 767px) 100vw, 600px")} alt="A tick on Bug Away mesh, unable to pass through the weave" loading="lazy" />
         </div>
       </section>
 
@@ -228,7 +229,7 @@ export default function WhyChooseUs() {
               </div>
             ))}
           </div>
-          <p style={{ color: c.gray, fontSize: 12, lineHeight: 1.6, marginTop: 20, fontFamily: "'Poppins',sans-serif" }}>
+          <p style={{ color: c.gray, fontSize: 12, lineHeight: 1.6, marginTop: 20, fontFamily: "'Archivo Variable', sans-serif" }}>
             General information, not medical advice. If you think you have been bitten and feel
             unwell, speak to a doctor.
           </p>

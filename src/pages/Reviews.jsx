@@ -31,7 +31,7 @@ export default function Reviews() {
             <>
               <div style={{ textAlign: "center", marginBottom: 22 }}>
                 <span style={{ color: "#E8A33D", fontSize: 22, letterSpacing: 2 }}>{"★".repeat(Math.round(data.avg))}</span>
-                <span style={{ fontFamily: "Archivo, sans-serif", fontWeight: 900, fontSize: 20, color: c.sageD, marginLeft: 10 }}>{data.avg}</span>
+                <span style={{ fontFamily: "'Archivo Variable', sans-serif", fontWeight: 900, fontSize: 20, color: c.sageD, marginLeft: 10 }}>{data.avg}</span>
                 <span style={{ fontSize: 13, color: "#666", marginLeft: 8 }}>based on {data.count} verified review{data.count === 1 ? "" : "s"}</span>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)", gap: 14 }}>
@@ -50,7 +50,7 @@ export default function Reviews() {
             </>
           ) : (
             <div style={{ background: "#F7F9F8", borderRadius: 16, padding: isMobile ? "26px 20px" : "36px 34px", textAlign: "center" }}>
-              <h2 style={{ fontFamily: "Archivo, sans-serif", fontWeight: 900, fontSize: isMobile ? 20 : 24, color: c.sageD, marginBottom: 10 }}>The first reviews are on their way</h2>
+              <h2 style={{ fontFamily: "'Archivo Variable', sans-serif", fontWeight: 900, fontSize: isMobile ? 20 : 24, color: c.sageD, marginBottom: 10 }}>The first reviews are on their way</h2>
               <p style={{ fontSize: 14, lineHeight: 1.7, color: "#666", maxWidth: 520, margin: "0 auto" }}>
                 Bug Away customers are out on the trails right now. Every verified buyer automatically gets a review invitation, and as their reviews come in, they'll appear on this page — unfiltered. Until then, we'd rather show you no reviews than fake ones.
               </p>

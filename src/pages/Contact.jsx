@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { pic } from '../img';
 import { c, useIsMobile, H2, LBL, BTN } from "../theme";
 
 const EMAIL = "info@bugawaygear.com";
@@ -12,13 +13,13 @@ export default function Contact() {
       {/* ── HERO (compact, dit is een support-pagina, geen marketing) ── */}
       <section style={{
         position: "relative", minHeight: isMobile ? 180 : 240,
-        background: `linear-gradient(to right, rgba(30,50,40,.75) 60%, rgba(30,50,40,.35) 100%), url('/images/combo-lifestyle-couple-forest-white.jpg') center/cover no-repeat`,
+        background: `linear-gradient(to right, rgba(30,50,40,.75) 60%, rgba(30,50,40,.35) 100%), url('/img/combo-lifestyle-couple-forest-white.webp') center/cover no-repeat`,
         display: "flex", alignItems: "center",
       }}>
         <div style={{ maxWidth: 700, padding: isMobile ? "48px 24px" : "60px 64px", color: "#fff" }}>
           <div style={{ ...LBL, color: "rgba(255,255,255,0.7)", marginBottom: 12 }}>SUPPORT</div>
           <h1 style={{
-            fontFamily: "Archivo, sans-serif",
+            fontFamily: "'Archivo Variable', sans-serif",
             fontSize: isMobile ? 30 : 44,
             fontWeight: 900,
             lineHeight: 1.15,
@@ -58,7 +59,7 @@ export default function Contact() {
             href={`mailto:${EMAIL}?subject=${encodeURIComponent(SUBJECT)}`}
             style={{
               display: "inline-block",
-              fontFamily: "'Archivo', sans-serif",
+              fontFamily: "'Archivo Variable', sans-serif",
               fontSize: isMobile ? 20 : 26,
               fontWeight: 800,
               color: c.sageD,
@@ -81,7 +82,7 @@ export default function Contact() {
             fontSize: 12,
             color: c.gray,
             marginTop: 18,
-            fontFamily: "'Poppins', sans-serif",
+            fontFamily: "'Archivo Variable', sans-serif",
           }}>
             No mail app? Copy the address above and email us from your inbox.
           </p>
@@ -109,7 +110,7 @@ export default function Contact() {
               fontWeight: 600,
               color: c.dark,
               textDecoration: "none",
-              fontFamily: "'Poppins', sans-serif",
+              fontFamily: "'Archivo Variable', sans-serif",
             }}>
               Read the FAQ
             </Link>
@@ -122,7 +123,7 @@ export default function Contact() {
               fontWeight: 600,
               color: c.dark,
               textDecoration: "none",
-              fontFamily: "'Poppins', sans-serif",
+              fontFamily: "'Archivo Variable', sans-serif",
             }}>
               Returns policy
             </Link>
@@ -136,7 +137,7 @@ export default function Contact() {
           borderTop: `1px solid ${c.glL}`,
           fontSize: 12,
           color: c.gray,
-          fontFamily: "'Poppins', sans-serif",
+          fontFamily: "'Archivo Variable', sans-serif",
           lineHeight: 1.6,
         }}>
           Bug Away is operated by Obtained VOF. All customer support runs

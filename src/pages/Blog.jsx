@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { pic } from '../img';
 import { c, useIsMobile, LBL } from "../theme";
 import { subscribe } from "../brevo";
 
@@ -42,12 +43,12 @@ export default function Blog() {
       {/* HERO */}
       <section style={{
         position: "relative", minHeight: isMobile ? 260 : 340,
-        background: `linear-gradient(to right, rgba(30,50,40,.75) 60%, rgba(30,50,40,.35) 100%), url('/images/jacket-men-lifestyle-forest-walking.jpg') center/cover no-repeat`,
+        background: `linear-gradient(to right, rgba(30,50,40,.75) 60%, rgba(30,50,40,.35) 100%), url('/img/jacket-men-lifestyle-forest-walking.webp') center/cover no-repeat`,
         display: "flex", alignItems: "center",
       }}>
         <div style={{ maxWidth: 700, padding: isMobile ? "60px 24px" : "80px 64px", color: "#fff" }}>
           <div style={{ ...LBL, color: "rgba(255,255,255,0.7)", marginBottom: 12 }}>KNOWLEDGE BASE</div>
-          <h1 style={{ fontFamily: "Archivo, sans-serif", fontSize: isMobile ? 32 : 48, fontWeight: 900, lineHeight: 1.15, margin: "0 0 16px" }}>
+          <h1 style={{ fontFamily: "'Archivo Variable', sans-serif", fontSize: isMobile ? 32 : 48, fontWeight: 900, lineHeight: 1.15, margin: "0 0 16px" }}>
             Learn about<br /><span style={{ color: "#a8d5b5" }}>tick protection</span>
           </h1>
           <p style={{ fontSize: 15, opacity: 0.85, maxWidth: 440, lineHeight: 1.65, margin: 0 }}>
@@ -72,16 +73,16 @@ export default function Blog() {
 
       {loading && (
         <section style={{ background: "#F7F9F8", padding: "80px 24px", textAlign: "center" }}>
-          <div style={{ fontSize: 14, color: c.gray, fontFamily: "'Poppins',sans-serif" }}>Loading articles…</div>
+          <div style={{ fontSize: 14, color: c.gray, fontFamily: "'Archivo Variable', sans-serif" }}>Loading articles…</div>
         </section>
       )}
 
       {!loading && filtered.length === 0 && (
         <section style={{ background: "#F7F9F8", padding: "80px 24px", textAlign: "center" }}>
-          <div style={{ fontFamily: "Archivo, sans-serif", fontWeight: 800, fontSize: 20, marginBottom: 8 }}>
+          <div style={{ fontFamily: "'Archivo Variable', sans-serif", fontWeight: 800, fontSize: 20, marginBottom: 8 }}>
             {articles.length === 0 ? "No articles yet" : `Nothing in ${active} yet`}
           </div>
-          <div style={{ fontSize: 14, color: c.gray, fontFamily: "'Poppins',sans-serif" }}>
+          <div style={{ fontSize: 14, color: c.gray, fontFamily: "'Archivo Variable', sans-serif" }}>
             {articles.length === 0 ? "New articles are published here every week." : "Try another category."}
           </div>
         </section>
@@ -98,7 +99,7 @@ export default function Blog() {
                 </div>
                 <div style={{ padding: isMobile ? 24 : 40, display: "flex", flexDirection: "column", justifyContent: "center" }}>
                   <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: 1.5, color: c.sage, marginBottom: 12 }}>FEATURED · {featured.cat}</div>
-                  <h2 style={{ fontFamily: "Archivo, sans-serif", fontWeight: 800, fontSize: isMobile ? 22 : 28, lineHeight: 1.3, marginBottom: 16 }}>{featured.title}</h2>
+                  <h2 style={{ fontFamily: "'Archivo Variable', sans-serif", fontWeight: 800, fontSize: isMobile ? 22 : 28, lineHeight: 1.3, marginBottom: 16 }}>{featured.title}</h2>
                   <p style={{ color: "#666", fontSize: 15, lineHeight: 1.7, marginBottom: 24 }}>{featured.excerpt}</p>
                   <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
                     <span style={{ fontSize: 12, color: "#999" }}>{featured.readTime}</span>
@@ -167,7 +168,7 @@ function BlogSignup({ isMobile }) {
   return (
     <section style={{ background: c.sage, padding: isMobile ? "48px 20px" : "64px 40px", textAlign: "center" }}>
       <div style={{ maxWidth: 520, margin: "0 auto" }}>
-        <h2 style={{ fontFamily: "Archivo, sans-serif", fontWeight: 900, fontSize: isMobile ? 26 : 32, color: "#fff", marginBottom: 12 }}>Stay updated on tick season</h2>
+        <h2 style={{ fontFamily: "'Archivo Variable', sans-serif", fontWeight: 900, fontSize: isMobile ? 26 : 32, color: "#fff", marginBottom: 12 }}>Stay updated on tick season</h2>
         <p style={{ color: "rgba(255,255,255,0.85)", fontSize: 15, marginBottom: 28 }}>Get our latest articles and tick protection tips straight to your inbox.</p>
         <form onSubmit={onSubmit} style={{ display: "flex", gap: 10, maxWidth: 420, margin: "0 auto", flexDirection: isMobile ? "column" : "row" }}>
           <input
@@ -176,13 +177,13 @@ function BlogSignup({ isMobile }) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Your email address"
-            style={{ flex: 1, padding: "13px 18px", borderRadius: 10, border: "none", fontSize: 14, outline: "none", minWidth: 0, fontFamily: "Archivo, sans-serif" }}
+            style={{ flex: 1, padding: "13px 18px", borderRadius: 10, border: "none", fontSize: 14, outline: "none", minWidth: 0, fontFamily: "'Archivo Variable', sans-serif" }}
           />
           <button type="submit" disabled={state.busy} style={{ background: "#1a2e24", color: "#fff", border: "none", borderRadius: 10, padding: "13px 24px", fontWeight: 700, fontSize: 14, cursor: state.busy ? "default" : "pointer", whiteSpace: "nowrap", opacity: state.busy ? 0.6 : 1 }}>
             {state.busy ? "…" : "Subscribe"}
           </button>
         </form>
-        <div style={{ minHeight: 20, marginTop: 14, fontSize: 13, fontFamily: "'Poppins',sans-serif", color: state.ok ? "#fff" : "#ffe0e0" }}>
+        <div style={{ minHeight: 20, marginTop: 14, fontSize: 13, fontFamily: "'Archivo Variable', sans-serif", color: state.ok ? "#fff" : "#ffe0e0" }}>
           {state.msg}
         </div>
       </div>

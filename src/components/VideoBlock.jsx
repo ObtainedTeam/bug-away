@@ -163,7 +163,7 @@ export default function VideoBlock({
         style={{
           position: "relative",
           zIndex: 2,
-          fontFamily: "'Poppins', sans-serif",
+          fontFamily: "'Archivo Variable', sans-serif",
           fontSize: 14,
           fontWeight: 600,
           color: thumbnail ? "#fff" : c.sageD,
