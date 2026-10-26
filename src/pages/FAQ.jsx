@@ -34,7 +34,7 @@ const FAQS = [
   },
   {
     q: "How long does shipping take?",
-    a: "Netherlands: 2–4 business days. EU: 3–7 business days. North America: 10–18 business days. You will receive a tracking number once your order ships."
+    a: "Orders ship from our warehouse in Houston, Texas, to the US and Canada. You receive a tracking number as soon as your order ships. Shipping is free on orders over $150."
   },
   {
     q: "What sizes are available?",
