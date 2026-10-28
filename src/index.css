@@ -171,7 +171,7 @@ button:active, a:active { transform: translateY(1px); }
 @media (max-width: 900px) { .shop-layout { grid-template-columns: minmax(0, 1fr); gap: 16px; } }
 
 /* Footer */
-.foot-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 40px; }
+.foot-grid { display: grid; grid-template-columns: 1.4fr repeat(4, minmax(0, 1fr)); gap: 32px; }
 .foot-bottom { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 @media (max-width: 767px) {
   .foot-grid { grid-template-columns: 1fr 1fr; gap: 32px 20px; }

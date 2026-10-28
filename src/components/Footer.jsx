@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { c, rv, FW, R, LH, W } from '../theme';
 import { NewsletterForm } from './ui';
 import { CATS, USE_CASES_NAV } from '../data/catalog';
+import { BUGS } from '../data/bugs';
 
 export const PAYMENTS = ['Visa', 'Mastercard', 'PayPal', 'Shop Pay', 'Google Pay', 'Klarna'];
 
@@ -17,7 +18,8 @@ function PayBadges({ dark = true }) {
 export { PayBadges };
 
 const COLS = [
-  ['Shop', [...CATS.filter((x) => !x.soon).map((x) => [`/shop?cat=${x.key}`, x.label]), ['/shop', 'All products']]],
+  ['Shop', [...CATS.filter((x) => !x.soon && !x.hideInShopMenu).map((x) => [`/shop?cat=${x.key}`, x.label]), ['/shop', 'All products']]],
+  ['Protect from', BUGS.map((b) => [`/protect/${b.key}`, b.label])],
   ['Made for', [...USE_CASES_NAV, ['/why-choose-us', 'Mesh vs sprays']]],
   ['Help', [['/faq', 'FAQ'], ['/contact', 'Contact us'], ['/returns', 'Returns & refunds'], ['/reviews', 'Reviews'], ['/how-it-works', 'How it works'], ['/about', 'Our story'], ['/blog', 'Blog']]],
 ];

@@ -28,6 +28,7 @@ import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { products } from '../src/data.js';
 import { activities } from '../src/data/activities.js';
+import { BUGS } from '../src/data/bugs.js';
 import { IMAGES } from '../src/data/images.js';
 
 const OUT_DIR = path.resolve('dist');
@@ -78,6 +79,7 @@ const META = {
 };
 
 const webpOf = (src) => (IMAGES[src] ? `/img/${IMAGES[src][0]}.webp` : src);
+for (const b of BUGS) META[`/protect/${b.key}`] = { title: b.metaTitle, desc: b.metaDescription, img: webpOf(b.img) };
 for (const a of activities) {
   META[`/${a.slug}`] = { title: a.metaTitle, desc: a.metaDescription, img: webpOf(a.hero) };
 }
@@ -189,6 +191,7 @@ const ROUTES = [
   '/returns',
   '/terms',
   ...activities.map((a) => `/${a.slug}`),
+  ...BUGS.map((b) => `/protect/${b.key}`),
   ...products.map((p) => `/product/${p.id}`),
 ];
 

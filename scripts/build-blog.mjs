@@ -24,6 +24,7 @@ import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { products } from '../src/data.js';
 import { activities } from '../src/data/activities.js';
+import { BUGS } from '../src/data/bugs.js';
 
 const API_BASE = 'https://api.babylovegrowth.ai/api/integrations/v1';
 const API_KEY = process.env.BABYLOVE_API_KEY;
@@ -195,6 +196,7 @@ const STATIC_PAGES = [
   // Activiteitenpagina's: hoge prioriteit, dit zijn de SEO-landingspagina's.
   // Afgeleid uit activities.js zodat een nieuwe activiteit vanzelf meeloopt.
   ...activities.map((a) => [`/${a.slug}`, '0.9', 'monthly']),
+  ...BUGS.map((b) => [`/protect/${b.key}`, '0.8', 'monthly']),
   ['/why-choose-us', '0.8', 'monthly'],
   ['/blog', '0.8', 'daily'],
   ['/how-it-works', '0.7', 'monthly'],

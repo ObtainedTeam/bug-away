@@ -6,6 +6,8 @@ import { CartContext } from './Cart';
 import { useCurrency, REGIONS } from '../currency.jsx';
 import { products } from '../data';
 import { CATS, SECONDARY_LINKS, USE_CASES_NAV, productById, CARD_IMG, SHORT } from '../data/catalog';
+import { BUGS } from '../data/bugs';
+import { activities } from '../data/activities';
 import { Price } from './ui';
 
 // Navigatie naar het flip'nsleep-model: sluitbare aankondigingsbalk, sticky
@@ -16,6 +18,16 @@ import { Price } from './ui';
 // geprerenderde HTML en de browser-HTML identiek zijn.
 
 const LINE = `1px solid ${c.line}`;
+
+// Hoofdmenu: drie ingangen (product, insect, situatie) plus twee directe links.
+const MENU = [
+  { key: 'shop', label: 'Shop' },
+  { key: 'bugs', label: 'Protect from' },
+  { key: 'made', label: 'Made for' },
+  { key: 'kids', label: 'Kids', to: '/shop?cat=kids' },
+  { key: 'reviews', label: 'Reviews', to: '/reviews' },
+];
+const SHOP_CATS = CATS.filter((x) => !x.hideInShopMenu);
 const SOON = { ...CHIP, fontSize: 10, padding: '3px 7px', background: c.mint, color: c.sageD, letterSpacing: '0.04em' };
 
 function goNewsletter(e) {
@@ -110,9 +122,80 @@ function SearchPanel({ open, onClose }) {
   );
 }
 
+const drawerRow = { display: 'flex', alignItems: 'center', gap: 8, minHeight: 44, textDecoration: 'none', color: c.dark, fontSize: 15, borderTop: `1px solid ${c.line}` };
+
+function Panel({ id, open, width, children }) {
+  return (
+    <div id={`nav-panel-${id}`} className={`nav-panel${open ? ' is-open' : ''}`} role="region"
+      style={{ position: 'absolute', top: 0, width: `min(${width}px, calc(100% - 48px))`, paddingTop: 10 }}>
+      <div style={{ background: c.white, borderRadius: R.lg, boxShadow: SH.float, padding: 24, borderTop: `3px solid ${c.sage}` }}>{children}</div>
+    </div>
+  );
+}
+
+// Shop-paneel: categorieën links, producten van de aangewezen categorie rechts.
+function ShopPanel({ onPick }) {
+  const [cur, setCur] = useState(SHOP_CATS[0].key);
+  const cat = SHOP_CATS.find((x) => x.key === cur);
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: '240px minmax(0, 1fr)', gap: 28, alignItems: 'start' }}>
+      <ul style={{ listStyle: 'none', borderRight: LINE, paddingRight: 16 }}>
+        {SHOP_CATS.map((x) => (
+          <li key={x.key}>
+            <Link to={x.soon ? '/shop' : `/shop?cat=${x.key}`} onMouseEnter={() => setCur(x.key)} onFocus={() => setCur(x.key)} onClick={onPick}
+              style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '9px 12px', borderRadius: R.sm, textDecoration: 'none', fontSize: 15, fontWeight: FW.mid, color: cur === x.key ? c.sageD : c.dark, background: cur === x.key ? c.mint : 'transparent' }}>
+              {x.label}{x.soon && <span style={SOON}>SOON</span>}
+            </Link>
+          </li>
+        ))}
+        <li><Link to="/shop" onClick={onPick} className="u-link" style={{ display: 'block', padding: '12px 12px 4px', fontSize: 14, fontWeight: FW.head, color: c.sageD }}>Shop all products →</Link></li>
+      </ul>
+      {cat.soon ? (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 20, minHeight: 200 }}>
+          <img {...pic(cat.soon.img, '160px')} loading="lazy" alt="" style={{ width: 150, height: 150, objectFit: 'cover', borderRadius: R.sm, filter: 'grayscale(.3)' }} />
+          <div>
+            <span style={SOON}>COMING SOON</span>
+            <div style={{ fontWeight: FW.head, fontSize: 20, margin: '8px 0 4px' }}>{cat.label}</div>
+            <p style={{ fontSize: 14, color: c.grayD, lineHeight: 1.5, marginBottom: 8 }}>{cat.soon.text}</p>
+            <a href="#newsletter" onClick={(e) => { onPick(); goNewsletter(e); }} className="u-link" style={{ fontSize: 14, fontWeight: FW.head, color: c.sageD }}>Join the list to hear first →</a>
+          </div>
+        </div>
+      ) : (
+        <div>
+          <p style={{ fontSize: 14, color: c.grayD, lineHeight: 1.5, marginBottom: 14, maxWidth: 560 }}>{cat.intro}</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 14 }}>
+            {cat.ids.slice(0, 4).map((pid) => <PanelCard key={pid} id={pid} onPick={onPick} />)}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function TilePanel({ title, intro, items, onPick, cols = 4 }) {
+  return (
+    <div>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, marginBottom: 16 }}>
+        <b style={{ fontSize: 19 }}>{title}</b><span style={{ fontSize: 14, color: c.grayD }}>{intro}</span>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`, gap: 14 }}>
+        {items.map((it) => (
+          <Link key={it.to} to={it.to} onClick={onPick} className="card-hover" style={{ position: 'relative', display: 'block', aspectRatio: '4 / 5', borderRadius: R.lg, overflow: 'hidden', textDecoration: 'none' }}>
+            <img {...pic(it.img, '220px')} loading="lazy" alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+            <span aria-hidden="true" style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(26,46,36,0) 40%, rgba(26,46,36,.82))' }} />
+            <span style={{ position: 'absolute', left: 14, right: 14, bottom: 12, color: c.white, textShadow: SH.text }}>
+              <b style={{ display: 'block', fontSize: 16 }}>{it.label}</b><span style={{ fontSize: 12.5, opacity: 0.92 }}>{it.sub}</span>
+            </span>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function Nav({ onCartOpen }) {
   const [drawer, setDrawer] = useState(false);
-  const [acc, setAcc] = useState('sets');
+  const [acc, setAcc] = useState('shop');
   const [openCat, setOpenCat] = useState(null);
   const [search, setSearch] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -195,19 +278,21 @@ export default function Nav({ onCartOpen }) {
           {/* Desktop categorieën */}
           <nav className="nav-lg" aria-label="Shop by category" style={{ flex: 1, justifyContent: 'center' }}>
             <ul style={{ listStyle: 'none', display: 'flex', alignItems: 'center' }}>
-              {CATS.map((cat) => {
-                const open = openCat === cat.key;
+              {MENU.map((m) => {
+                const open = openCat === m.key;
+                const style = { display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', cursor: 'pointer', padding: '10px 13px', borderRadius: R.pill, color: open || (m.to && loc.pathname + loc.search === m.to) ? c.sageD : c.dark, fontSize: 15, fontWeight: FW.mid, whiteSpace: 'nowrap', textDecoration: 'none' };
                 return (
-                  <li key={cat.key}>
-                    <button ref={(el) => { btnRefs.current[cat.key] = el; }} type="button" className="nav-cat"
-                      aria-expanded={open} aria-controls={`nav-panel-${cat.key}`}
-                      onMouseEnter={() => setOpenCat(cat.key)}
-                      onClick={(e) => setOpenCat(open && e.detail === 0 ? null : cat.key)}
-                      style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', cursor: 'pointer', padding: '10px 9px', borderRadius: R.pill, color: open ? c.sageD : c.dark, fontSize: 14, fontWeight: FW.mid, whiteSpace: 'nowrap' }}>
-                      {cat.label}
-                      {cat.soon && <span style={SOON}>SOON</span>}
-                      <Chevron open={open} />
-                    </button>
+                  <li key={m.key}>
+                    {m.to ? (
+                      <Link to={m.to} className="nav-cat" onMouseEnter={close} style={style}>{m.label}</Link>
+                    ) : (
+                      <button ref={(el) => { btnRefs.current[m.key] = el; }} type="button" className="nav-cat"
+                        aria-expanded={open} aria-controls={`nav-panel-${m.key}`}
+                        onMouseEnter={() => setOpenCat(m.key)}
+                        onClick={(e) => setOpenCat(open && e.detail === 0 ? null : m.key)} style={style}>
+                        {m.label}<Chevron open={open} />
+                      </button>
+                    )}
                   </li>
                 );
               })}
@@ -216,9 +301,6 @@ export default function Nav({ onCartOpen }) {
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginLeft: 'auto' }} onMouseEnter={close}>
             <div className="nav-lg" style={{ gap: 14, marginRight: 6 }}>
-              {SECONDARY_LINKS.slice(1, 2).map(([to, label]) => (
-                <Link key={to} to={to} className="u-link" style={{ color: loc.pathname === to ? c.sageD : c.dark, fontSize: 14, fontWeight: FW.mid, whiteSpace: 'nowrap' }}>{label}</Link>
-              ))}
               <RegionSelect />
             </div>
             <button type="button" aria-label="Search" onClick={() => setSearch(true)} style={iconBtn}><SearchIcon /></button>
@@ -232,40 +314,17 @@ export default function Nav({ onCartOpen }) {
 
         {/* Dropdownpanelen (desktop) */}
         <div className="nav-lg" style={{ position: 'absolute', top: '100%', left: 0, right: 0, justifyContent: 'center', pointerEvents: 'none' }}>
-          {CATS.map((cat) => {
-            const open = openCat === cat.key;
-            const ids = cat.ids || [];
-            const pw = cat.soon ? W.narrow : ids.length > 2 ? W.page : 860;
-            return (
-              <div key={cat.key} id={`nav-panel-${cat.key}`} className={`nav-panel${open ? ' is-open' : ''}`} role="region" aria-label={cat.label}
-                style={{ position: 'absolute', top: 0, width: `min(${pw}px, calc(100% - 48px))`, paddingTop: 10 }}>
-                <div style={{ background: c.white, borderRadius: R.lg, boxShadow: SH.float, padding: 24, borderTop: `3px solid ${c.sage}` }}>
-                  {cat.soon ? (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-                      <img {...pic(cat.soon.img, '120px')} loading="lazy" alt="" style={{ width: 110, height: 110, objectFit: 'cover', borderRadius: R.sm, flexShrink: 0, filter: 'grayscale(.4)' }} />
-                      <div>
-                        <span style={SOON}>COMING SOON</span>
-                        <div style={{ fontWeight: FW.head, fontSize: 19, lineHeight: LH.head, color: c.dark, margin: '8px 0 4px' }}>{cat.label}</div>
-                        <p style={{ fontSize: 14, color: c.grayD, lineHeight: 1.5, marginBottom: 8 }}>{cat.soon.text}</p>
-                        <a href="#newsletter" onClick={(e) => { close(); goNewsletter(e); }} className="u-link" style={{ fontSize: 14, fontWeight: FW.head, color: c.sageD }}>Join the list to hear first →</a>
-                      </div>
-                    </div>
-                  ) : (
-                    <div style={{ display: 'grid', gridTemplateColumns: '220px minmax(0, 1fr)', gap: 28, alignItems: 'start' }}>
-                      <div>
-                        <div style={{ fontWeight: FW.head, fontSize: 20, lineHeight: LH.head, color: c.dark, marginBottom: 8 }}>{cat.label}</div>
-                        <p style={{ fontSize: 14, lineHeight: 1.55, color: c.grayD, marginBottom: 14 }}>{cat.intro}</p>
-                        <Link to={`/shop?cat=${cat.key}`} onClick={close} className="u-link" style={{ fontSize: 14, fontWeight: FW.head, color: c.sageD }}>Shop all {cat.label.toLowerCase()} →</Link>
-                      </div>
-                      <div style={{ display: 'grid', gridTemplateColumns: `repeat(${Math.max(ids.length, 3)}, minmax(0, 1fr))`, gap: 14 }}>
-                        {ids.map((id) => <PanelCard key={id} id={id} onPick={close} />)}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
+          <Panel id="shop" open={openCat === 'shop'} width={W.page}>
+            <ShopPanel onPick={close} />
+          </Panel>
+          <Panel id="bugs" open={openCat === 'bugs'} width={1000}>
+            <TilePanel title="Protect from" intro="Every Bug Away set stops all four. Pick the one that bothers you most and see what works best."
+              items={BUGS.map((b) => ({ to: `/protect/${b.key}`, img: b.img, label: b.label, sub: b.short }))} onPick={close} />
+          </Panel>
+          <Panel id="made" open={openCat === 'made'} width={W.page}>
+            <TilePanel title="Made for" intro="Pick your situation and see what to wear for it."
+              items={activities.map((a) => ({ to: `/${a.slug}`, img: a.hero, label: a.nav, sub: a.label.replace(/^FOR /, 'For ').toLowerCase().replace(/^for/, 'For') }))} onPick={close} cols={6} />
+          </Panel>
         </div>
       </header>
 
@@ -283,53 +342,39 @@ export default function Nav({ onCartOpen }) {
           </div>
 
           <div style={{ flex: 1, overflowY: 'auto', padding: '6px 0' }}>
-            <div style={{ padding: '12px 20px 4px', color: c.grayD, fontSize: 12, fontWeight: FW.head, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Shop by category</div>
-            {CATS.map((cat) => {
-              const open = acc === cat.key;
+            {[['shop', 'Shop'], ['bugs', 'Protect from'], ['made', 'Made for']].map(([key, label]) => {
+              const open = acc === key;
               return (
-                <div key={cat.key} style={{ borderBottom: LINE }}>
-                  <button type="button" aria-expanded={open} aria-controls={`nav-acc-${cat.key}`} onClick={() => setAcc(open ? null : cat.key)}
-                    style={{ width: '100%', minHeight: 52, display: 'flex', alignItems: 'center', gap: 8, background: 'none', border: 'none', cursor: 'pointer', padding: '12px 20px', color: c.dark, fontSize: 16, fontWeight: FW.mid, textAlign: 'left' }}>
-                    {cat.label}
-                    {cat.soon && <span style={SOON}>SOON</span>}
-                    <span style={{ marginLeft: 'auto', display: 'flex' }}><Chevron open={open} /></span>
+                <div key={key} style={{ borderBottom: LINE }}>
+                  <button type="button" aria-expanded={open} aria-controls={`nav-acc-${key}`} onClick={() => setAcc(open ? null : key)}
+                    style={{ width: '100%', minHeight: 54, display: 'flex', alignItems: 'center', gap: 8, background: 'none', border: 'none', cursor: 'pointer', padding: '12px 20px', color: c.dark, fontSize: 17, fontWeight: FW.head, textAlign: 'left' }}>
+                    {label}<span style={{ marginLeft: 'auto', display: 'flex' }}><Chevron open={open} /></span>
                   </button>
-                  <div id={`nav-acc-${cat.key}`} hidden={!open} style={{ padding: '0 20px 14px' }}>
-                    {cat.soon ? (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                        <img {...pic(cat.soon.img, '56px')} loading="lazy" alt="" style={{ width: 56, height: 56, objectFit: 'cover', borderRadius: R.sm, flexShrink: 0, filter: 'grayscale(.4)' }} />
-                        <div style={{ fontSize: 14, lineHeight: 1.5, color: c.grayD }}>
-                          {cat.soon.text} <a href="#newsletter" onClick={(e) => { setDrawer(false); goNewsletter(e); }} style={{ color: c.sageD, fontWeight: FW.head }}>Join the list</a>
-                        </div>
+                  <div id={`nav-acc-${key}`} hidden={!open} style={{ padding: '0 20px 14px' }}>
+                    {key === 'shop' && SHOP_CATS.map((cat) => (
+                      cat.soon
+                        ? <a key={cat.key} href="#newsletter" onClick={(e) => { setDrawer(false); goNewsletter(e); }} style={drawerRow}>{cat.label}<span style={SOON}>SOON</span></a>
+                        : <Link key={cat.key} to={`/shop?cat=${cat.key}`} onClick={() => setDrawer(false)} style={drawerRow}>{cat.label}<span style={{ marginLeft: 'auto', fontSize: 13, color: c.grayD }}>{cat.ids.length}</span></Link>
+                    ))}
+                    {key === 'shop' && <Link to="/shop" onClick={() => setDrawer(false)} style={{ ...drawerRow, color: c.sageD, fontWeight: FW.head }}>Shop all products →</Link>}
+                    {key === 'bugs' && BUGS.map((b) => (
+                      <Link key={b.key} to={`/protect/${b.key}`} onClick={() => setDrawer(false)} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '7px 0', textDecoration: 'none', color: c.dark }}>
+                        <img {...pic(b.img, '56px')} loading="lazy" alt="" style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: R.sm, flexShrink: 0 }} />
+                        <span><b style={{ display: 'block', fontSize: 15 }}>{b.label}</b><span style={{ fontSize: 13, color: c.grayD }}>{b.short}</span></span>
+                      </Link>
+                    ))}
+                    {key === 'made' && (
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, paddingTop: 2 }}>
+                        {USE_CASES_NAV.map(([to, l]) => (
+                          <Link key={to} to={to} onClick={() => setDrawer(false)} style={{ ...CHIP, fontSize: 14, padding: '10px 14px', background: c.mint, color: c.dark, textDecoration: 'none' }}>{l}</Link>
+                        ))}
                       </div>
-                    ) : (
-                      <>
-                        {cat.ids.map((id) => {
-                          const p = productById(id);
-                          return (
-                            <Link key={id} to={`/product/${id}`} onClick={() => setDrawer(false)} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '7px 0', textDecoration: 'none', color: c.dark }}>
-                              <img {...pic(CARD_IMG[id] || p.images[0], '56px')} loading="lazy" alt="" style={{ width: 56, height: 56, objectFit: p.imageFit === 'contain' ? 'contain' : 'cover', background: c.off, borderRadius: R.sm, flexShrink: 0 }} />
-                              <span style={{ minWidth: 0, flex: 1 }}>
-                                <span style={{ display: 'block', fontWeight: FW.mid, fontSize: 14, lineHeight: LH.head }}>{(SHORT[id] || [p.name])[0]}</span>
-                                <Price product={p} size={13} />
-                              </span>
-                            </Link>
-                          );
-                        })}
-                        <Link to={`/shop?cat=${cat.key}`} onClick={() => setDrawer(false)} style={{ display: 'inline-block', marginTop: 6, fontSize: 14, fontWeight: FW.head, color: c.sageD }}>Shop all {cat.label.toLowerCase()} →</Link>
-                      </>
                     )}
                   </div>
                 </div>
               );
             })}
-
-            <div style={{ padding: '18px 20px 4px', color: c.grayD, fontSize: 12, fontWeight: FW.head, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Made for</div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, padding: '8px 20px 6px' }}>
-              {USE_CASES_NAV.map(([to, label]) => (
-                <Link key={to} to={to} onClick={() => setDrawer(false)} style={{ ...CHIP, fontSize: 13, padding: '9px 14px', background: c.mint, color: c.dark, textDecoration: 'none' }}>{label}</Link>
-              ))}
-            </div>
+            <Link to="/shop?cat=kids" onClick={() => setDrawer(false)} style={{ display: 'flex', alignItems: 'center', minHeight: 54, padding: '0 20px', color: c.dark, fontSize: 17, fontWeight: FW.head, textDecoration: 'none', borderBottom: LINE }}>Kids</Link>
 
             <div style={{ padding: '12px 0' }}>
               {[...SECONDARY_LINKS, ['/about', 'Our story'], ['/contact', 'Contact']].map(([to, label]) => (

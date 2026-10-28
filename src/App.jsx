@@ -21,6 +21,7 @@ import Reviews from './pages/Reviews';
 import Legal from './pages/Legal';
 import Activity from './pages/Activity';
 import WhyChooseUs from './pages/WhyChooseUs';
+import ProtectFrom from './pages/ProtectFrom';
 import { activities } from './data/activities';
 
 export function AppShell() {
@@ -58,6 +59,7 @@ export function AppShell() {
                 element={<Activity onCartOpen={() => setCartOpen(true)} />} />
             ))}
             <Route path="/why-choose-us" element={<WhyChooseUs />} />
+            <Route path="/protect/:bug" element={<ProtectFrom />} />
             <Route path="/pets" element={<Pets />} />
             <Route path="/accessories" element={<Accessories />} />
             <Route path="/reviews" element={<Reviews />} />

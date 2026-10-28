@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { c, rv, FW, R, LH, W, CHIP, EYEBROW, T } from '../theme';
 import { products } from '../data';
 import { CATS, AUDIENCES } from '../data/catalog';
+import { BUGS, PROTECTS } from '../data/bugs';
 import { useCurrency } from '../currency.jsx';
 import { ProductCard, TrustBand } from '../components/ui';
 
@@ -18,11 +19,13 @@ function readFilters(search, param) {
   const q = new URLSearchParams(search);
   let cat = (q.get('cat') || 'all').toLowerCase();
   let aud = (q.get('for') || 'all').toLowerCase();
+  let bug = (q.get('bug') || 'all').toLowerCase();
+  if (bug !== 'all' && !BUGS.some((b) => b.key === bug)) bug = 'all';
   const legacy = LEGACY[(param || '').toLowerCase()] || LEGACY[cat];
   if (legacy) { if (legacy[0] === 'for') { aud = legacy[1]; cat = 'all'; } else cat = legacy[1]; }
   if (cat !== 'all' && !CATS.some((x) => x.key === cat && !x.soon)) cat = 'all';
   if (aud !== 'all' && !AUDIENCES.some((x) => x.key === aud)) aud = 'all';
-  return { cat, aud };
+  return { cat, aud, bug };
 }
 
 export default function Shop() {
@@ -31,7 +34,7 @@ export default function Shop() {
   const { category } = useParams();
   const { price } = useCurrency();
   // Eerste render = server-HTML (alles); daarna de filters uit de URL.
-  const [f, setF] = useState({ cat: 'all', aud: 'all' });
+  const [f, setF] = useState({ cat: 'all', aud: 'all', bug: 'all' });
   const [sort, setSort] = useState('featured');
   useEffect(() => { setF(readFilters(loc.search, category)); }, [loc.search, category]);
 
@@ -40,18 +43,20 @@ export default function Shop() {
     const q = new URLSearchParams();
     if (v.cat !== 'all') q.set('cat', v.cat);
     if (v.aud !== 'all') q.set('for', v.aud);
+    if (v.bug !== 'all') q.set('bug', v.bug);
     nav(`/shop${q.toString() ? `?${q}` : ''}`, { replace: true });
   };
 
   const catIds = f.cat === 'all' ? ORDER : CATS.find((x) => x.key === f.cat).ids;
   const audIds = f.aud === 'all' ? null : AUDIENCES.find((x) => x.key === f.aud).ids;
-  let list = ORDER.filter((id) => catIds.includes(id) && (!audIds || audIds.includes(id)) && products.some((p) => p.id === id));
+  let list = ORDER.filter((id) => catIds.includes(id) && (!audIds || audIds.includes(id)) && (f.bug === 'all' || (PROTECTS[id] || []).includes(f.bug)) && products.some((p) => p.id === id));
   if (sort !== 'featured') {
     const byId = Object.fromEntries(products.map((p) => [p.id, p]));
     list = [...list].sort((a, b) => (price(byId[a]) - price(byId[b])) * (sort === 'low' ? 1 : -1));
   }
   const cat = CATS.find((x) => x.key === f.cat);
-  const title = f.aud !== 'all' ? `${AUDIENCES.find((x) => x.key === f.aud).label}` : cat ? cat.label : 'Shop all';
+  const bugObj = BUGS.find((b) => b.key === f.bug);
+  const title = bugObj ? `Protection from ${bugObj.label.toLowerCase()}` : f.aud !== 'all' ? `${AUDIENCES.find((x) => x.key === f.aud).label}` : cat ? cat.label : 'Shop all';
   const intro = cat ? cat.intro : 'Chemical-free mesh protection for the whole family, plus the accessories that finish the job.';
 
   const chip = (on) => ({ ...CHIP, fontSize: 14, padding: '10px 16px', minHeight: 42, border: `1.5px solid ${on ? c.dark : c.line}`, background: on ? c.dark : c.white, color: on ? c.white : c.dark, cursor: 'pointer', justifyContent: 'flex-start' });
@@ -83,6 +88,13 @@ export default function Shop() {
                 <button key={a.key} type="button" onClick={() => set({ aud: a.key })} aria-pressed={f.aud === a.key} style={chip(f.aud === a.key)}>{a.label}</button>
               ))}
             </div>
+            <div style={{ ...EYEBROW, color: c.grayD, margin: '20px 0 10px' }}>Protects against</div>
+            <div className="tabs" style={{ flexWrap: 'wrap' }}>
+              <button type="button" onClick={() => set({ bug: 'all' })} aria-pressed={f.bug === 'all'} style={chip(f.bug === 'all')}>All insects</button>
+              {BUGS.map((b) => (
+                <button key={b.key} type="button" onClick={() => set({ bug: b.key })} aria-pressed={f.bug === b.key} style={chip(f.bug === b.key)}>{b.label}</button>
+              ))}
+            </div>
             <div className="d-only" style={{ marginTop: 24, padding: 16, borderRadius: R.lg, background: c.mint }}>
               <b style={{ fontSize: 14, color: c.sageD }}>Buy 3 sets, get the 4th free</b>
               <p style={{ fontSize: 13, color: c.grayD, marginTop: 4, lineHeight: 1.5 }}>Mix men's, women's and kids' sets. Applied automatically at checkout.</p>
@@ -100,7 +112,7 @@ export default function Shop() {
               </label>
             </div>
             {list.length === 0
-              ? <p style={{ padding: '40px 0', color: c.grayD }}>Nothing here yet. <button type="button" onClick={() => set({ cat: 'all', aud: 'all' })} style={{ border: 'none', background: 'none', color: c.sageD, fontWeight: FW.head, cursor: 'pointer' }}>Show all products</button></p>
+              ? <p style={{ padding: '40px 0', color: c.grayD }}>Nothing here yet. <button type="button" onClick={() => set({ cat: 'all', aud: 'all', bug: 'all' })} style={{ border: 'none', background: 'none', color: c.sageD, fontWeight: FW.head, cursor: 'pointer' }}>Show all products</button></p>
               : <div className="pgrid pgrid-3 r-gap" style={rv('gap', 20, 12)}>{list.map((id, i) => <ProductCard key={id} id={id} priority={i < 2} />)}</div>}
 
             {CATS.some((x) => x.soon) && (

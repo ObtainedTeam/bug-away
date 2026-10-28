@@ -48,10 +48,11 @@ export const CATS = [
   { key: 'sets', label: 'Full Sets', intro: 'Jacket and pants together, sealed from hood to ankle. Less than the two pieces apart, and buy 3 sets, get the 4th free.', ids: ['ba-combo-men', 'ba-combo-women', 'ba-kids-set'] },
   { key: 'jackets', label: 'Jackets', intro: 'Hooded no-see-um mesh jackets that go over what you already wear.', ids: ['ba-jacket-men', 'ba-jacket-women'] },
   { key: 'pants', label: 'Pants', intro: 'Mesh pants with a sewn-in foot cover, so nothing gets in at the ankle.', ids: ['ba-pants-men', 'ba-pants-women'] },
-  { key: 'kids', label: 'Kids', intro: 'The full set in kids sizes 4 to 12, with a safe elastic hood trim.', ids: ['ba-kids-set'] },
+  { key: 'kids', label: 'Kids', intro: 'The full set in kids sizes 4 to 12, with a safe elastic hood trim.', ids: ['ba-kids-set'], hideInShopMenu: true },
   { key: 'accessories', label: 'Accessories', intro: 'The small things that finish your protection on the trail and at home.', ids: ['ba-tick-kit', 'ba-storage-pouch', 'ba-repellent-spray'] },
+  { key: 'shirts', label: 'Mosquito Shirts', soon: { img: '/images/Female _ White mesh _ hoodie on 1_1.jpg', text: 'A lightweight mesh shirt for warm days with mosquitoes around.' } },
   { key: 'gloves', label: 'Gloves', soon: { img: '/images/detail-zipper.jpg', text: 'Sheer mesh gloves for hands that stay out of the sleeves.' } },
-  { key: 'masks', label: 'Face Mask', soon: { img: '/images/detail-collage-white.jpg', text: 'A mesh face cover for the worst black-fly days.' } },
+  { key: 'masks', label: 'Face Masks', soon: { img: '/images/detail-collage-white.jpg', text: 'A mesh face cover for the worst black-fly days.' } },
 ];
 
 // Doelgroepen voor collectie en categoriekaarten.
