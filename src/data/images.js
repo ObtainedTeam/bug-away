@@ -3,58 +3,65 @@
 export const IMAGES = {
 "/images/2 guys  _ white and black mesh_ hiking.png": [
 "2-guys-white-and-black-mesh-hiking",
-896,
-1200,
+1600,
+2143,
 [
-480
+480,
+960
 ]
 ],
 "/images/2 guys _ white and black mesh_ hiking.png": [
 "2-guys-white-and-black-mesh-hiking-2",
-896,
-1200,
+1600,
+2143,
 [
-480
+480,
+960
 ]
 ],
 "/images/2 guys black and white _ white and black mesh_ hiking.png": [
 "2-guys-black-and-white-white-and-black-mesh-hiking",
-896,
-1200,
+1600,
+2143,
 [
-480
+480,
+960
 ]
 ],
 "/images/2 males _ Black MEesh _ Fly fishing.png": [
 "2-males-black-meesh-fly-fishing",
-896,
-1200,
+1600,
+2143,
 [
-480
+480,
+960
 ]
 ],
 "/images/Buddies camping together.png": [
 "buddies-camping-together",
-896,
-1200,
+1600,
+2143,
 [
-480
+480,
+960
 ]
 ],
 "/images/Couple _ camping.png": [
 "couple-camping",
-896,
-1200,
+1600,
+2143,
 [
-480
+480,
+960
 ]
 ],
 "/images/Family .png": [
 "family",
-896,
-1200,
+1600,
+2143,
 [
-480
+480,
+960
 ]
 ],
 "/images/Female _ Black mesh .png": [
@@ -76,10 +83,11 @@ export const IMAGES = {
 ],
 "/images/Female _ White mesh _ Forest solo.png": [
 "female-white-mesh-forest-solo",
-896,
-1200,
+1600,
+2143,
 [
-480
+480,
+960
 ]
 ],
 "/images/Female _ White mesh _ Pants 1_1.jpg": [
@@ -102,18 +110,20 @@ export const IMAGES = {
 ],
 "/images/Female _ White mesh _ mountain solo .png": [
 "female-white-mesh-mountain-solo",
-896,
-1200,
+1600,
+2143,
 [
-480
+480,
+960
 ]
 ],
 "/images/Female _ White mesh _ mountain solo.png": [
 "female-white-mesh-mountain-solo-2",
-896,
-1200,
+1600,
+2143,
 [
-480
+480,
+960
 ]
 ],
 "/images/Female _ White mesh _ pants backside 1_1.jpg": [
@@ -251,10 +261,11 @@ export const IMAGES = {
 ],
 "/images/Male _ Black mesh _ fish in hand.png": [
 "male-black-mesh-fish-in-hand",
-896,
-1200,
+1600,
+2143,
 [
-480
+480,
+960
 ]
 ],
 "/images/Male _ Black mesh _ full suit front 1_1.jpg": [
@@ -337,10 +348,11 @@ export const IMAGES = {
 ],
 "/images/Male _ black mesh _ bino's hunting.png": [
 "male-black-mesh-bino-s-hunting",
-896,
-1200,
+1600,
+2143,
 [
-480
+480,
+960
 ]
 ],
 "/images/Male _ black mesh _ pants fronts full body 1_1.jpg": [
@@ -353,10 +365,11 @@ export const IMAGES = {
 ],
 "/images/Men and female hiking on mountain.png": [
 "men-and-female-hiking-on-mountain",
-896,
-1200,
+1600,
+2143,
 [
-480
+480,
+960
 ]
 ],
 "/images/combo-lifestyle-couple-beach-sunset.jpg": [
@@ -370,8 +383,8 @@ export const IMAGES = {
 ],
 "/images/combo-lifestyle-couple-coffee-tent.jpg": [
 "combo-lifestyle-couple-coffee-tent",
-1000,
-1000,
+1600,
+2143,
 [
 480,
 960
@@ -380,7 +393,7 @@ export const IMAGES = {
 "/images/combo-lifestyle-couple-forest-green.jpg": [
 "combo-lifestyle-couple-forest-green",
 1600,
-1600,
+2143,
 [
 480,
 960
@@ -388,8 +401,8 @@ export const IMAGES = {
 ],
 "/images/combo-lifestyle-couple-forest-white.jpg": [
 "combo-lifestyle-couple-forest-white",
-1000,
-1000,
+1600,
+2143,
 [
 480,
 960
@@ -397,8 +410,8 @@ export const IMAGES = {
 ],
 "/images/combo-lifestyle-group-campfire-green.jpg": [
 "combo-lifestyle-group-campfire-green",
-1000,
-1000,
+1600,
+2143,
 [
 480,
 960
@@ -407,7 +420,7 @@ export const IMAGES = {
 "/images/combo-lifestyle-woman-picnic-lake.jpg": [
 "combo-lifestyle-woman-picnic-lake",
 1600,
-1600,
+2143,
 [
 480,
 960
@@ -469,8 +482,8 @@ export const IMAGES = {
 ],
 "/images/jacket-men-lifestyle-bicycle-forest.jpg": [
 "jacket-men-lifestyle-bicycle-forest",
-1000,
-1000,
+1600,
+2143,
 [
 480,
 960
@@ -478,8 +491,8 @@ export const IMAGES = {
 ],
 "/images/jacket-men-lifestyle-birdwatching.jpg": [
 "jacket-men-lifestyle-birdwatching",
-1000,
-1000,
+1600,
+2143,
 [
 480,
 960
@@ -487,8 +500,8 @@ export const IMAGES = {
 ],
 "/images/jacket-men-lifestyle-forest-walking.jpg": [
 "jacket-men-lifestyle-forest-walking",
-1000,
-1000,
+1600,
+2143,
 [
 480,
 960
@@ -531,8 +544,8 @@ export const IMAGES = {
 ],
 "/images/jacket-women-lifestyle-gardening-closeup.jpg": [
 "jacket-women-lifestyle-gardening-closeup",
-1000,
-1000,
+1600,
+2000,
 [
 480,
 960
@@ -540,8 +553,8 @@ export const IMAGES = {
 ],
 "/images/jacket-women-lifestyle-gardening.jpg": [
 "jacket-women-lifestyle-gardening",
-1000,
-1000,
+1600,
+905,
 [
 480,
 960
@@ -549,8 +562,8 @@ export const IMAGES = {
 ],
 "/images/jacket-women-lifestyle-meadow-sunset.jpg": [
 "jacket-women-lifestyle-meadow-sunset",
-1000,
-1000,
+1600,
+2143,
 [
 480,
 960
@@ -558,8 +571,8 @@ export const IMAGES = {
 ],
 "/images/jacket-women-lifestyle-phone-forest.jpg": [
 "jacket-women-lifestyle-phone-forest",
-1000,
-1000,
+1600,
+2143,
 [
 480,
 960
@@ -585,8 +598,8 @@ export const IMAGES = {
 ],
 "/images/kids-lifestyle-forest-playing.jpg": [
 "kids-lifestyle-forest-playing",
-1489,
-1489,
+1600,
+2143,
 [
 480,
 960
@@ -594,8 +607,8 @@ export const IMAGES = {
 ],
 "/images/kids-lifestyle-jumping-stream.jpg": [
 "kids-lifestyle-jumping-stream",
-1000,
-1000,
+1600,
+2143,
 [
 480,
 960
@@ -613,7 +626,7 @@ export const IMAGES = {
 "/images/lifestyle-men-outdoor-upper.png": [
 "lifestyle-men-outdoor-upper",
 1600,
-1600,
+2143,
 [
 480,
 960
@@ -627,27 +640,10 @@ export const IMAGES = {
 480
 ]
 ],
-"/images/mosquito-lamp-hero.jpg": [
-"mosquito-lamp-hero",
-1100,
-1100,
-[
-480,
-960
-]
-],
-"/images/mosquito-lamp-product.jpg": [
-"mosquito-lamp-product",
-570,
-450,
-[
-480
-]
-],
 "/images/pants-detail-feet-grass.jpg": [
 "pants-detail-feet-grass",
-1000,
-1000,
+1600,
+1195,
 [
 480,
 960
@@ -655,8 +651,8 @@ export const IMAGES = {
 ],
 "/images/pants-lifestyle-feet-closeup.jpg": [
 "pants-lifestyle-feet-closeup",
-1000,
-1000,
+1600,
+2143,
 [
 480,
 960
@@ -700,8 +696,8 @@ export const IMAGES = {
 ],
 "/images/pants-women-lifestyle-picnic-lake.jpg": [
 "pants-women-lifestyle-picnic-lake",
-1000,
-1000,
+1600,
+2143,
 [
 480,
 960
@@ -709,8 +705,8 @@ export const IMAGES = {
 ],
 "/images/pants-women-lifestyle-stars-field.jpg": [
 "pants-women-lifestyle-stars-field",
-1000,
-1000,
+1600,
+2143,
 [
 480,
 960
@@ -746,7 +742,7 @@ export const IMAGES = {
 "/images/proof-mosquito.jpg": [
 "proof-mosquito",
 1600,
-893,
+905,
 [
 480,
 960
@@ -755,7 +751,7 @@ export const IMAGES = {
 "/images/proof-spider.jpg": [
 "proof-spider",
 1600,
-893,
+905,
 [
 480,
 960
@@ -764,7 +760,7 @@ export const IMAGES = {
 "/images/proof-ticks.jpg": [
 "proof-ticks",
 1600,
-893,
+905,
 [
 480,
 960
