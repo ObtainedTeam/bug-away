@@ -45,10 +45,10 @@ export const HOME_VIDEOS = {
     { src: '/videos/hero-1280.mp4', poster: '/img/hero-poster.webp', caption: 'Built for real days outside', sub: 'Hiking, fishing, camping, gardening', wide: true },
   ],
   small: [
-    { caption: 'Hiking review', poster: webp('/images/2 guys _ white and black mesh_ hiking.png') },
-    { caption: 'Gardening review', poster: webp('/images/jacket-women-lifestyle-gardening.jpg') },
-    { caption: 'Family review', poster: webp('/images/kids-lifestyle-forest-playing.jpg') },
-    { caption: 'Fishing review', poster: webp('/images/MAle _ Black Mesh _ Fly fishing.png') },
+    { src: '/videos/ugc-garden.mp4', clip: '/videos/ugc-garden-clip.mp4', poster: '/img/ugc-garden-poster.webp', caption: 'In the garden' },
+    { src: '/videos/ugc-family.mp4', clip: '/videos/ugc-family-clip.mp4', poster: '/img/ugc-family-poster.webp', caption: 'With the kids' },
+    { src: '/videos/ugc-fishing.mp4', clip: '/videos/ugc-fishing-clip.mp4', poster: '/img/ugc-fishing-poster.webp', caption: 'On the water' },
+    { caption: 'On the trail', poster: webp('/images/2 guys _ white and black mesh_ hiking.png') },
   ],
 };
 

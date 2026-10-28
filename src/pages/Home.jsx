@@ -254,7 +254,7 @@ export default function Home() {
       <ShopGrid />
       <Benefits />
       <Reviews />
-      <VideoRow eyebrow="See it in action" title="Watch the mesh do its job" intro="A real tick on the mesh, up close. More customer videos are on the way." big={HOME_VIDEOS.big} videos={HOME_VIDEOS.small} />
+      <VideoRow eyebrow="See it in action" title="Watch the mesh do its job" intro="A real tick on the mesh up close, and Bug Away out in the garden, with the kids and on the water." big={HOME_VIDEOS.big} videos={HOME_VIDEOS.small} />
       <Urgency />
       <UseCases />
       <TrustBand />
