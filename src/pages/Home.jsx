@@ -103,7 +103,7 @@ function Benefits() {
             <div className="benefit-media" style={{ position: 'relative', minHeight: 300, background: c.mint }}>
               <img {...pic(b.img, '(max-width: 767px) 100vw, 580px')} alt={b.alt} loading="lazy" decoding="async" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: b.pos || 'center' }} />
             </div>
-            <div className="r-pad" style={{ ...rv('pad', '44px 48px 44px 0', '4px 22px 26px'), alignSelf: 'center' }}>
+            <div className="r-pad" style={{ ...rv('pad', i % 2 ? '44px 8px 44px 48px' : '44px 48px 44px 8px', '4px 22px 26px'), alignSelf: 'center' }}>
               <span style={{ ...EYEBROW, marginBottom: 10 }}>{b.q}</span>
               <h3 className="r-fs" style={{ ...rv('fs', 28, 22), fontWeight: FW.head, lineHeight: LH.head, color: c.dark }}>{b.title}</h3>
               <p style={{ fontSize: 16, lineHeight: LH.body, color: c.grayD, marginTop: 12 }}>{b.text}</p>

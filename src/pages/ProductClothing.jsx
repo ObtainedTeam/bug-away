@@ -11,6 +11,7 @@ import { Section, SectionHead, ProductCard, Stars, Price, Icon, TrustBand, Video
 import { PayBadges } from '../components/Footer';
 import { PDP_FAQ, PROOF, SPECS, related } from '../data/pdp';
 import Reveal from '../components/Reveal';
+import SizeFinder from '../components/SizeFinder';
 
 // Productpagina kleding: de hele funnel op één pagina. Fotokolom links blijft
 // staan (pd-sticky) terwijl de koopkolom meescrollt; op mobiel onder elkaar
@@ -48,7 +49,9 @@ function Gallery({ product, color }) {
   );
 }
 
-function SizeGuide({ product, onClose }) {
+function SizeGuide({ product, onClose, onPick }) {
+  const kids = product.id.includes('kids');
+  const [tab, setTab] = useState(kids ? 'chart' : 'finder');
   const charts = product.id.includes('kids') ? ['/images/size-guide-kids.png']
     : product.id.includes('pants') ? ['/images/size-guide-pants.png']
       : product.id.includes('jacket') ? ['/images/size-guide-chart.png']
@@ -63,13 +66,22 @@ function SizeGuide({ product, onClose }) {
     <div role="dialog" aria-modal="true" aria-label="Size guide" onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 300, background: 'rgba(26,46,36,.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
       <div onClick={(e) => e.stopPropagation()} style={{ ...CARD, width: 'min(720px, 100%)', maxHeight: '90vh', overflowY: 'auto', padding: 24, position: 'relative' }}>
         <button type="button" onClick={onClose} aria-label="Close size guide" style={{ position: 'absolute', top: 10, right: 10, width: 44, height: 44, border: 'none', background: 'none', fontSize: 26, cursor: 'pointer', color: c.dark }}>×</button>
-        <h2 style={{ fontSize: 22, fontWeight: FW.head, marginBottom: 6 }}>Size guide</h2>
+        <h2 style={{ fontSize: 22, fontWeight: FW.head, marginBottom: 6 }}>Find your size</h2>
         <p style={{ fontSize: 14, color: c.grayD, marginBottom: 16 }}>Bug Away goes over your own clothes. Between two sizes? Size up: a looser fit breathes better and gives a mosquito nothing to press against.</p>
-        {charts.map((s) => <img key={s} {...pic(s, '680px')} alt="Size chart" style={{ width: '100%', borderRadius: R.sm, marginBottom: 10 }} />)}
+        {!kids && (
+          <div role="tablist" style={{ display: 'flex', gap: 8, marginBottom: 18 }}>
+            {[['finder', 'Size finder'], ['chart', 'Size chart']].map(([k, l]) => (
+              <button key={k} type="button" role="tab" aria-selected={tab === k} onClick={() => setTab(k)}
+                style={{ ...CHIP, minHeight: 42, fontSize: 14, padding: '0 16px', border: `1.5px solid ${tab === k ? c.dark : c.line}`, background: tab === k ? c.dark : c.white, color: tab === k ? c.white : c.dark, cursor: 'pointer' }}>{l}</button>
+            ))}
+          </div>
+        )}
+        {tab === 'finder' && <SizeFinder product={product} onPick={(s) => { onPick(s); onClose(); }} />}
+        {tab === 'chart' && <>{charts.map((s) => <img key={s} {...pic(s, '680px')} alt="Size chart" style={{ width: '100%', borderRadius: R.sm, marginBottom: 10 }} />)}
         <div className="grid-2m1" style={{ gap: 10 }}>
           <img {...pic('/images/size-guide-jacket.png', '340px')} alt="How to measure" style={{ width: '100%', borderRadius: R.sm }} />
           <img {...pic('/images/size-guide-fittype.png', '340px')} alt="Fit type" style={{ width: '100%', borderRadius: R.sm }} />
-        </div>
+        </div></>}
       </div>
     </div>
   );
@@ -197,7 +209,7 @@ export default function ProductClothing({ onCartOpen }) {
           <div id="size-picker" style={{ marginTop: 20, scrollMarginTop: 120 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div style={label}>Size: <span style={{ fontWeight: 400, color: need && !size ? '#b42318' : c.grayD }}>{size || (need ? 'Please choose a size' : 'Choose your size')}</span></div>
-              <button type="button" onClick={() => setGuide(true)} className="u-link" style={{ background: 'none', border: 'none', color: c.sageD, fontWeight: FW.mid, fontSize: 14, cursor: 'pointer', padding: '8px 0' }}>Size guide</button>
+              <button type="button" onClick={() => setGuide(true)} className="u-link" style={{ background: 'none', border: 'none', color: c.sageD, fontWeight: FW.mid, fontSize: 14, cursor: 'pointer', padding: '8px 0' }}>Find my size</button>
             </div>
             <div className="sizes" style={{ marginTop: 8 }}>
               {product.sizes.map((s) => {
@@ -224,7 +236,10 @@ export default function ProductClothing({ onCartOpen }) {
 
           <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginTop: 16, padding: '12px 14px', borderRadius: R.sm, background: c.off }}>
             <Icon name="shield" size={22} />
-            <p style={{ fontSize: 14, lineHeight: 1.5, color: c.dark }}><b>Not a single bite, or your money back.</b> <span style={{ color: c.grayD }}>30-day guarantee and 30-day returns.</span></p>
+            <div>
+              <p style={{ fontSize: 14, lineHeight: 1.5, color: c.dark }}><b>Not a single bite, or your money back.</b> <span style={{ color: c.grayD }}>30-day guarantee and 30-day returns.</span></p>
+              <p style={{ fontSize: 13, lineHeight: 1.45, color: c.sageD, fontWeight: FW.mid, marginTop: 4 }}>Only 0.5% of customers ever use it. The other 99.5% keep it on.</p>
+            </div>
           </div>
 
           <div className="grid-3m1" style={{ gap: 8, marginTop: 14 }}>
@@ -343,7 +358,7 @@ export default function ProductClothing({ onCartOpen }) {
 
       <TrustBand />
 
-      {guide && <SizeGuide product={product} onClose={() => setGuide(false)} />}
+      {guide && <SizeGuide product={product} onClose={() => setGuide(false)} onPick={(sz) => { setSize(sz); setNeed(false); }} />}
 
       {/* Vaste koopbalk (mobiel) */}
       <div className="m-only" aria-hidden={!sticky} style={{ position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 150, background: c.white, borderTop: `1px solid ${c.line}`, boxShadow: '0 -8px 24px rgba(44,53,48,.12)', padding: '10px 14px calc(10px + env(safe-area-inset-bottom))', display: 'flex', gap: 12, alignItems: 'center', transform: sticky ? 'none' : 'translateY(110%)', transition: 'transform .25s ease' }}>

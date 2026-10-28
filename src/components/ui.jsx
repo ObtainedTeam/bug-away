@@ -169,13 +169,38 @@ export function VideoModal({ video, onClose }) {
   );
 }
 
+// Gedempte clip die vanzelf speelt zodra de kaart in beeld is (Instagram-stijl).
+// Pauzeert buiten beeld; bij prefers-reduced-motion blijft de poster staan.
+function AutoClip({ src, poster, pos }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const v = ref.current;
+    if (!v || typeof IntersectionObserver === 'undefined') return undefined;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        if (!v.src) v.src = src;
+        const p = v.play(); if (p && p.catch) p.catch(() => {});
+      } else v.pause();
+    }, { threshold: 0.35 });
+    io.observe(v);
+    return () => io.disconnect();
+  }, [src]);
+  return <video ref={ref} muted loop playsInline preload="none" poster={poster} aria-hidden="true"
+    style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: pos || 'center' }} />;
+}
+
 function VideoCard({ v, ratio, onOpen, large = false }) {
+  const auto = !large && v.src;
   const inner = (
     <>
-      {v.poster && <img src={v.poster} alt="" loading="lazy" decoding="async" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: v.pos || 'center' }} />}
+      {auto && <AutoClip src={v.clip || v.src} poster={v.poster} pos={v.pos} />}
+      {!auto && v.poster && <img src={v.poster} alt="" loading="lazy" decoding="async" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: v.pos || 'center' }} />}
       <span aria-hidden="true" style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(26,46,36,0) 40%, rgba(26,46,36,.82))' }} />
       {!v.src && <span style={{ ...CHIP, position: 'absolute', top: 12, left: 12, background: c.white, color: c.dark }}>Video coming soon</span>}
-      <span style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: v.src ? 1 : 0.7 }}><PlayIcon size={large ? 68 : 52} /></span>
+      {auto
+        ? <span style={{ ...CHIP, position: 'absolute', top: 12, right: 12, background: 'rgba(255,255,255,.9)', color: c.dark, fontSize: 11 }}>🔊 Tap for sound</span>
+        : <span style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: v.src ? 1 : 0.7 }}><PlayIcon size={large ? 68 : 52} /></span>}
       <span className={large ? 'r-fs' : undefined} style={{ position: 'absolute', left: large ? 22 : 14, right: large ? 22 : 14, bottom: large ? 20 : 14, color: c.white, fontWeight: FW.head, ...(large ? rv('fs', 22, 18) : { fontSize: 15 }), lineHeight: LH.head, textShadow: SH.text, textAlign: 'left' }}>
         {v.caption}
         {v.sub && <span style={{ display: 'block', fontWeight: 400, fontSize: 13, marginTop: 4, opacity: 0.9 }}>{v.sub}</span>}
