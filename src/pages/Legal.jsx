@@ -33,7 +33,7 @@ const pages = {
       { heading:"Agreement", content:"By using our website and placing an order, you agree to these Terms & Conditions. These terms are governed by Dutch law." },
       { heading:"Products", content:"Bug Away clothing is designed as a physical barrier against ticks and insects. While highly effective, we cannot guarantee 100% protection. Always perform a body check after spending time outdoors." },
       { heading:"Pricing", content:"Prices are shown in US dollars, or in Canadian or Australian dollars for visitors from those countries. Taxes and shipping are calculated at checkout. The price at the time of your order is the price you pay." },
-      { heading:"Shipping", content:"We ship to the Netherlands, EU countries and North America. Delivery times are estimates and may vary. We are not responsible for delays caused by customs or postal services." },
+      { heading:"Shipping", content:"We ship from Houston, Texas, to the United States and Canada. Orders are usually delivered within 5 days. Delivery times are estimates and may vary. We are not responsible for delays caused by customs or postal services." },
       { heading:"Intellectual property", content:"All content on this website including images, text and design is owned by Bug Away / Obtained VOF and may not be reproduced without permission." },
       { heading:"Contact", content:"For questions about these terms, email us at info@bugawaygear.com." }
     ]

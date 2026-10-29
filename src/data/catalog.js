@@ -50,9 +50,11 @@ export const CATS = [
   { key: 'pants', label: 'Pants', intro: 'Mesh pants with a sewn-in foot cover, so nothing gets in at the ankle.', ids: ['ba-pants-men', 'ba-pants-women'] },
   { key: 'kids', label: 'Kids', intro: 'The full set in kids sizes 4 to 12, with a safe elastic hood trim.', ids: ['ba-kids-set'], hideInShopMenu: true },
   { key: 'accessories', label: 'Accessories', intro: 'The small things that finish your protection on the trail and at home.', ids: ['ba-tick-kit', 'ba-storage-pouch', 'ba-repellent-spray'] },
-  { key: 'shirts', label: 'Mosquito Shirts', soon: { img: '/images/Female _ White mesh _ hoodie on 1_1.jpg', text: 'A lightweight mesh shirt for warm days with mosquitoes around.' } },
+  { key: 'hoodie-shirts', label: 'Mosquito Shirt with Hood', soon: { img: '/images/Female _ White mesh _ hoodie on 1_1.jpg', text: 'A lightweight mesh shirt with a hood for warm days with mosquitoes around.' } },
+  { key: 'scarf-shirts', label: 'Mosquito Shirt with Scarf', soon: { img: '/images/Female _ White mesh _ hoodie on 1_1.jpg', text: 'A mesh shirt with a neck scarf that covers the gap at your collar.' } },
   { key: 'gloves', label: 'Gloves', soon: { img: '/images/detail-zipper.jpg', text: 'Sheer mesh gloves for hands that stay out of the sleeves.' } },
   { key: 'masks', label: 'Face Masks', soon: { img: '/images/detail-collage-white.jpg', text: 'A mesh face cover for the worst black-fly days.' } },
+  { key: 'dogs', label: 'Dog Suit', soon: { img: '/images/tick-kit-hero.jpg', text: 'A mesh suit that keeps ticks off your dog on the trail.' } },
 ];
 
 // Doelgroepen voor collectie en categoriekaarten.

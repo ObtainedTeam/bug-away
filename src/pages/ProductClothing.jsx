@@ -49,11 +49,30 @@ function Gallery({ product, color }) {
   );
 }
 
+// Kindermaten lopen op leeftijd (4-6Y t/m 10-12Y), niet op XS-XXL.
+// Lengtes zijn de gangbare kinderlengte per leeftijd, als hulpmiddel.
+const KIDS_SIZES = [['4-6Y', '40-46 in', '102-116 cm'], ['6-8Y', '46-50 in', '116-128 cm'], ['8-10Y', '50-55 in', '128-140 cm'], ['10-12Y', '55-60 in', '140-152 cm']];
+function KidsSizes() {
+  const cell = { padding: '12px 10px', borderBottom: `1px solid ${c.line}`, fontSize: 15, textAlign: 'left' };
+  return (
+    <div>
+      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <thead><tr style={{ background: c.forest, color: c.white }}>
+          <th style={{ ...cell, fontWeight: FW.head }}>Size</th><th style={{ ...cell, fontWeight: FW.head }}>Age</th><th style={{ ...cell, fontWeight: FW.head }}>Child's height</th>
+        </tr></thead>
+        <tbody>{KIDS_SIZES.map(([s, h, cm]) => (
+          <tr key={s}><td style={{ ...cell, fontWeight: FW.head }}>{s}</td><td style={cell}>{s.replace('Y', '')} years</td><td style={cell}>{h} <span style={{ color: c.grayD }}>({cm})</span></td></tr>
+        ))}</tbody>
+      </table>
+      <p style={{ fontSize: 14, color: c.grayD, marginTop: 14, lineHeight: 1.5 }}>Kids sizes go by age. Tall for their age, or right between two sizes? Pick the older size so the set fits over their clothes and lasts another season.</p>
+    </div>
+  );
+}
+
 function SizeGuide({ product, onClose, onPick }) {
   const kids = product.id.includes('kids');
   const [tab, setTab] = useState(kids ? 'chart' : 'finder');
-  const charts = product.id.includes('kids') ? ['/images/size-guide-kids.png']
-    : product.id.includes('pants') ? ['/images/size-guide-pants.png']
+  const charts = product.id.includes('pants') ? ['/images/size-guide-pants.png']
       : product.id.includes('jacket') ? ['/images/size-guide-chart.png']
         : ['/images/size-guide-chart.png', '/images/size-guide-pants.png'];
   useEffect(() => {
@@ -77,7 +96,8 @@ function SizeGuide({ product, onClose, onPick }) {
           </div>
         )}
         {tab === 'finder' && <SizeFinder product={product} onPick={(s) => { onPick(s); onClose(); }} />}
-        {tab === 'chart' && <>{charts.map((s) => <img key={s} {...pic(s, '680px')} alt="Size chart" style={{ width: '100%', borderRadius: R.sm, marginBottom: 10 }} />)}
+        {kids && <KidsSizes />}
+        {!kids && tab === 'chart' && <>{charts.map((s) => <img key={s} {...pic(s, '680px')} alt="Size chart" style={{ width: '100%', borderRadius: R.sm, marginBottom: 10 }} />)}
         <div className="grid-2m1" style={{ gap: 10 }}>
           <img {...pic('/images/size-guide-jacket.png', '340px')} alt="How to measure" style={{ width: '100%', borderRadius: R.sm }} />
           <img {...pic('/images/size-guide-fittype.png', '340px')} alt="Fit type" style={{ width: '100%', borderRadius: R.sm }} />
@@ -243,7 +263,7 @@ export default function ProductClothing({ onCartOpen }) {
           </div>
 
           <div className="grid-3m1" style={{ gap: 8, marginTop: 14 }}>
-            {[['truck', 'Free shipping over $150'], ['leaf', 'No DEET, no permethrin'], ['pin', 'Ships from Houston, TX']].map(([ic, t]) => (
+            {[['truck', 'Free shipping over $150'], ['leaf', 'No DEET, no permethrin'], ['pin', 'Delivered within 5 days']].map(([ic, t]) => (
               <div key={t} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, fontWeight: FW.mid, color: c.dark }}><Icon name={ic} size={18} />{t}</div>
             ))}
           </div>
@@ -254,7 +274,7 @@ export default function ProductClothing({ onCartOpen }) {
             {[
               ['Description', product.longDesc.split('\n\n').map((t, k) => <p key={k} style={{ marginBottom: 12 }}>{t}</p>)],
               ['Features', <ul key="f" style={{ listStyle: 'none', display: 'grid', gap: 8 }}>{product.features.map((f) => <li key={f} style={{ display: 'flex', gap: 10 }}><span style={{ color: c.sageD, fontWeight: FW.head }}>✓</span>{f}</li>)}</ul>],
-              ['Shipping & returns', <p key="s">Orders ship from our warehouse in Houston, Texas, with tracking to the US and Canada. Shipping is free on orders over $150. Not happy? Return it within 30 days. If a tick or mosquito gets through the mesh, you get a full refund. <Link to="/returns" style={{ color: c.sageD, fontWeight: FW.mid }}>Return policy</Link></p>],
+              ['Shipping & returns', <p key="s">Orders ship from our warehouse in Houston, Texas, with tracking to the US and Canada, and arrive within 5 days. Shipping is free on orders over $150. Not happy? Return it within 30 days. If a tick or mosquito gets through the mesh, you get a full refund. <Link to="/returns" style={{ color: c.sageD, fontWeight: FW.mid }}>Return policy</Link></p>],
               ['Care', <p key="c">Machine wash cold on a gentle cycle, hang to dry or tumble dry low. There is no treatment to wash out, so the protection stays the same wash after wash.</p>],
             ].map(([q, a, open]) => (
               <details key={q} open={open}>

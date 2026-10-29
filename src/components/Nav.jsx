@@ -257,7 +257,7 @@ export default function Nav({ onCartOpen }) {
       {bar && (
         <div style={{ position: 'relative', background: c.forest, color: c.white, textAlign: 'center', padding: '9px 44px', fontSize: 13, lineHeight: LH.head, fontWeight: FW.mid }}>
           <Link to="/shop" className="u-link" style={{ color: c.white }}>
-            Free shipping on orders over $150<span className="d-only"> · Tracked delivery to the US &amp; Canada from Houston, TX</span>
+            Free shipping on orders over $150<span className="d-only"> · Delivered within 5 days to the US &amp; Canada</span>
           </Link>
           <button type="button" onClick={closeBar} aria-label="Close announcement"
             style={{ position: 'absolute', right: 6, top: '50%', transform: 'translateY(-50%)', width: 36, height: 36, border: 'none', background: 'none', color: c.white, fontSize: 20, lineHeight: 1, cursor: 'pointer', opacity: 0.8 }}>×</button>

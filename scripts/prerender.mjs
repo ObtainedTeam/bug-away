@@ -87,6 +87,7 @@ for (const a of activities) {
 META['/'].ld = {
   '@context': 'https://schema.org', '@type': 'Organization', name: 'Bug Away',
   url: SITE, email: 'info@bugawaygear.com', logo: `${SITE}/favicon.svg`,
+  sameAs: ['https://www.instagram.com/bugawaygear/', 'https://www.facebook.com/p/Bug-Away-Gear-61589161742240/'],
 };
 for (const p of products) {
   META[`/product/${p.id}`] = {

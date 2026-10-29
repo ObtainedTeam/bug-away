@@ -299,7 +299,7 @@ The tailored fit is designed specifically for women's proportions: a clean silho
       "Gentle on sensitive skin",
       "Machine washable",
       "100% chemical-free — safe for children",
-      "Available in sizes 4-6Y through 10-12Y",
+      "Sized by age: 4-6Y through 10-12Y",
     ],
     useCases: ["Forest play", "School nature trips", "Camping with family", "Garden play", "Hiking with parents", "Summer camps"],
     images: [

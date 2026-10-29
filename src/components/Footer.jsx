@@ -4,6 +4,8 @@ import { NewsletterForm } from './ui';
 import { CATS, USE_CASES_NAV } from '../data/catalog';
 import { BUGS } from '../data/bugs';
 
+export const SOCIALS = [['https://www.instagram.com/bugawaygear/', 'Instagram'], ['https://www.facebook.com/p/Bug-Away-Gear-61589161742240/', 'Facebook']];
+
 export const PAYMENTS = ['Visa', 'Mastercard', 'PayPal', 'Shop Pay', 'Google Pay', 'Klarna'];
 
 function PayBadges({ dark = true }) {
@@ -48,6 +50,11 @@ export default function Footer() {
                 Ships from Houston, Texas<br />
                 Operated by Obtained VOF, Lelystad, the Netherlands
               </p>
+              <ul aria-label="Follow Bug Away" style={{ listStyle: 'none', display: 'flex', gap: 10, marginTop: 16 }}>
+                {SOCIALS.map(([href, label]) => (
+                  <li key={label}><a href={href} target="_blank" rel="noopener noreferrer" aria-label={`Bug Away on ${label}`} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: 44, minHeight: 44, padding: '0 14px', borderRadius: R.pill, border: '1px solid rgba(255,255,255,.25)', color: c.white, fontSize: 14, fontWeight: FW.mid, textDecoration: 'none' }}>{label}</a></li>
+                ))}
+              </ul>
             </div>
             {COLS.map(([title, links]) => (
               <nav key={title} aria-label={title}>

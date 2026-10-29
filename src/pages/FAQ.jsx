@@ -34,7 +34,7 @@ const FAQS = [
   },
   {
     q: "How long does shipping take?",
-    a: "Orders ship from our warehouse in Houston, Texas, to the US and Canada. You receive a tracking number as soon as your order ships. Shipping is free on orders over $150."
+    a: "Orders ship from our warehouse in Houston, Texas, to the US and Canada and arrive within 5 days. You receive a tracking number as soon as your order ships. Shipping is free on orders over $150."
   },
   {
     q: "What sizes are available?",

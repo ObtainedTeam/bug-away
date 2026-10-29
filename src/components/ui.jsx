@@ -253,7 +253,7 @@ export function Icon({ name, size = 24, color = c.sageD }) {
 export const TRUST_ITEMS = [
   ['shield', 'Not a single bite, or your money back', '30-day guarantee. If a tick or mosquito gets through the mesh, we refund you in full.'],
   ['ret', 'Easy returns', 'Changed your mind or need another size? Return it within 30 days.', '/returns'],
-  ['truck', 'Ships from Houston, Texas', 'Tracked shipping to the US and Canada. Free on orders over $150.'],
+  ['truck', 'Ships from Houston, Texas', 'Tracked delivery to the US and Canada within 5 days. Free on orders over $150.'],
   ['pin', 'Designed in the Netherlands', 'Developed and run from the Netherlands, shipped from our US warehouse.', '/about'],
 ];
 
