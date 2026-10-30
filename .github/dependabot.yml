@@ -1,0 +1,20 @@
+# Dependabot: wekelijkse check op verouderde en kwetsbare packages.
+# Updates komen als pull request; er verandert niets op main tot iemand ze merget.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 3
+    groups:
+      kleine-updates:
+        update-types: [minor, patch]
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
